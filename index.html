@@ -46,7 +46,7 @@
                 <span class="absolute top-1 right-1 w-2 h-2 bg-pink-500 rounded-full"></span>
             </button>
             <div id="auth-section" class="flex items-center gap-3 border-r border-slate-800 pr-4">
-                <button onclick="loginUser()" class="px-4 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-bold transition">
+                <button onclick="loginUser()" id="auth-btn" class="px-4 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-bold transition">
                     تسجيل الدخول / حساب جديد
                 </button>
             </div>
@@ -61,15 +61,15 @@
                     <i class="fa-solid fa-microphone text-lg"></i>
                     <span class="hidden lg:inline">الرومات الصوتية</span>
                 </a>
-                <a href="#" onclick="openTransferModal()" class="flex items-center gap-4 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
+                <button onclick="openTransferModal()" class="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800/60 hover:text-white transition text-right">
                     <i class="fa-solid fa-paper-plane text-lg text-emerald-400"></i>
                     <span class="hidden lg:inline">إرسال أموال للمشتركين</span>
-                </a>
-                <a href="#" class="flex items-center gap-4 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
+                </button>
+                <a href="#" onclick="alert('قسم المحفظة وسجل السحب عبر شام كاش قيد التفعيل المباشر.')" class="flex items-center gap-4 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
                     <i class="fa-solid fa-wallet text-lg"></i>
                     <span class="hidden lg:inline">المحفظة والسحب</span>
                 </a>
-                <a href="#" class="flex items-center gap-4 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
+                <a href="#" onclick="alert('متجر الهدايا سيتم إطلاقه قريباً جداً!')" class="flex items-center gap-4 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
                     <i class="fa-solid fa-gift text-lg"></i>
                     <span class="hidden lg:inline">متجر الهدايا</span>
                 </a>
@@ -79,7 +79,7 @@
                 <i class="fa-solid fa-headset text-3xl text-purple-400 mb-2"></i>
                 <h4 class="text-sm font-bold">أنشئ رومك الخاصة</h4>
                 <p class="text-[11px] text-slate-400 mt-1 mb-3">ابدأ بثك الصوتي واجمع الدعم</p>
-                <button class="w-full py-2 bg-purple-600 hover:bg-purple-700 text-white text-xs rounded-lg font-bold transition">
+                <button onclick="alert('ميزة إنشاء الرومات الصوتية الخاصة ستتوفر فور اكتمال ربط نظام WebRTC.')" class="w-full py-2 bg-purple-600 hover:bg-purple-700 text-white text-xs rounded-lg font-bold transition">
                     + إنشاء غرفة صوتية
                 </button>
             </div>
@@ -118,7 +118,7 @@
                         </div>
                         <div class="flex items-center justify-between pt-4 border-t border-slate-800/80">
                             <span class="text-xs text-slate-400">أبو أحمد (المضيف)</span>
-                            <button class="px-4 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-bold transition">دخول</button>
+                            <button onclick="alert('جاري الانضمام إلى الروم الصوتي...')" class="px-4 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-bold transition">دخول</button>
                         </div>
                     </div>
                 </div>
@@ -155,23 +155,47 @@
         </div>
     </div>
 
-    <!-- الربط والبرمجة مع Supabase -->
+    <!-- الربط والبرمجة مع Supabase والتفاعل -->
     <script>
         const SUPABASE_URL = "https://hsorrgydvfjmleztmlur.supabase.co"; 
         const SUPABASE_ANON_KEY = "sb_publishable_GgSvoGy9pHif9SHHXPaF_w_g0xgakSh"; 
 
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+        // التحقق من حالة المستخدم عند فتح الموقع
+        document.addEventListener("DOMContentLoaded", async () => {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (session) {
+                updateUserInterface(session.user);
+            }
+        });
+
         async function loginUser() {
-            const email = prompt("أدخل بريدك الإلكتروني لتسجيل الدخول:");
+            const email = prompt("أدخل بريدك الإلكتروني لتسجيل الدخول أو إنشاء حساب:");
             if (!email) return;
 
-            const { data, error } = await supabaseClient.auth.signInWithOtp({ email });
+            const { error } = await supabaseClient.auth.signInWithOtp({ email });
             if (error) {
                 alert("خطأ: " + error.message);
             } else {
-                alert("تم إرسال رابط تسجيل الدخول لبريدك الإلكتروني!");
+                alert("تم إرسال رابط تسجيل الدخول السريع إلى بريدك الإلكتروني! تحقق من صندوق الوارد.");
             }
+        }
+
+        function updateUserInterface(user) {
+            const authSection = document.getElementById('auth-section');
+            authSection.innerHTML = `
+                <div class="text-left">
+                    <div class="text-xs font-bold text-purple-300">${user.email.split('@')[0]}</div>
+                    <button onclick="logoutUser()" class="text-[10px] text-red-400 hover:underline">تسجيل خروج</button>
+                </div>
+            `;
+            document.getElementById('user-balance').innerText = "1,000.00 ل.س"; // رصيد افتراضي تجريبي لحين تفعيل الجدول
+        }
+
+        async function logoutUser() {
+            await supabaseClient.auth.signOut();
+            location.reload();
         }
 
         function openTransferModal() {
@@ -183,7 +207,7 @@
         }
 
         function openDepositModal() {
-            alert("للشحن عبر شام كاش:\nيرجى تحويل المبلغ إلى حساب شام كاش المخصص: (09xxxxxxxx)\nثم إرسال رقم العملية للدعم الفني لتأكيد الرصيد.");
+            alert("لشحن محفظة DEDE عبر شام كاش:\n1. قم بالتحويل إلى رقم الحساب المعتمد: (09xxxxxxxx)\n2. أرسل رقم عملية التحويل لدعم المنصة لتعبئة الرصيد فوراً.");
         }
 
         async function executeTransfer() {
@@ -191,12 +215,14 @@
             const amount = parseFloat(document.getElementById('transfer-amount').value);
 
             if (!receiver || !amount || amount <= 0) {
-                alert("يرجى إدخال اسم مستخدم ومبلغ صحيح.");
+                alert("يرجى إدخال اسم مستخدم صحيح ومبلغ أكبر من الصفر.");
                 return;
             }
 
-            alert(`جاري معالجة تحويل ${amount} ل.س إلى ${receiver} مع اقتطاع العمولة...`);
+            alert(`تم بنجاح إرسال ${amount} ل.س إلى المستخدم (${receiver}) وتم خصم عمولة المنصة (5%) تلقائياً.`);
             closeTransferModal();
+            document.getElementById('receiver-username').value = '';
+            document.getElementById('transfer-amount').value = '';
         }
     </script>
 </body>

@@ -100,7 +100,7 @@
         </div>
     </div>
 
-    <!-- 1. الشريط العلوي Navbar (يظهر بعد تسجيل الدخول) -->
+    <!-- 1. الشريط العلوي Navbar -->
     <header class="h-20 glass-nav px-6 flex items-center justify-between z-20">
         <div class="flex items-center gap-3 cursor-pointer" onclick="leaveRoom()">
             <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-pink-600 via-rose-500 to-purple-600 flex items-center justify-center font-black text-2xl text-white shadow-lg shadow-pink-500/40 border border-pink-300/40">
@@ -216,22 +216,7 @@
                 </div>
 
                 <div id="rooms-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- الروم الافتراضي العام -->
-                    <div class="glass-card rounded-2xl p-5 hover:border-pink-500/65 transition cursor-pointer group" onclick="tryJoinRoom('سهرة تعارف وسوالف شبابية 💖', 'أبو أحمد', false, '')">
-                        <div class="flex items-start justify-between mb-4">
-                            <div>
-                                <span class="bg-pink-500/20 text-pink-300 text-[10px] px-2.5 py-1 rounded-full font-bold border border-pink-500/30">روم عام 🌍</span>
-                                <h3 class="text-lg font-bold mt-2 text-white">سهرة تعارف وسوالف شبابية 💖</h3>
-                            </div>
-                            <span class="flex items-center gap-1 bg-pink-950/60 px-2.5 py-1 rounded-full text-xs text-pink-200">
-                                <i class="fa-solid fa-heart text-pink-400"></i> 410
-                            </span>
-                        </div>
-                        <div class="flex items-center justify-between pt-4 border-t border-pink-500/20">
-                            <span class="text-xs text-pink-200">أبو أحمد <span class="text-[9px] vip-badge text-white px-1.5 rounded">VIP 👑</span></span>
-                            <button class="px-4 py-1.5 bg-gradient-to-r from-pink-600 to-rose-600 text-white rounded-lg text-xs font-bold">دخول الروم</button>
-                        </div>
-                    </div>
+                    <!-- يتم جلب الرومات وعرضها هنا ديناميكياً من قاعدة البيانات -->
                 </div>
             </div>
         </main>
@@ -439,13 +424,15 @@
                 grantAccessToApp(currentUser);
             }
             populateGiftsModal();
+            loadActiveRooms();
         });
 
         function grantAccessToApp(user) {
             currentUser = user;
             userCoins = 0;
-            document.getElementById('auth-gate-screen').classList.add('hidden'); // إخفاء شاشة التسجيل ودخول الموقع
+            document.getElementById('auth-gate-screen').classList.add('hidden'); // إخفاء شاشة التسجيل
             updateUserInterface(user);
+            loadActiveRooms();
         }
 
         async function executeGateLogin() {
@@ -542,6 +529,83 @@
             `;
         }
 
+        async function loadActiveRooms() {
+            const { data: rooms, error } = await supabaseClient
+                .from('rooms')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            const grid = document.getElementById('rooms-grid');
+            if (!grid) return;
+
+            let html = `
+                <div class="glass-card rounded-2xl p-5 hover:border-pink-500/65 transition cursor-pointer group" onclick="tryJoinRoom('سهرة تعارف وسوالف شبابية 💖', 'أبو أحمد', false, '')">
+                    <div class="flex items-start justify-between mb-4">
+                        <div>
+                            <span class="bg-pink-500/20 text-pink-300 text-[10px] px-2.5 py-1 rounded-full font-bold border border-pink-500/30">روم عام 🌍</span>
+                            <h3 class="text-lg font-bold mt-2 text-white">سهرة تعارف وسوالف شبابية 💖</h3>
+                        </div>
+                        <span class="flex items-center gap-1 bg-pink-950/60 px-2.5 py-1 rounded-full text-xs text-pink-200">
+                            <i class="fa-solid fa-heart text-pink-400"></i> 410
+                        </span>
+                    </div>
+                    <div class="flex items-center justify-between pt-4 border-t border-pink-500/20">
+                        <span class="text-xs text-pink-200">أبو أحمد <span class="text-[9px] vip-badge text-white px-1.5 rounded">VIP 👑</span></span>
+                        <button class="px-4 py-1.5 bg-gradient-to-r from-pink-600 to-rose-600 text-white rounded-lg text-xs font-bold">دخول الروم</button>
+                    </div>
+                </div>
+            `;
+
+            if (rooms && rooms.length > 0) {
+                rooms.forEach(r => {
+                    const isPriv = r.room_type === 'private';
+                    html += `
+                        <div class="glass-card rounded-2xl p-5 hover:border-pink-500/65 transition cursor-pointer group" onclick="tryJoinRoom('${r.title}', '${r.host_name}', ${isPriv}, '${r.pin || ''}')">
+                            <div class="flex items-start justify-between mb-4">
+                                <div>
+                                    <span class="bg-${isPriv ? 'amber' : 'pink'}-500/20 text-${isPriv ? 'amber' : 'pink'}-300 text-[10px] px-2.5 py-1 rounded-full font-bold border border-${isPriv ? 'amber' : 'pink'}-500/30">${isPriv ? 'روم خاص 🔒' : 'روم عام 🌍'}</span>
+                                    <h3 class="text-lg font-bold mt-2 text-white">${r.title}</h3>
+                                </div>
+                                <span class="flex items-center gap-1 bg-pink-950/60 px-2.5 py-1 rounded-full text-xs text-pink-200">
+                                    <i class="fa-solid fa-heart text-pink-400"></i> نشط
+                                </span>
+                            </div>
+                            <div class="flex items-center justify-between pt-4 border-t border-pink-500/20">
+                                <span class="text-xs text-pink-200">${r.host_name} <span class="text-[9px] vip-badge text-white px-1.5 rounded">المنشئ 👑</span></span>
+                                <button class="px-4 py-1.5 bg-gradient-to-r from-pink-600 to-rose-600 text-white rounded-lg text-xs font-bold">دخول</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            grid.innerHTML = html;
+        }
+
+        async function createNewLiveRoom() {
+            const title = document.getElementById('new-room-title'].value.trim() || 'روم جديد';
+            const roomType = document.getElementById('new-room-type').value;
+            const pin = document.getElementById('new-room-pin').value;
+            closeModal('create-room-modal');
+
+            let hostName = currentUser ? (currentUser.user_metadata?.full_name || (currentUser.email ? currentUser.email.split('@')[0] : 'زائر')) : "زائر كريم";
+
+            const { error } = await supabaseClient
+                .from('rooms')
+                .insert([{ title: title, host_name: hostName, room_type: roomType, pin: pin }]);
+
+            if (error) {
+                alert("خطأ أثناء حفظ الروم في السيرفر: " + error.message);
+                return;
+            }
+
+            isUserMember = true;
+            isUserAdminOrMod = true; 
+
+            alert("🎉 تم إنشاء الروم وحفظه في السيرفر بنجاح!");
+            loadActiveRooms();
+            tryJoinRoom(title, hostName, roomType === 'private', pin);
+        }
+
         function populateGiftsModal() {
             const grid = document.getElementById('gifts-grid');
             if (!grid) return;
@@ -558,7 +622,7 @@
             const gift = giftsList.find(g => g.id === giftId);
             if (!gift) return;
             if (userCoins < gift.price) {
-                return alert("رصيدك الحالي (0 كوينز أو غير كافٍ)! يرجى شحن محفظتك عبر شام كاش لإرسال الهدايا.");
+                return alert("رصيدك الحالي (0 كوينز)! يرجى شحن محفظتك عبر شام كاش لإرسال الهدايا.");
             }
 
             userCoins -= gift.price;
@@ -575,15 +639,6 @@
 
             showScreenGiftEffect(senderName, receiverName, gift);
             if (gift.price >= 50000) showBigBossAnnouncement(senderName, gift);
-
-            const chatBox = document.getElementById('room-chat-messages');
-            if (chatBox) {
-                const msgDiv = document.createElement('div');
-                msgDiv.className = "p-2 bg-pink-950/60 rounded-xl border border-pink-500/30 text-xs text-pink-200 animate-pulse";
-                msgDiv.innerHTML = `🎁 أرسل <b class="text-amber-300">${senderName}</b> إلى <b class="text-pink-300">${receiverName}</b> هدية <b class="text-white">${gift.icon} ${gift.name}</b> بقيمة <span class="text-amber-400 font-bold">${gift.price.toLocaleString()} كوينز</span>`;
-                chatBox.appendChild(msgDiv);
-                chatBox.scrollTop = chatBox.scrollHeight;
-            }
         }
 
         function showScreenGiftEffect(sender, receiver, gift) {
@@ -617,10 +672,7 @@
             setTimeout(() => { el.remove(); }, 4000);
         }
 
-        function requestMemberRole() {
-            document.getElementById('member-request-modal').classList.remove('hidden');
-        }
-
+        function requestMemberRole() { document.getElementById('member-request-modal').classList.remove('hidden'); }
         function submitMemberRequest() {
             closeModal('member-request-modal');
             alert("تم إرسال طلب الانضمام كعضو إلى منشئ الروم بانتظار الموافقة...");
@@ -632,9 +684,7 @@
         }
 
         function requestAdminRole() {
-            if (!isUserMember) {
-                return alert("عذراً، يجب أن تصبح عضواً معتمداً في الروم أولاً قبل التقدم لطلب الإشراف!");
-            }
+            if (!isUserMember) return alert("عذراً، يجب أن تصبح عضواً معتمداً في الروم أولاً!");
             document.getElementById('mod-request-modal').classList.remove('hidden');
         }
 
@@ -653,7 +703,6 @@
             if (!controlsArea) return;
 
             let html = `<div class="flex items-center gap-2 flex-wrap bg-amber-500/10 p-2.5 rounded-xl border border-amber-500/30 text-xs">`;
-            
             if (isUserMember && !isUserAdminOrMod) {
                 html += `<span class="text-pink-300 font-bold"><i class="fa-solid fa-user-check"></i> أنت عضو معتمد</span>
                          <button onclick="requestAdminRole()" class="px-2.5 py-1 bg-amber-500 text-slate-950 rounded-lg font-bold">طلب إشراف 🛡️</button>`;
@@ -683,9 +732,7 @@
             setTimeout(() => { floatEl.remove(); }, 2000);
         }
 
-        function openMusicModal() {
-            document.getElementById('music-modal').classList.remove('hidden');
-        }
+        function openMusicModal() { document.getElementById('music-modal').classList.remove('hidden'); }
 
         document.addEventListener('change', function(e) {
             if (e.target && e.target.id === 'local-audio-file') {
@@ -699,33 +746,11 @@
             }
         });
 
-        function playLocalAudio() {
-            if (localPlayerAudio) {
-                localPlayerAudio.play().then(() => alert("▶ تتم تشغيل الأغنية في الروم الآن!"));
-            } else {
-                alert("يرجى اختيار ملف صوتي من هاتفك أو حاسوبك أولاً.");
-            }
-        }
-
-        function pauseLocalAudio() {
-            if (localPlayerAudio) localPlayerAudio.pause();
-        }
-
-        function stopLocalAudio() {
-            if (localPlayerAudio) {
-                localPlayerAudio.pause();
-                localPlayerAudio.currentTime = 0;
-            }
-        }
-
-        function adjustAudioVolume(val) {
-            if (localPlayerAudio) localPlayerAudio.volume = val;
-        }
-
-        function kickGuestUser() {
-            const targetName = prompt("أدخل اسم العضو المراد طرده لعدم حيازته على إشراف أو وكالة:");
-            if (targetName) alert(`⚠️ تم طرد العضو (${targetName}) بنجاح من الروم.`);
-        }
+        function playLocalAudio() { if (localPlayerAudio) localPlayerAudio.play(); else alert("اختر ملفاً صوتياً أولاً."); }
+        function pauseLocalAudio() { if (localPlayerAudio) localPlayerAudio.pause(); }
+        function stopLocalAudio() { if (localPlayerAudio) { localPlayerAudio.pause(); localPlayerAudio.currentTime = 0; } }
+        function adjustAudioVolume(val) { if (localPlayerAudio) localPlayerAudio.volume = val; }
+        function kickGuestUser() { const name = prompt("اسم العضو المراد طرده:"); if (name) alert(`تم طرد (${name}).`); }
 
         function togglePinInput(val) {
             const pinInput = document.getElementById('new-room-pin');
@@ -766,7 +791,7 @@
         function executeDeposit() {
             const txId = document.getElementById('deposit-tx-id').value;
             const netCoins = calculateDepositCoins();
-            if (!txId || netCoins <= 0) return alert("يرجى ملء الحقول.");
+            if (!txId || netCoins <= 0) return alert("يرجى ملء الحقول المطلوبة.");
             userCoins += netCoins; 
             document.getElementById('user-balance').innerText = userCoins.toLocaleString() + " كوينز";
             alert(`تم شحن ${netCoins.toLocaleString()} كوينز إلى رصيدك بنجاح!`);
@@ -795,12 +820,9 @@
                             <h2 class="text-xl font-bold mt-1 text-white">${title}</h2>
                             <p class="text-xs text-pink-200">المضيف: <span class="text-amber-300 font-bold">${host}</span></p>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <button onclick="leaveRoom()" class="px-4 py-2 bg-red-600/20 text-red-300 rounded-xl text-xs font-bold border border-red-500/30">مغادرة</button>
-                        </div>
+                        <button onclick="leaveRoom()" class="px-4 py-2 bg-red-600/20 text-red-300 rounded-xl text-xs font-bold border border-red-500/30">مغادرة</button>
                     </div>
 
-                    <!-- أزرار تحكم العضوية والإشراف -->
                     <div id="admin-room-controls"></div>
 
                     <div class="grid grid-cols-4 gap-3 p-4 glass-card rounded-2xl text-center">
@@ -829,10 +851,7 @@
             updateRoomControlsForUser();
         }
 
-        function leaveRoom() {
-            if (localPlayerAudio) localPlayerAudio.pause();
-            location.reload();
-        }
+        function leaveRoom() { if (localPlayerAudio) localPlayerAudio.pause(); location.reload(); }
 
         function openGamesModal() { document.getElementById('games-modal').classList.remove('hidden'); }
         function openAboutModal() { document.getElementById('about-modal').classList.remove('hidden'); }
@@ -843,39 +862,6 @@
         function openProfileModal() { alert("قسم الملف الشخصي و VIP جاهز."); }
         function openCreateRoomModal() { document.getElementById('create-room-modal').classList.remove('hidden'); }
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-
-        function createNewLiveRoom() {
-            const title = document.getElementById('new-room-title').value || 'روم جديد';
-            const roomType = document.getElementById('new-room-type').value;
-            const pin = document.getElementById('new-room-pin').value;
-            closeModal('create-room-modal');
-
-            let hostName = currentUser ? (currentUser.user_metadata?.full_name || (currentUser.email ? currentUser.email.split('@')[0] : 'زائر')) : "زائر كريم";
-            isUserMember = true;
-            isUserAdminOrMod = true; 
-
-            const grid = document.getElementById('rooms-grid');
-            const roomCard = document.createElement('div');
-            roomCard.className = "glass-card rounded-2xl p-5 hover:border-pink-500/65 transition cursor-pointer group";
-            roomCard.onclick = () => tryJoinRoom(title, hostName, roomType === 'private', pin);
-            roomCard.innerHTML = `
-                <div class="flex items-start justify-between mb-4">
-                    <div>
-                        <span class="bg-${roomType === 'private' ? 'amber' : 'pink'}-500/20 text-${roomType === 'private' ? 'amber' : 'pink'}-300 text-[10px] px-2.5 py-1 rounded-full font-bold border border-${roomType === 'private' ? 'amber' : 'pink'}-500/30">${roomType === 'private' ? 'روم خاص 🔒' : 'روم عام 🌍'}</span>
-                        <h3 class="text-lg font-bold mt-2 text-white">${title}</h3>
-                    </div>
-                    <span class="flex items-center gap-1 bg-pink-950/60 px-2.5 py-1 rounded-full text-xs text-pink-200">
-                        <i class="fa-solid fa-heart text-pink-400"></i> 1
-                    </span>
-                </div>
-                <div class="flex items-center justify-between pt-4 border-t border-pink-500/20">
-                    <span class="text-xs text-pink-200">${hostName} <span class="text-[9px] vip-badge text-white px-1.5 rounded">المنشئ 👑</span></span>
-                    <button class="px-4 py-1.5 bg-gradient-to-r from-pink-600 to-rose-600 text-white rounded-lg text-xs font-bold">دخول</button>
-                </div>
-            `;
-            grid.prepend(roomCard);
-            tryJoinRoom(title, hostName, roomType === 'private', pin);
-        }
     </script>
 </body>
 </html>

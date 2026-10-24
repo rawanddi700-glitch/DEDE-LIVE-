@@ -64,7 +64,43 @@
     <!-- حاوية التأثيرات على الشاشة -->
     <div id="screen-effects-container" class="fixed inset-0 pointer-events-none z-50 flex flex-col items-center justify-center overflow-hidden"></div>
 
-    <!-- 1. الشريط العلوي Navbar -->
+    <!-- 🛑 شاشة تسجيل الدخول الإجبارية عند فتح الموقع (تختفي فور تسجيل الدخول) -->
+    <div id="auth-gate-screen" class="fixed inset-0 bg-[#09020d]/95 backdrop-blur-2xl z-50 flex items-center justify-center p-4">
+        <div class="glass-card w-full max-w-md p-8 rounded-3xl border border-pink-500/40 space-y-6 text-center shadow-2xl">
+            <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-tr from-pink-600 via-rose-500 to-purple-600 flex items-center justify-center font-black text-3xl text-white shadow-lg shadow-pink-500/40 border border-pink-300/40">
+                <i class="fa-solid fa-microphone-lines"></i>
+            </div>
+            <div>
+                <h1 class="text-2xl font-black text-white tracking-wider">DEDE LIVE</h1>
+                <p class="text-xs text-pink-300/90 font-bold mt-1">يجب تسجيل الدخول أو المتابعة كزائر للوصول إلى المنصة</p>
+            </div>
+
+            <div class="space-y-3 pt-2">
+                <input type="email" id="gate-email" placeholder="البريد الإلكتروني" class="w-full bg-slate-900/80 border border-pink-500/30 rounded-xl p-3 text-sm text-white text-center focus:outline-none focus:border-pink-500">
+                <input type="password" id="gate-password" placeholder="كلمة المرور" class="w-full bg-slate-900/80 border border-pink-500/30 rounded-xl p-3 text-sm text-white text-center focus:outline-none focus:border-pink-500">
+                
+                <div class="flex gap-2 pt-1">
+                    <button onclick="executeGateLogin()" class="flex-1 py-3 bg-pink-600 hover:bg-pink-700 text-white rounded-xl font-bold text-xs transition shadow-lg">تسجيل الدخول</button>
+                    <button onclick="executeGateSignup()" class="flex-1 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-bold text-xs transition shadow-lg">إنشاء حساب</button>
+                </div>
+
+                <div class="relative flex py-2 items-center">
+                    <div class="flex-grow border-t border-pink-500/20"></div>
+                    <span class="flex-shrink mx-4 text-[10px] text-pink-300/60">أو المتابعة السريعة</span>
+                    <div class="flex-grow border-t border-pink-500/20"></div>
+                </div>
+
+                <button onclick="loginWithFacebook()" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-xs transition shadow-lg flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-facebook text-sm"></i> متابعة عبر فيسبوك
+                </button>
+                <button onclick="loginAsGuest()" class="w-full py-3 bg-pink-900/50 hover:bg-pink-900 text-pink-200 border border-pink-500/40 rounded-xl font-bold text-xs transition shadow-lg flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-user-secret text-amber-300"></i> دخول كزائر وهمي (رصيد 0)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 1. الشريط العلوي Navbar (يظهر بعد تسجيل الدخول) -->
     <header class="h-20 glass-nav px-6 flex items-center justify-between z-20">
         <div class="flex items-center gap-3 cursor-pointer" onclick="leaveRoom()">
             <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-pink-600 via-rose-500 to-purple-600 flex items-center justify-center font-black text-2xl text-white shadow-lg shadow-pink-500/40 border border-pink-300/40">
@@ -101,15 +137,7 @@
                 <i class="fa-brands fa-whatsapp text-sm"></i> الدعم والشكاوي
             </a>
             <div id="auth-section" class="flex items-center gap-2 border-r border-pink-500/30 pr-3">
-                <button onclick="openEmailLoginModal()" class="px-3 py-1.5 bg-pink-600 hover:bg-pink-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-md">
-                    <i class="fa-solid fa-envelope text-amber-300 text-xs"></i> دخول بالبريد
-                </button>
-                <button onclick="loginWithFacebook()" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-md">
-                    <i class="fa-brands fa-facebook text-white text-xs"></i> دخول فيسبوك
-                </button>
-                <button onclick="loginAsGuest()" class="px-2.5 py-1.5 bg-pink-900/60 hover:bg-pink-900 text-pink-200 border border-pink-500/40 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-md">
-                    <i class="fa-solid fa-user-secret text-amber-300 text-xs"></i> زائر
-                </button>
+                <!-- يتم تعبئتها ديناميكياً ببيانات المستخدم -->
             </div>
         </div>
     </header>
@@ -218,23 +246,6 @@
             <div class="flex gap-2">
                 <button onclick="verifyRoomPin()" class="flex-1 py-2.5 bg-amber-500 text-slate-950 rounded-xl font-bold text-xs">دخول</button>
                 <button onclick="closeModal('pin-modal')" class="flex-1 py-2.5 bg-slate-800 text-slate-300 rounded-xl text-xs">إلغاء</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- نافذة تسجيل الدخول بالبريد الإلكتروني -->
-    <div id="email-login-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-        <div class="glass-card w-full max-w-md p-6 rounded-3xl border border-pink-500/30 space-y-4 text-center">
-            <div class="flex justify-between items-center">
-                <h3 class="text-lg font-bold text-pink-300">تسجيل الدخول بالبريد الإلكتروني</h3>
-                <button onclick="closeModal('email-login-modal')" class="text-slate-400"><i class="fa-solid fa-xmark text-xl"></i></button>
-            </div>
-            <p class="text-xs text-pink-200">أدخل بريدك الإلكتروني وكلمة المرور للدخول أو إنشاء حساب جديد برصيد يبدأ من الصفر:</p>
-            <input type="email" id="user-email-input" placeholder="example@domain.com" class="w-full bg-slate-900 border rounded-xl p-3 text-sm text-white text-center">
-            <input type="password" id="user-password-input" placeholder="كلمة المرور" class="w-full bg-slate-900 border rounded-xl p-3 text-sm text-white text-center">
-            <div class="flex gap-2 pt-2">
-                <button onclick="executeEmailLogin()" class="flex-1 py-3 bg-pink-600 hover:bg-pink-700 text-white rounded-xl font-bold text-xs transition">تسجيل الدخول</button>
-                <button onclick="executeEmailSignup()" class="flex-1 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-bold text-xs transition">إنشاء حساب جديد</button>
             </div>
         </div>
     </div>
@@ -425,10 +436,70 @@
             if (session) {
                 currentUser = session.user;
                 userCoins = 0; 
-                updateUserInterface(currentUser);
+                grantAccessToApp(currentUser);
             }
             populateGiftsModal();
         });
+
+        function grantAccessToApp(user) {
+            currentUser = user;
+            userCoins = 0;
+            document.getElementById('auth-gate-screen').classList.add('hidden'); // إخفاء شاشة التسجيل ودخول الموقع
+            updateUserInterface(user);
+        }
+
+        async function executeGateLogin() {
+            const email = document.getElementById('gate-email').value;
+            const password = document.getElementById('gate-password').value;
+            if (!email || !password) return alert("يرجى إدخال البريد الإلكتروني وكلمة المرور.");
+
+            const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+            if (error) {
+                alert("خطأ في تسجيل الدخول: " + error.message);
+            } else {
+                grantAccessToApp(data.user);
+                alert("✨ أهلاً بك في DEDE LIVE!");
+            }
+        }
+
+        async function executeGateSignup() {
+            const email = document.getElementById('gate-email').value;
+            const password = document.getElementById('gate-password').value;
+            if (!email || !password) return alert("يرجى إدخال البريد الإلكتروني وكلمة المرور لإنشاء الحساب.");
+
+            const { data, error } = await supabaseClient.auth.signUp({ email, password });
+            if (error) {
+                alert("خطأ في التسجيل: " + error.message);
+            } else {
+                if (data.user) {
+                    grantAccessToApp(data.user);
+                    alert("🎉 تم إنشاء الحساب بنجاح ودخولك إلى المنصة برصيد يبدأ من الصفر!");
+                } else {
+                    alert("🎉 تم التسجيل بنجاح! يمكنك الآن تسجيل الدخول.");
+                }
+            }
+        }
+
+        async function loginWithFacebook() {
+            const { error } = await supabaseClient.auth.signInWithOAuth({
+                provider: 'facebook',
+                options: { redirectTo: window.location.origin }
+            });
+            if (error) alert("خطأ في ربط فيسبوك: " + error.message);
+        }
+
+        function loginAsGuest() {
+            const randomGuestId = Math.floor(100000 + Math.random() * 900000);
+            currentUser = {
+                user_metadata: {
+                    full_name: `زائر_${randomGuestId}`,
+                    avatar_url: 'https://cdn-icons-png.flaticon.com/512/847/847969.png'
+                },
+                email: `guest_${randomGuestId}@dedelive.com`
+            };
+            grantAccessToApp(currentUser);
+            alert(`👋 أهلاً بك! تم دخولك كزائر برصيد 0 كوينز.`);
+        }
 
         function playHumanFemaleVoiceWithEcho() {
             if (welcomeAudioPlayed) return;
@@ -449,64 +520,6 @@
                 delayNode.connect(audioCtx.destination);
                 audio.play().catch(() => {});
             } catch (e) {}
-        }
-
-        function openEmailLoginModal() {
-            document.getElementById('email-login-modal').classList.remove('hidden');
-        }
-
-        async function executeEmailLogin() {
-            const email = document.getElementById('user-email-input').value;
-            const password = document.getElementById('user-password-input').value;
-            if (!email || !password) return alert("يرجى إدخال البريد الإلكتروني وكلمة المرور.");
-
-            const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-            if (error) {
-                alert("خطأ في تسجيل الدخول: " + error.message);
-            } else {
-                currentUser = data.user;
-                userCoins = 0;
-                updateUserInterface(currentUser);
-                closeModal('email-login-modal');
-                alert("✨ أهلاً بك! تم تسجيل الدخول بنجاح.");
-            }
-        }
-
-        async function executeEmailSignup() {
-            const email = document.getElementById('user-email-input').value;
-            const password = document.getElementById('user-password-input').value;
-            if (!email || !password) return alert("يرجى إدخال البريد الإلكتروني وكلمة المرور لإنشاء الحساب.");
-
-            const { data, error } = await supabaseClient.auth.signUp({ email, password });
-            if (error) {
-                alert("خطأ في التسجيل: " + error.message);
-            } else {
-                alert("🎉 تم إنشاء الحساب بنجاح! يرجى التحقق من بريدك الإلكتروني لتأكيد الحساب إن طُلب منك.");
-                closeModal('email-login-modal');
-            }
-        }
-
-        async function loginWithFacebook() {
-            const { error } = await supabaseClient.auth.signInWithOAuth({
-                provider: 'facebook',
-                options: { redirectTo: window.location.origin }
-            });
-            if (error) alert("خطأ في ربط فيسبوك: " + error.message);
-        }
-
-        // تسجيل الدخول كزائر برصيد يبدأ من الصفر
-        function loginAsGuest() {
-            const randomGuestId = Math.floor(100000 + Math.random() * 900000);
-            currentUser = {
-                user_metadata: {
-                    full_name: `زائر_${randomGuestId}`,
-                    avatar_url: 'https://cdn-icons-png.flaticon.com/512/847/847969.png'
-                },
-                email: `guest_${randomGuestId}@dedelive.com`
-            };
-            userCoins = 0; 
-            updateUserInterface(currentUser);
-            alert(`👋 أهلاً بك! تم تسجيل دخولك كزائر برصيد 0 كوينز.`);
         }
 
         function updateUserInterface(user) {

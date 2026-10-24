@@ -33,27 +33,29 @@
             border-bottom: 1px solid rgba(236, 72, 153, 0.25);
         }
         
-        @keyframes romanticSoundWave {
-            0% { box-shadow: 0 0 0 0 rgba(236, 72, 153, 0.8); }
-            70% { box-shadow: 0 0 0 20px rgba(236, 72, 153, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(236, 72, 153, 0); }
-        }
-        .speaking-animation { animation: romanticSoundWave 1.4s infinite; border-color: #ec4899 !important; }
-        
         @keyframes giftPopup {
-            0% { transform: scale(0.5); opacity: 0; }
-            50% { transform: scale(1.1); opacity: 1; }
-            100% { transform: scale(1); opacity: 0.95; }
+            0% { transform: scale(0.3) translateY(50px); opacity: 0; }
+            50% { transform: scale(1.15) translateY(-10px); opacity: 1; }
+            100% { transform: scale(1) translateY(0); opacity: 0.95; }
         }
-        .gift-banner { animation: giftPopup 3s ease-in-out forwards; }
+        .gift-animation { animation: giftPopup 2.5s ease-in-out forwards; }
+
+        @keyframes bigBossBanner {
+            0% { transform: scale(0.5); opacity: 0; }
+            20% { transform: scale(1.05); opacity: 1; }
+            80% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(0.8); opacity: 0; }
+        }
+        .big-boss-announcement { animation: bigBossBanner 4s ease-in-out forwards; }
+
         .vip-badge { background: linear-gradient(135deg, #f59e0b, #d97706); text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
-        
         .theme-night { background: rgba(20, 8, 28, 0.65); }
-        .theme-tarab { background: linear-gradient(to bottom, rgba(126, 34, 206, 0.4), rgba(15, 5, 20, 0.85)); }
-        .theme-sunset { background: linear-gradient(to bottom, rgba(190, 18, 60, 0.4), rgba(15, 5, 20, 0.85)); }
     </style>
 </head>
 <body class="flex flex-col h-screen" onclick="playHumanFemaleVoiceWithEcho()">
+
+    <!-- حاوية التأثيرات الكبرى على الشاشة (الهدايا الفخمة وإعلان الكبير) -->
+    <div id="screen-effects-container" class="fixed inset-0 pointer-events-none z-50 flex flex-col items-center justify-center overflow-hidden"></div>
 
     <!-- 1. الشريط العلوي Navbar -->
     <header class="h-20 glass-nav px-6 flex items-center justify-between z-20">
@@ -193,111 +195,52 @@
         </main>
     </div>
 
-    <!-- 💎 نافذة كازينو روبرت (سيتم تفعيل الكازينو قريباً) -->
+    <!-- 🎁 نافذة متجر الهدايا الاحترافية داخل الروم -->
+    <div id="gift-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="glass-card w-full max-w-lg p-6 rounded-3xl border border-pink-500/30 space-y-4">
+            <div class="flex justify-between items-center border-b border-pink-500/20 pb-3">
+                <h3 class="text-lg font-bold text-pink-300 flex items-center gap-2"><i class="fa-solid fa-gift text-amber-400"></i> متجر الهدايا الفاخرة</h3>
+                <button onclick="closeModal('gift-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <p class="text-xs text-pink-200/80">اختر الهدية لإرسالها للمضيف وتوليد تأثيرات مذهلة على الشاشة:</p>
+            <div id="gifts-grid" class="grid grid-cols-3 gap-3 max-h-72 overflow-y-auto p-1">
+                <!-- يتم تعبئة الهدايا برمجياً -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 💎 نافذة كازينو روبرت (قريباً) -->
     <div id="games-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="glass-card w-full max-w-md p-8 rounded-3xl border border-amber-500/40 space-y-6 text-center shadow-2xl">
             <div class="flex justify-between items-center border-b border-pink-500/20 pb-3">
-                <h3 class="text-lg font-bold flex items-center gap-2 text-amber-400">
-                    <i class="fa-solid fa-gem"></i> كازينو روبرت 💎
-                </h3>
+                <h3 class="text-lg font-bold flex items-center gap-2 text-amber-400"><i class="fa-solid fa-gem"></i> كازينو روبرت 💎</h3>
                 <button onclick="closeModal('games-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
-
             <div class="py-8 space-y-4">
-                <div class="w-20 h-20 mx-auto rounded-full bg-amber-500/20 border-2 border-amber-400 flex items-center justify-center text-3xl animate-pulse text-amber-400 shadow-lg shadow-amber-500/30">
-                    🎰
-                </div>
+                <div class="w-20 h-20 mx-auto rounded-full bg-amber-500/20 border-2 border-amber-400 flex items-center justify-center text-3xl animate-pulse text-amber-400 shadow-lg">🎰</div>
                 <h4 class="text-2xl font-black text-white tracking-wide">سيتم تفعيل الكازينو قريباً</h4>
-                <p class="text-xs text-pink-200/80 leading-relaxed px-4">
-                    نعمل حالياً على تجهيز أقوى ألعاب كازينو روبرت الحصرية بالكوينزات لتجربة ممتعة وآمنة كلياً. ترقبونا قريباً!
-                </p>
+                <p class="text-xs text-pink-200/80 leading-relaxed px-4">نعمل حالياً على تجهيز أقوى ألعاب كازينو روبرت الحصرية بالكوينزات. ترقبونا قريباً!</p>
             </div>
-
-            <button onclick="closeModal('games-modal')" class="w-full py-3 bg-gradient-to-r from-amber-500 to-rose-600 hover:from-amber-600 text-slate-950 font-black rounded-xl text-xs transition shadow-lg tracking-wider">
-                حسناً، فهمت
-            </button>
+            <button onclick="closeModal('games-modal')" class="w-full py-3 bg-gradient-to-r from-amber-500 to-rose-600 text-slate-950 font-black rounded-xl text-xs transition shadow-lg">حسناً، فهمت</button>
         </div>
     </div>
 
-    <!-- 📚 نافذة دليل شرح التطبيق الشامل والتفصيلي -->
+    <!-- 📚 نافذة الدليل الشامل -->
     <div id="about-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="glass-card w-full max-w-2xl p-6 rounded-3xl border border-pink-500/30 space-y-5 max-h-[85vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b border-pink-500/20 pb-3">
-                <h3 class="text-xl font-bold flex items-center gap-2 text-pink-300">
-                    <i class="fa-solid fa-book-open text-amber-400"></i> دليل منصة DEDE LIVE والتفاصيل الرسمية
-                </h3>
+                <h3 class="text-xl font-bold flex items-center gap-2 text-pink-300"><i class="fa-solid fa-book-open text-amber-400"></i> دليل منصة DEDE LIVE والتفاصيل الرسمية</h3>
                 <button onclick="closeModal('about-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
-
             <div class="p-4 bg-pink-500/10 rounded-2xl border border-pink-500/30 text-xs text-pink-200 flex items-center gap-3">
                 <span class="text-3xl">🌍</span>
-                <div>تطبيق <b>DEDE LIVE</b> يضم أكثر من <b>100,000 مستخدم</b> نشط يتواصلون ويلعبون يومياً مع دعم مالي مباشر وآمن كلياً[cite: 1].</div>
+                <div>تطبيق <b>DEDE LIVE</b> يضم أكثر من <b>100,000 مستخدم</b> نشط يتواصلون ويلعبون يومياً[cite: 1].</div>
             </div>
-
-            <div class="space-y-4 text-xs leading-relaxed">
-                <div class="bg-rose-950/40 p-4 rounded-2xl border border-pink-500/20 space-y-2">
-                    <h4 class="text-sm font-bold text-amber-300 flex items-center gap-2">
-                        <i class="fa-solid fa-coins"></i> 1. النظام الاقتصادي والعملة (الكوينزات 🪙)
-                    </h4>
-                    <p class="text-pink-100/90">
-                        يعتمد التطبيق على عملة الكوينزات (Coins) الرسمية لشراء الهدايا ودعم الرومات[cite: 1].
-                        <br>• <b>سعر صرف الليرة السورية المعتمد:</b> 1 دولار = 14,300 ل.س[cite: 1].
-                        <br>• <b>معادلة الشحن والإيداع:</b> كل 1$ شحن يمنحك <b>40,000 كوينز</b> (خصم 1% عمولة إيداع)[cite: 1].
-                    </p>
-                </div>
-
-                <div class="bg-rose-950/40 p-4 rounded-2xl border border-pink-500/20 space-y-2">
-                    <h4 class="text-sm font-bold text-emerald-400 flex items-center gap-2">
-                        <i class="fa-solid fa-wallet"></i> 2. شروط وضوابط السحب المالي (Cash-Out)
-                    </h4>
-                    <p class="text-pink-100/90">
-                        يستطيع المضيفون والداعمون تحويل أرباحهم من الكوينزات إلى أموال حقيقية بكل سهولة.
-                        <br>• <b>معادلة السحب الرسمية:</b> كل <b>700,000 كوينز = 10 دولار أمريكي</b>[cite: 1].
-                        <br>• تُحول المبالغ المسحوبة حصراً وبشكل فورياً عبر محفظة <b>شام كاش (Sham Cash)</b>[cite: 1].
-                    </p>
-                </div>
-
-                <div class="bg-rose-950/40 p-4 rounded-2xl border border-pink-500/20 space-y-2">
-                    <h4 class="text-sm font-bold text-pink-400 flex items-center gap-2">
-                        <i class="fa-solid fa-briefcase"></i> 3. قسم الوكلاء والداعمين المعتمدين (Agencies)
-                    </h4>
-                    <p class="text-pink-100/90">
-                        • <b>الوكلاء:</b> يلتزم الوكيل بإدارة أهداف المضيفين والتأكد من التزامهم بقواعد البث الشريف، مقابل نسبة أرباح ومكافآت شهرية[cite: 1].
-                        <br>• <b>الداعمون:</b> يحصل كبار الداعمين على أوسمة ذهبية وأولوية في صدارة قائمة المتصدرين مع دعم فني مخصص.
-                    </p>
-                </div>
-
-                <div class="bg-rose-950/40 p-4 rounded-2xl border border-pink-500/20 space-y-2">
-                    <h4 class="text-sm font-bold text-amber-400 flex items-center gap-2">
-                        <i class="fa-brands fa-whatsapp text-emerald-400"></i> 4. الدعم الفني والشكاوي المباشرة
-                    </h4>
-                    <p class="text-pink-100/90">
-                        لأي استفسارات بخصوص عمليات الإيداع أو السحب أو طلبات التوثيق والوكالات، يمكنك التواصل مباشرة مع الإدارة على الرقم المعتمد عبر واتساب: <a href="https://wa.me/963993918672" target="_blank" class="text-emerald-400 font-bold underline">+963993918672</a>[cite: 1].
-                    </p>
-                </div>
-            </div>
-
-            <button onclick="acceptTerms()" class="w-full py-3 bg-gradient-to-r from-pink-600 via-rose-600 to-purple-600 text-white font-bold rounded-xl text-xs transition shadow-lg">
-                أوافق على جميع الشروط والدليل المعتمد
-            </button>
+            <button onclick="acceptTerms()" class="w-full py-3 bg-gradient-to-r from-pink-600 to-purple-600 text-white font-bold rounded-xl text-xs transition">أوافق على الشروط</button>
         </div>
     </div>
 
-    <!-- باقي النوافذ الهدايا والإيداع والسحب -->
-    <div id="gift-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-        <div class="glass-card w-full max-w-lg p-6 rounded-3xl border border-pink-500/30 space-y-4">
-            <div class="flex justify-between items-center mb-2"><h3 class="text-lg font-bold text-pink-300">متجر الهدايا</h3><button onclick="closeModal('gift-modal')" class="text-slate-400"><i class="fa-solid fa-xmark text-xl"></i></button></div>
-            <div class="grid grid-cols-3 gap-3 max-h-64 overflow-y-auto p-1">
-                <div onclick="sendGift('🌹 باقة ورد', 1000)" class="glass-card p-3 rounded-xl border border-pink-500/30 hover:border-pink-500 cursor-pointer text-center">
-                    <div class="text-3xl mb-1">🌹</div><div class="text-xs font-bold text-white">وردة</div><div class="text-[10px] text-amber-400 mt-1">🪙 1,000</div>
-                </div>
-                <div onclick="sendGift('💖 قلب متألق', 5000)" class="glass-card p-3 rounded-xl border border-pink-500/30 hover:border-pink-500 cursor-pointer text-center">
-                    <div class="text-3xl mb-1">💖</div><div class="text-xs font-bold text-white">قلب</div><div class="text-[10px] text-amber-400 mt-1">🪙 5,000</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    <!-- نوافذ الإيداع والسحب والمتصدرين -->
     <div id="deposit-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="glass-card w-full max-w-md p-6 rounded-3xl border border-pink-500/30 space-y-4">
             <div class="flex justify-between items-center"><h3 class="text-lg font-bold text-emerald-400">شحن كوينزات</h3><button onclick="closeModal('deposit-modal')" class="text-slate-400"><i class="fa-solid fa-xmark text-xl"></i></button></div>
@@ -350,10 +293,19 @@
         
         let currentUser = null;
         let userCoins = 400000;
-        let localAudioTrack = null;
-        let isMicActive = false;
         let currentTheme = 'theme-night';
         let welcomeAudioPlayed = false;
+        let activeRoomHost = 'أبو أحمد';
+
+        // قائمة الهدايا الاحترافية مع الأسماء والأيقونات والأصوات الخاصة بها
+        const giftsList = [
+            { id: 1, name: "وردة جورية", icon: "🌹", price: 1000, sound: "https://actions.google.com/sounds/v1/cartoon/bell_ringing.ogg" },
+            { id: 2, name: "قلب متألق", icon: "💖", price: 5000, sound: "https://actions.google.com/sounds/v1/cartoon/wood_plank_flick.ogg" },
+            { id: 3, name: "تاج ملكي", icon: "👑", price: 25000, sound: "https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg" },
+            { id: 4, name: "سيارة فاخرة", icon: "🏎️", price: 50000, sound: "https://actions.google.com/sounds/v1/vehicles/car_accelerate.ogg" },
+            { id: 5, name: "صاروخ الفضاء", icon: "🚀", price: 100000, sound: "https://actions.google.com/sounds/v1/science_fiction/laser_charge.ogg" },
+            { id: 6, name: "قصر الأحلام", icon: "🏰", price: 500000, sound: "https://actions.google.com/sounds/v1/ambiences/large_room.ogg" }
+        ];
 
         document.addEventListener("DOMContentLoaded", async () => {
             const { data: { session } } = await supabaseClient.auth.getSession();
@@ -361,23 +313,21 @@
                 currentUser = session.user;
                 updateUserInterface(currentUser);
             }
+            populateGiftsModal();
         });
 
-        // تشغيل صوت الترحيب البشري الأنثوي المعالَج مع تأثير الصدى السينمائي
+        // تشغيل صوت الترحيب البشري الأنثوي المعالَج مع الصدى
         function playHumanFemaleVoiceWithEcho() {
             if (welcomeAudioPlayed) return;
             welcomeAudioPlayed = true;
 
             try {
                 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const humanFemaleAudioUrl = "https://actions.google.com/sounds/v1/human_voices/female_voice_welcome.ogg"; 
-                const audio = new Audio(humanFemaleAudioUrl);
+                const audio = new Audio("https://actions.google.com/sounds/v1/human_voices/female_voice_welcome.ogg");
                 audio.crossOrigin = "anonymous";
-
                 const source = audioCtx.createMediaElementSource(audio);
                 const delayNode = audioCtx.createDelay();
                 delayNode.delayTime.value = 0.25;
-
                 const feedbackNode = audioCtx.createGain();
                 feedbackNode.gain.value = 0.35;
 
@@ -387,20 +337,8 @@
                 feedbackNode.connect(delayNode);
                 delayNode.connect(audioCtx.destination);
 
-                audio.play().catch(() => {
-                    const msg = new SpeechSynthesisUtterance('Welcome to DEDE LIVE');
-                    msg.lang = 'en-US';
-                    msg.pitch = 1.3;
-                    msg.rate = 0.85;
-                    window.speechSynthesis.speak(msg);
-                });
-            } catch (e) {
-                const msg = new SpeechSynthesisUtterance('Welcome to DEDE LIVE');
-                msg.lang = 'en-US';
-                msg.pitch = 1.3;
-                msg.rate = 0.85;
-                window.speechSynthesis.speak(msg);
-            }
+                audio.play().catch(() => {});
+            } catch (e) {}
         }
 
         async function loginWithGoogle() {
@@ -429,6 +367,90 @@
             `;
         }
 
+        function populateGiftsModal() {
+            const grid = document.getElementById('gifts-grid');
+            if (!grid) return;
+            grid.innerHTML = giftsList.map(g => `
+                <div onclick="sendGift(${g.id})" class="glass-card p-3 rounded-2xl border border-pink-500/30 hover:border-amber-400 cursor-pointer text-center transition group">
+                    <div class="text-3xl mb-1 group-hover:scale-125 transition duration-300">${g.icon}</div>
+                    <div class="text-xs font-bold text-white">${g.name}</div>
+                    <div class="text-[10px] text-amber-400 mt-1 font-mono">🪙 ${g.price.toLocaleString()}</div>
+                </div>
+            `).join('');
+        }
+
+        function sendGift(giftId) {
+            const gift = giftsList.find(g => g.id === giftId);
+            if (!gift) return;
+
+            if (userCoins < gift.price) {
+                return alert("رصيد الكوينزات لديك غير كافٍ لإرسال هذه الهدية الفاخرة!");
+            }
+
+            userCoins -= gift.price;
+            document.getElementById('user-balance').innerText = userCoins.toLocaleString() + " كوينز";
+            closeModal('gift-modal');
+
+            // جلب اسم المستخدم الحالي
+            const senderName = currentUser ? (currentUser.user_metadata?.full_name || currentUser.email.split('@')[0]) : "محمد سعد الدين";
+            const receiverName = activeRoomHost;
+
+            // تشغيل التأثير الصوتي الخاص بالهدية
+            try {
+                const giftAudio = new Audio(gift.sound);
+                giftAudio.play().catch(() => {});
+            } catch(e) {}
+
+            // إظهار تأثير الهدية على الشاشة (للمرسل والمستلم)
+            showScreenGiftEffect(senderName, receiverName, gift);
+
+            // إذا كانت الهدية غالية جداً (أكبر من أو تساوي 50,000 كوينز)، يتم إظهار إعلان الكبير الفخم على الشاشة!
+            if (gift.price >= 50000) {
+                showBigBossAnnouncement(senderName, gift);
+            }
+
+            // إضافة رسالة في شات الروم الفعال إذا كان موجوداً
+            const chatBox = document.getElementById('room-chat-messages');
+            if (chatBox) {
+                const msgDiv = document.createElement('div');
+                msgDiv.className = "p-2 bg-pink-950/60 rounded-xl border border-pink-500/30 text-xs text-pink-200 animate-pulse";
+                msgDiv.innerHTML = `🎁 أرسل <b class="text-amber-300">${senderName}</b> إلى <b class="text-pink-300">${receiverName}</b> هدية <b class="text-white">${gift.icon} ${gift.name}</b> بقيمة <span class="text-amber-400 font-bold">${gift.price.toLocaleString()} كوينز</span>`;
+                chatBox.appendChild(msgDiv);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+        }
+
+        function showScreenGiftEffect(sender, receiver, gift) {
+            const container = document.getElementById('screen-effects-container');
+            const el = document.createElement('div');
+            el.className = "gift-animation glass-card px-8 py-5 rounded-3xl border-2 border-amber-400 shadow-2xl bg-slate-950/90 text-center space-y-2 mb-4 pointer-events-none";
+            el.innerHTML = `
+                <div class="text-5xl animate-bounce">${gift.icon}</div>
+                <div class="text-sm font-bold text-pink-200"><span class="text-amber-300">${sender}</span> أرسل هدية فاخرة</div>
+                <div class="text-xl font-black text-white">${gift.name} (${gift.price.toLocaleString()} 🪙)</div>
+                <div class="text-xs text-pink-300">إلى المضيف: <span class="text-amber-400 font-bold">${receiver}</span></div>
+            `;
+            container.appendChild(el);
+            setTimeout(() => { el.remove(); }, 3000);
+        }
+
+        function showBigBossAnnouncement(sender, gift) {
+            const container = document.getElementById('screen-effects-container');
+            const el = document.createElement('div');
+            el.className = "big-boss-announcement absolute inset-x-4 top-1/4 bg-gradient-to-r from-amber-600 via-rose-600 to-purple-700 p-6 rounded-3xl border-4 border-amber-300 shadow-[0_0_50px_rgba(245,158,11,0.8)] text-center space-y-3 z-50";
+            el.innerHTML = `
+                <div class="text-xs tracking-widest text-amber-200 font-black uppercase">🔥 حدث ملكي استثنائي 🔥</div>
+                <div class="text-3xl md:text-5xl font-black text-white drop-shadow-lg">
+                    <span class="text-amber-300 underline">${sender}</span> سواهااااااااااااا الكبيررررررررررر! 👑
+                </div>
+                <div class="text-lg text-pink-100 font-bold">
+                    قام برمي هدية أسطورية (${gift.icon} ${gift.name}) بقيمة <span class="text-amber-300 font-mono text-2xl">${gift.price.toLocaleString()} كوينز</span>!
+                </div>
+            `;
+            container.appendChild(el);
+            setTimeout(() => { el.remove(); }, 4000);
+        }
+
         function calculateDepositCoins() {
             const curr = document.getElementById('deposit-currency').value;
             const amount = parseFloat(document.getElementById('deposit-amount').value) || 0;
@@ -451,7 +473,7 @@
         function executeWithdraw() {
             const coins = parseInt(document.getElementById('withdraw-coins').value);
             const addr = document.getElementById('withdraw-address').value;
-            if (!addr || isNaN(coins) || coins < 700000) return alert("الحد الأدنى للسحب 700,000 كوينز.");
+            if (!addr || isNaN(coins) || coins < 700000) return alert("الحد الأدنى للسحب 700,000 كوينز[cite: 1].");
             if (coins > userCoins) return alert("رصيدك غير كافٍ.");
             userCoins -= coins;
             document.getElementById('user-balance').innerText = userCoins.toLocaleString() + " كوينز";
@@ -459,15 +481,8 @@
             closeModal('withdraw-modal');
         }
 
-        function sendGift(name, cost) {
-            if (userCoins < cost) return alert("رصيدك غير كافٍ.");
-            userCoins -= cost;
-            document.getElementById('user-balance').innerText = userCoins.toLocaleString() + " كوينز";
-            closeModal('gift-modal');
-            alert(`🎁 أرسلت هدية (${name}) بقيمة ${cost.toLocaleString()} كوينز بنجاح!`);
-        }
-
         function joinLiveRoom(title, host) {
+            activeRoomHost = host;
             const mainArea = document.getElementById('main-content-area');
             mainArea.innerHTML = `
                 <div class="flex flex-col h-full space-y-4 p-3 rounded-3xl ${currentTheme} border border-pink-500/30">
@@ -492,13 +507,13 @@
                     </div>
 
                     <div class="flex-1 glass-card rounded-2xl p-4 flex flex-col justify-between">
-                        <div class="space-y-2 overflow-y-auto max-h-40 text-xs text-pink-100/90">
-                            <div class="p-2 bg-pink-950/40 rounded-xl">💖 مرحباً بك في الروم الصوتي! تواصل بحب وأرسل الهدايا.</div>
+                        <div id="room-chat-messages" class="space-y-2 overflow-y-auto max-h-40 text-xs text-pink-100/90">
+                            <div class="p-2 bg-pink-950/40 rounded-xl">💖 مرحباً بك في الروم الصوتي! تواصل بحب وأرسل الهدايا الفاخرة.</div>
                         </div>
                         <div class="flex items-center gap-3 pt-3 border-t border-pink-500/20">
                             <button onclick="alert('✋ تم رفع اليد')" class="px-3 py-2 bg-pink-500/20 text-pink-200 rounded-xl text-xs font-bold border border-pink-500/30">✋ رفع اليد</button>
                             <input type="text" placeholder="اكتب تعليقاً..." class="flex-1 bg-rose-950/50 border rounded-xl px-4 py-2 text-xs text-white">
-                            <button onclick="openGiftModal()" class="px-4 py-2 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-xl text-xs font-bold">هدية</button>
+                            <button onclick="openGiftModal()" class="px-4 py-2 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-xl text-xs font-bold shadow-lg animate-pulse">🎁 الهدايا</button>
                         </div>
                     </div>
                 </div>
@@ -520,7 +535,8 @@
         function createNewLiveRoom() {
             const title = document.getElementById('new-room-title').value || 'روم تعارف جديد';
             closeModal('create-room-modal');
-            joinLiveRoom(title, 'أنت (المضيف)');
+            let hostName = currentUser ? (currentUser.user_metadata?.full_name || currentUser.email.split('@')[0]) : "محمد سعد الدين";
+            joinLiveRoom(title, hostName);
         }
     </script>
 </body>

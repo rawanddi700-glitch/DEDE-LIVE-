@@ -64,7 +64,7 @@
     <!-- حاوية التأثيرات على الشاشة -->
     <div id="screen-effects-container" class="fixed inset-0 pointer-events-none z-50 flex flex-col items-center justify-center overflow-hidden"></div>
 
-    <!-- 🛑 شاشة تسجيل الدخول الإجبارية عند فتح الموقع (تختفي فور تسجيل الدخول) -->
+    <!-- 🛑 شاشة تسجيل الدخول الإجبارية عند فتح الموقع -->
     <div id="auth-gate-screen" class="fixed inset-0 bg-[#09020d]/95 backdrop-blur-2xl z-50 flex items-center justify-center p-4">
         <div class="glass-card w-full max-w-md p-8 rounded-3xl border border-pink-500/40 space-y-6 text-center shadow-2xl">
             <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-tr from-pink-600 via-rose-500 to-purple-600 flex items-center justify-center font-black text-3xl text-white shadow-lg shadow-pink-500/40 border border-pink-300/40">
@@ -137,7 +137,7 @@
                 <i class="fa-brands fa-whatsapp text-sm"></i> الدعم والشكاوي
             </a>
             <div id="auth-section" class="flex items-center gap-2 border-r border-pink-500/30 pr-3">
-                <!-- يتم تعبئتها ديناميكياً ببيانات المستخدم -->
+                <!-- بيانات المستخدم -->
             </div>
         </div>
     </header>
@@ -178,7 +178,7 @@
         <!-- 3. المحتوى الرئيسي -->
         <main id="main-content-area" class="flex-1 overflow-y-auto p-6 space-y-8">
             
-            <!-- 🌟 شريط مقولة الأب المؤسس روبرت المتحرك -->
+            <!-- شريط مقولة الأب المؤسس روبرت المتحرك -->
             <div class="w-full overflow-hidden bg-gradient-to-r from-purple-950 via-rose-950 to-indigo-950 py-3 rounded-2xl border border-pink-500/30 shadow-2xl relative z-10">
                 <style>
                     @keyframes marquee {
@@ -197,7 +197,6 @@
                     </span>
                 </div>
             </div>
-            <!-- نهاية الشريط -->
 
             <div class="relative rounded-3xl overflow-hidden p-8 bg-gradient-to-r from-pink-950/60 via-purple-950/80 to-rose-950/60 border border-pink-500/30 shadow-2xl">
                 <div class="max-w-xl space-y-3 z-10 relative">
@@ -216,7 +215,7 @@
                 </div>
 
                 <div id="rooms-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- يتم جلب الرومات وعرضها هنا ديناميكياً من قاعدة البيانات -->
+                    <!-- الرومات الديناميكية -->
                 </div>
             </div>
         </main>
@@ -235,7 +234,7 @@
         </div>
     </div>
 
-    <!-- 🎁 نافذة متجر الهدايا (100 هدية) -->
+    <!-- نافذة الهدايا -->
     <div id="gift-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="glass-card w-full max-w-2xl p-6 rounded-3xl border border-pink-500/30 space-y-4 max-h-[85vh] flex flex-col">
             <div class="flex justify-between items-center border-b border-pink-500/20 pb-3">
@@ -262,7 +261,7 @@
     <div id="mod-request-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="glass-card w-full max-w-md p-6 rounded-3xl border border-pink-500/30 space-y-4 text-center">
             <h3 class="text-lg font-bold text-amber-400">طلب الحصول على إشراف الروم</h3>
-            <p class="text-xs text-pink-200">بما أنك عضو معتمد، هل تود طلب صلاحيات المشرف الكاملة (تشغيل الأغاني وطرد الأعضاء)?</p>
+            <p class="text-xs text-pink-200">بما أنك عضو معتمد، هل تود طلب صلاحيات المشرف الكاملة؟</p>
             <div class="flex gap-3 pt-2">
                 <button onclick="submitModRequest()" class="flex-1 py-2.5 bg-emerald-600 text-white rounded-xl font-bold text-xs">إرسال طلب الإشراف</button>
                 <button onclick="closeModal('mod-request-modal')" class="flex-1 py-2.5 bg-slate-800 text-slate-300 rounded-xl text-xs">إلغاء</button>
@@ -270,14 +269,13 @@
         </div>
     </div>
 
-    <!-- نافذة تشغيل الأغاني من الهاتف أو الكمبيوتر -->
+    <!-- نافذة تشغيل الأغاني -->
     <div id="music-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="glass-card w-full max-w-md p-6 rounded-3xl border border-pink-500/30 space-y-5 text-center">
             <h3 class="text-lg font-bold text-pink-300 flex items-center justify-center gap-2"><i class="fa-solid fa-music text-amber-400"></i> مشغل الأغاني الداخلي</h3>
-            <p class="text-xs text-pink-200">قم بتصدير وتشغيل أغنية من هاتفك أو حاسوبك ليسمعها الجميع بالروم:</p>
+            <p class="text-xs text-pink-200">قم بتصدير وتشغيل أغنية من هاتفك أو حاسوبك:</p>
             
             <div class="space-y-3 bg-rose-950/40 p-4 rounded-2xl border border-pink-500/20">
-                <label class="block text-xs font-bold text-amber-300">اختر ملف صوتي من جهازك (موبايل/كمبيوتر):</label>
                 <input type="file" id="local-audio-file" accept="audio/*" class="w-full text-xs text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-pink-600 file:text-white hover:file:bg-pink-700 cursor-pointer">
             </div>
 
@@ -286,12 +284,6 @@
                 <button onclick="pauseLocalAudio()" class="py-2.5 px-4 bg-amber-600 text-slate-950 rounded-xl font-bold text-xs shadow-lg">⏸ إيقاف مؤقت</button>
                 <button onclick="stopLocalAudio()" class="py-2.5 px-4 bg-red-600 text-white rounded-xl font-bold text-xs shadow-lg">⏹ إيقاف تام</button>
             </div>
-
-            <div class="space-y-1 pt-2">
-                <label class="text-[11px] text-pink-200 block">التحكم بمستوى الصوت:</label>
-                <input type="range" id="audio-volume-slider" min="0" max="1" step="0.05" value="1" onchange="adjustAudioVolume(this.value)" class="w-full accent-pink-500 cursor-pointer">
-            </div>
-
             <button onclick="closeModal('music-modal')" class="w-full py-2.5 bg-slate-800 text-slate-300 rounded-xl text-xs">إغلاق</button>
         </div>
     </div>
@@ -310,28 +302,22 @@
         </div>
     </div>
 
-    <!-- النوافذ الثابتة الأخرى -->
+    <!-- النوافذ الأخرى -->
     <div id="games-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="glass-card w-full max-w-md p-8 rounded-3xl border border-amber-500/40 space-y-6 text-center shadow-2xl">
             <div class="flex justify-between items-center border-b border-pink-500/20 pb-3">
                 <h3 class="text-lg font-bold flex items-center gap-2 text-amber-400"><i class="fa-solid fa-gem"></i> كازينو روبرت 💎</h3>
                 <button onclick="closeModal('games-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
-            <div class="py-8 space-y-4">
-                <div class="w-20 h-20 mx-auto rounded-full bg-amber-500/20 border-2 border-amber-400 flex items-center justify-center text-3xl animate-pulse text-amber-400">🎰</div>
-                <h4 class="text-2xl font-black text-white tracking-wide">سيتم تفعيل الكازينو قريباً</h4>
-            </div>
+            <div class="py-8 space-y-4"><h4 class="text-2xl font-black text-white">سيتم تفعيل الكازينو قريباً</h4></div>
             <button onclick="closeModal('games-modal')" class="w-full py-3 bg-gradient-to-r from-amber-500 to-rose-600 text-slate-950 font-black rounded-xl text-xs">حسناً</button>
         </div>
     </div>
 
     <div id="about-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="glass-card w-full max-w-2xl p-6 rounded-3xl border border-pink-500/30 space-y-5 max-h-[85vh] overflow-y-auto">
-            <div class="flex justify-between items-center border-b border-pink-500/20 pb-3">
-                <h3 class="text-xl font-bold flex items-center gap-2 text-pink-300"><i class="fa-solid fa-book-open text-amber-400"></i> دليل DEDE LIVE</h3>
-                <button onclick="closeModal('about-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
-            </div>
-            <div class="text-xs text-pink-200">يضم التطبيق أكثر من 100,000 مستخدم مع غرف عامة وخاصة وتسجيل آمن عبر البريد الإلكتروني أو فيسبوك أو الزوار الوهميين. الرصيد يبدأ من الصفر ولا يرتفع إلا بالشحن الحقيقي.</div>
+            <div class="flex justify-between items-center border-b border-pink-500/20 pb-3"><h3 class="text-xl font-bold text-pink-300">دليل DEDE LIVE</h3><button onclick="closeModal('about-modal')" class="text-slate-400"><i class="fa-solid fa-xmark text-xl"></i></button></div>
+            <div class="text-xs text-pink-200">الرصيد يبدأ حصرياً من الصفر ويتم شحنه عبر شام كاش.</div>
             <button onclick="closeModal('about-modal')" class="w-full py-3 bg-pink-600 text-white rounded-xl font-bold text-xs">إغلاق</button>
         </div>
     </div>
@@ -341,7 +327,6 @@
             <div class="flex justify-between items-center"><h3 class="text-lg font-bold text-emerald-400">شحن كوينزات</h3><button onclick="closeModal('deposit-modal')" class="text-slate-400"><i class="fa-solid fa-xmark text-xl"></i></button></div>
             <div class="bg-rose-950/50 p-3 rounded-xl border text-xs space-y-1">
                 <div>محفظة شام كاش: <span class="text-emerald-400 font-mono select-all">c97ee7954214e0b9c32a91d6f07a93ba</span></div>
-                <div class="text-amber-300">1$ = 40,000 كوينز (سعر الصرف 14,300 ل.س)</div>
             </div>
             <select id="deposit-currency" onchange="calculateDepositCoins()" class="w-full bg-slate-900 border rounded-xl p-2.5 text-xs text-white">
                 <option value="USD">دولار ($)</option>
@@ -357,7 +342,6 @@
     <div id="withdraw-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="glass-card w-full max-w-md p-6 rounded-3xl border border-pink-500/30 space-y-4">
             <div class="flex justify-between items-center"><h3 class="text-lg font-bold text-amber-400">سحب الكوينزات (شام كاش)</h3><button onclick="closeModal('withdraw-modal')" class="text-slate-400"><i class="fa-solid fa-xmark text-xl"></i></button></div>
-            <div class="text-xs text-amber-300">الحد الأدنى 700,000 كوينز = 10$</div>
             <input type="text" id="withdraw-address" placeholder="عنوان محفظة شام كاش" class="w-full bg-slate-900 border rounded-xl p-3 text-sm text-white">
             <input type="number" id="withdraw-coins" placeholder="الكوينزات المراد سحبها" class="w-full bg-slate-900 border rounded-xl p-3 text-sm text-white">
             <button onclick="executeWithdraw()" class="w-full py-3 bg-amber-600 text-white rounded-xl font-bold text-xs">تأكيد السحب</button>
@@ -387,7 +371,6 @@
         let isUserAdminOrMod = false;   
         let localPlayerAudio = null;    
 
-        // قائمة 100 هدية برمجياً
         const giftsList = [];
         const giftCategories = [
             { prefix: "وردة", icons: ["🌹", "🌷", "🌸", "🌺", "🌻", "🌼", "💐"], basePrice: 1000 },
@@ -416,12 +399,19 @@
             }
         });
 
+        // 🔄 مراقبة الجلسة وحالة الحساب وتذكر المستخدم بانتظام
+        supabaseClient.auth.onAuthStateChange((event, session) => {
+            if (session && session.user) {
+                grantAccessToApp(session.user);
+            } else {
+                document.getElementById('auth-gate-screen').classList.remove('hidden');
+            }
+        });
+
         document.addEventListener("DOMContentLoaded", async () => {
             const { data: { session } } = await supabaseClient.auth.getSession();
-            if (session) {
-                currentUser = session.user;
-                userCoins = 0; 
-                grantAccessToApp(currentUser);
+            if (session && session.user) {
+                grantAccessToApp(session.user);
             }
             populateGiftsModal();
             loadActiveRooms();
@@ -430,40 +420,42 @@
         function grantAccessToApp(user) {
             currentUser = user;
             userCoins = 0;
-            document.getElementById('auth-gate-screen').classList.add('hidden'); // إخفاء شاشة التسجيل
+            document.getElementById('auth-gate-screen').classList.add('hidden');
             updateUserInterface(user);
             loadActiveRooms();
         }
 
         async function executeGateLogin() {
-            const email = document.getElementById('gate-email').value;
-            const password = document.getElementById('gate-password').value;
+            const email = document.getElementById('gate-email').value.trim();
+            const password = document.getElementById('gate-password').value.trim();
             if (!email || !password) return alert("يرجى إدخال البريد الإلكتروني وكلمة المرور.");
 
             const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
             if (error) {
                 alert("خطأ في تسجيل الدخول: " + error.message);
-            } else {
+            } else if (data.user) {
                 grantAccessToApp(data.user);
-                alert("✨ أهلاً بك في DEDE LIVE!");
             }
         }
 
         async function executeGateSignup() {
-            const email = document.getElementById('gate-email').value;
-            const password = document.getElementById('gate-password').value;
+            const email = document.getElementById('gate-email').value.trim();
+            const password = document.getElementById('gate-password').value.trim();
             if (!email || !password) return alert("يرجى إدخال البريد الإلكتروني وكلمة المرور لإنشاء الحساب.");
 
             const { data, error } = await supabaseClient.auth.signUp({ email, password });
             if (error) {
                 alert("خطأ في التسجيل: " + error.message);
-            } else {
-                if (data.user) {
-                    grantAccessToApp(data.user);
-                    alert("🎉 تم إنشاء الحساب بنجاح ودخولك إلى المنصة برصيد يبدأ من الصفر!");
-                } else {
-                    alert("🎉 تم التسجيل بنجاح! يمكنك الآن تسجيل الدخول.");
-                }
+                return;
+            }
+
+            // تسجيل الدخول فوراً بعد إنشاء الحساب لتثبيت الجلسة
+            const { data: loginData, error: loginError } = await supabaseClient.auth.signInWithPassword({ email, password });
+            if (loginError) {
+                alert("🎉 تم إنشاء الحساب بنجاح! يرجى تسجيل الدخول الآن ببريدك.");
+            } else if (loginData.user) {
+                grantAccessToApp(loginData.user);
+                alert("🎉 تم إنشاء الحساب ودخولك المنصة بنجاح برصيد 0 كوينز!");
             }
         }
 
@@ -523,10 +515,15 @@
                         <div class="text-xs font-bold text-white flex items-center gap-1">
                             ${name} <span class="text-[9px] vip-badge text-white px-1 rounded">VIP 👑</span>
                         </div>
-                        <button onclick="location.reload();" class="text-[10px] text-pink-400 hover:underline">خروج</button>
+                        <button onclick="logoutUser()" class="text-[10px] text-pink-400 hover:underline">خروج</button>
                     </div>
                 </div>
             `;
+        }
+
+        async function logoutUser() {
+            await supabaseClient.auth.signOut();
+            location.reload();
         }
 
         async function loadActiveRooms() {
@@ -582,7 +579,9 @@
         }
 
         async function createNewLiveRoom() {
-            const title = document.getElementById('new-room-title'].value.trim() || 'روم جديد';
+            const titleInput = document.getElementById('new-room-title');
+            if (!titleInput) return;
+            const title = titleInput.value.trim() || 'روم جديد';
             const roomType = document.getElementById('new-room-type').value;
             const pin = document.getElementById('new-room-pin').value;
             closeModal('create-room-modal');
@@ -678,7 +677,7 @@
             alert("تم إرسال طلب الانضمام كعضو إلى منشئ الروم بانتظار الموافقة...");
             setTimeout(() => {
                 isUserMember = true;
-                alert("🎉 مبروك! وافق منشئ الروم على انضمامك كعضو رسمي. يمكنك الآن طلب الإشراف.");
+                alert("🎉 مبروك! وافق منشئ الروم على انضمامك كعضو رسمي.");
                 updateRoomControlsForUser();
             }, 2000);
         }
@@ -713,7 +712,6 @@
                     <button onclick="triggerEmojiReaction('💖')" class="px-2.5 py-1 bg-rose-600 text-white rounded-lg font-bold">💖 قلب</button>
                     <button onclick="triggerEmojiReaction('👑')" class="px-2.5 py-1 bg-amber-600 text-white rounded-lg font-bold">👑 تاج</button>
                     <button onclick="openMusicModal()" class="px-2.5 py-1 bg-purple-600 text-white rounded-lg font-bold"><i class="fa-solid fa-music"></i> تشغيل أغنية</button>
-                    <button onclick="kickGuestUser()" class="px-2.5 py-1 bg-red-600 text-white rounded-lg font-bold"><i class="fa-solid fa-user-slash"></i> طرد عضو</button>
                 `;
             } else {
                 html += `<button onclick="requestMemberRole()" class="px-3 py-1 bg-pink-600 text-white rounded-lg font-bold">طلب انضمام لعضوية الروم ✍️</button>`;
@@ -749,8 +747,6 @@
         function playLocalAudio() { if (localPlayerAudio) localPlayerAudio.play(); else alert("اختر ملفاً صوتياً أولاً."); }
         function pauseLocalAudio() { if (localPlayerAudio) localPlayerAudio.pause(); }
         function stopLocalAudio() { if (localPlayerAudio) { localPlayerAudio.pause(); localPlayerAudio.currentTime = 0; } }
-        function adjustAudioVolume(val) { if (localPlayerAudio) localPlayerAudio.volume = val; }
-        function kickGuestUser() { const name = prompt("اسم العضو المراد طرده:"); if (name) alert(`تم طرد (${name}).`); }
 
         function togglePinInput(val) {
             const pinInput = document.getElementById('new-room-pin');

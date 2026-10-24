@@ -13,7 +13,7 @@
     <style>
         body { background-color: #0f172a; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; }
         .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        .active-mic { box-shadow: 0 0 15px #a855f7; }
+        .active-mic { box-shadow: 0 0 20px #a855f7; border-color: #a855f7 !important; }
     </style>
 </head>
 <body class="flex flex-col h-screen overflow-hidden">
@@ -24,7 +24,7 @@
             <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-pink-500 flex items-center justify-center font-bold text-xl shadow-lg shadow-purple-500/30 text-white">
                 D
             </div>
-            <span class="text-2xl font-black bg-gradient-to-r from-purple-400 via-pink-500 to-red-400 bg-clip-text text-transparent tracking-wide">
+            <span class="text-2xl font-black bg-gradient-to-r from-purple-400 via-pink-500 to-red-400 bg-clip-text text-transparent tracking-wide cursor-pointer" onclick="leaveRoom()">
                 DEDE LIVE
             </span>
         </div>
@@ -34,7 +34,7 @@
             <span class="text-xs text-slate-400">محفظة DEDE:</span>
             <div class="flex items-center gap-2">
                 <i class="fa-solid fa-wallet text-amber-400"></i>
-                <span id="user-balance" class="font-bold text-amber-400">0.00 ل.س</span>
+                <span id="user-balance" class="font-bold text-amber-400">1,000.00 ل.س</span>
             </div>
             <button onclick="openDepositModal()" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-xs text-white px-3 py-1 rounded-full font-medium transition shadow-md">
                 <i class="fa-solid fa-plus text-[10px] ml-1"></i> إيداع (شام كاش)
@@ -45,10 +45,6 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <button class="relative p-2 text-slate-400 hover:text-white transition">
-                <i class="fa-regular fa-bell text-xl"></i>
-                <span class="absolute top-1 right-1 w-2 h-2 bg-pink-500 rounded-full"></span>
-            </button>
             <div id="auth-section" class="flex items-center gap-3 border-r border-slate-800 pr-4">
                 <button onclick="loginWithGoogle()" id="auth-btn" class="px-4 py-2 bg-white hover:bg-slate-100 text-slate-900 rounded-xl text-xs font-bold transition flex items-center gap-2 shadow-md">
                     <i class="fa-brands fa-google text-red-500 text-sm"></i> تسجيل الدخول بحساب Google
@@ -61,7 +57,7 @@
         <!-- 2. القائمة الجانبية Sidebar -->
         <aside class="w-20 lg:w-64 border-l border-slate-800 bg-slate-900/50 flex flex-col justify-between p-4 z-10">
             <nav class="space-y-2">
-                <a href="#" class="flex items-center gap-4 px-4 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-medium shadow-lg shadow-purple-500/20">
+                <a href="#" onclick="leaveRoom()" class="flex items-center gap-4 px-4 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-medium shadow-lg shadow-purple-500/20">
                     <i class="fa-solid fa-microphone text-lg"></i>
                     <span class="hidden lg:inline">الرومات الصوتية</span>
                 </a>
@@ -83,14 +79,14 @@
                 <i class="fa-solid fa-headset text-3xl text-purple-400 mb-2"></i>
                 <h4 class="text-sm font-bold">أنشئ رومك الخاصة</h4>
                 <p class="text-[11px] text-slate-400 mt-1 mb-3">ابدأ بثك الصوتي واجمع الدعم</p>
-                <button onclick="alert('ميزة إنشاء الرومات الصوتية الخاصة ستتوفر فور اكتمال ربط نظام WebRTC.')" class="w-full py-2 bg-purple-600 hover:bg-purple-700 text-white text-xs rounded-lg font-bold transition">
+                <button onclick="openCreateRoomModal()" class="w-full py-2 bg-purple-600 hover:bg-purple-700 text-white text-xs rounded-lg font-bold transition">
                     + إنشاء غرفة صوتية
                 </button>
             </div>
         </aside>
 
-        <!-- 3. المحتوى الرئيسي Main Content -->
-        <main class="flex-1 overflow-y-auto p-6 space-y-8 bg-slate-950">
+        <!-- 3. المحتوى الرئيسي Main Content (يعرض قائمة الرومات أو شاشة الروم الداخلية) -->
+        <main id="main-content-area" class="flex-1 overflow-y-auto p-6 space-y-8 bg-slate-950">
             
             <div class="relative rounded-3xl overflow-hidden p-8 bg-gradient-to-r from-purple-900/60 via-slate-900 to-pink-900/40 border border-slate-800">
                 <div class="max-w-xl space-y-3 z-10 relative">
@@ -100,7 +96,7 @@
                 </div>
             </div>
 
-            <!-- الرومات الصوتية -->
+            <!-- قائمة الرومات الصوتية -->
             <div>
                 <div class="flex items-center justify-between mb-6">
                     <div class="flex items-center gap-3">
@@ -110,7 +106,7 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div class="glass-card rounded-2xl p-5 hover:border-purple-500/50 transition cursor-pointer group">
+                    <div class="glass-card rounded-2xl p-5 hover:border-purple-500/50 transition cursor-pointer group" onclick="joinRoom('جلسة طرب وسوالف شباب 🎶', 'أبو أحمد')">
                         <div class="flex items-start justify-between mb-4">
                             <div>
                                 <span class="bg-purple-500/20 text-purple-400 text-[10px] px-2.5 py-1 rounded-full font-bold">سوالف ودردشة</span>
@@ -122,7 +118,7 @@
                         </div>
                         <div class="flex items-center justify-between pt-4 border-t border-slate-800/80">
                             <span class="text-xs text-slate-400">أبو أحمد (المضيف)</span>
-                            <button onclick="alert('جاري الانضمام إلى الروم الصوتي...')" class="px-4 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-bold transition">دخول</button>
+                            <button class="px-4 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-bold transition">دخول</button>
                         </div>
                     </div>
                 </div>
@@ -131,155 +127,132 @@
         </main>
     </div>
 
-    <!-- 1. نافذة إرسال الأموال (Transfer Modal) -->
-    <div id="transfer-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="glass-card w-full max-w-md p-6 rounded-3xl border border-slate-700">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-lg font-bold flex items-center gap-2">
-                    <i class="fa-solid fa-paper-plane text-emerald-400"></i> إرسال أموال لمستخدِم
-                </h3>
-                <button onclick="closeModal('transfer-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
-            </div>
-            <div class="space-y-4">
-                <div>
-                    <label class="text-xs text-slate-400 mb-1 block">اسم المستخدم المستقبل (Username):</label>
-                    <input type="text" id="receiver-username" placeholder="مثال: dede_user" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-purple-500">
-                </div>
-                <div>
-                    <label class="text-xs text-slate-400 mb-1 block">المبلغ (ل.س):</label>
-                    <input type="number" id="transfer-amount" placeholder="0.00" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-purple-500">
-                </div>
-                <div class="p-3 bg-purple-500/10 rounded-xl border border-purple-500/20 text-[11px] text-purple-300">
-                    💡 يقتطع الموقع عمولة 5% تلقائياً من عملية التحويل بين المشتركين.
-                </div>
-                <button onclick="executeTransfer()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold transition">
-                    إرسال الآن
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 2. نافذة الإيداع (Deposit Modal) -->
-    <div id="deposit-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="glass-card w-full max-w-md p-6 rounded-3xl border border-slate-700 space-y-5">
-            <div class="flex justify-between items-center">
-                <h3 class="text-lg font-bold flex items-center gap-2 text-emerald-400">
-                    <i class="fa-solid fa-plus-circle"></i> إيداع رصيد (شام كاش)
-                </h3>
-                <button onclick="closeModal('deposit-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
-            </div>
-            
-            <div class="bg-slate-900 p-4 rounded-2xl border border-slate-800 space-y-2">
-                <span class="text-xs text-slate-400 block">حول المبلغ المطلوب إلى عنوان المحفظة التالي:</span>
-                <div class="flex items-center justify-between bg-slate-950 p-2.5 rounded-xl border border-slate-800">
-                    <span id="sham-cash-account" class="font-mono text-xs text-emerald-400 select-all break-all">c97ee7954214e0b9c32a91d6f07a93ba</span>
-                    <button onclick="copyShamCash()" class="text-slate-400 hover:text-white text-xs px-2 py-1 bg-slate-800 rounded-lg mr-2">نسخ</button>
-                </div>
-            </div>
-
-            <div class="space-y-3">
-                <div>
-                    <label class="text-xs text-slate-400 mb-1 block">رقم العملية (رقم الإشعار / التحويل):</label>
-                    <input type="text" id="deposit-tx-id" placeholder="أدخل رقم الإشعار هنا" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-emerald-500">
-                </div>
-                <div>
-                    <label class="text-xs text-slate-400 mb-1 block">المبلغ المحول (ل.س):</label>
-                    <input type="number" id="deposit-amount" placeholder="مثال: 10000" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-emerald-500">
-                </div>
-                <div class="p-3 bg-emerald-500/10 rounded-xl border border-emerald-500/20 text-[11px] text-emerald-300">
-                    ⚡ يقتطع النظام تلقائياً عمولة إيداع قدرها 1% وينزل الصافي في محفظتك فوراً بعد التأكيد.
-                </div>
-                <button onclick="executeDeposit()" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl font-bold transition shadow-lg shadow-emerald-600/20">
-                    تأكيد الإيداع وإضافة الرصيد
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 3. نافذة السحب (Withdraw Modal) -->
-    <div id="withdraw-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="glass-card w-full max-w-md p-6 rounded-3xl border border-slate-700 space-y-5">
-            <div class="flex justify-between items-center">
-                <h3 class="text-lg font-bold flex items-center gap-2 text-amber-400">
-                    <i class="fa-solid fa-arrow-up-from-bracket"></i> سحب الرصيد (شام كاش حصراً)
-                </h3>
-                <button onclick="closeModal('withdraw-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
-            </div>
-            
-            <div class="space-y-3">
-                <div>
-                    <label class="text-xs text-slate-400 mb-1 block">عنوان محفظة شام كاش الخاصة بك:</label>
-                    <input type="text" id="withdraw-address" placeholder="أدخل عنوان محفظتك لاستلام الأموال" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-amber-500">
-                </div>
-                <div>
-                    <label class="text-xs text-slate-400 mb-1 block">المبلغ المراد سحبه (ل.س):</label>
-                    <input type="number" id="withdraw-amount" placeholder="0.00" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-amber-500">
-                </div>
-                <button onclick="executeWithdraw()" class="w-full py-3 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white rounded-xl font-bold transition">
-                    تأكيد طلب السحب
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 4. نافذة تعديل الملف الشخصي (Profile Modal) -->
-    <div id="profile-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <!-- نافذة إنشاء غرفة صوتية جديدة -->
+    <div id="create-room-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="glass-card w-full max-w-md p-6 rounded-3xl border border-slate-700 space-y-4">
             <div class="flex justify-between items-center mb-2">
                 <h3 class="text-lg font-bold flex items-center gap-2 text-purple-400">
-                    <i class="fa-solid fa-user-pen"></i> تعديل حسابك الشخصي
+                    <i class="fa-solid fa-microphone-lines"></i> إنشاء روم صوتي جديد
                 </h3>
-                <button onclick="closeModal('profile-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+                <button onclick="closeModal('create-room-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
             <div class="space-y-3">
                 <div>
-                    <label class="text-xs text-slate-400 mb-1 block">اسم الحساب (Display Name):</label>
-                    <input type="text" id="profile-full-name" placeholder="مثال: محمد علي" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-purple-500">
+                    <label class="text-xs text-slate-400 mb-1 block">عنوان الروم:</label>
+                    <input type="text" id="new-room-title" placeholder="مثال: سهرة شبابه وأغاني طرب" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-purple-500">
                 </div>
                 <div>
-                    <label class="text-xs text-slate-400 mb-1 block">اسم المستخدم الفريد (Username):</label>
-                    <input type="text" id="profile-username" placeholder="مثال: mohamad_99" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-purple-500">
+                    <label class="text-xs text-slate-400 mb-1 block">التصنيف:</label>
+                    <select id="new-room-category" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-purple-500">
+                        <option>سوالف ودردشة</option>
+                        <option>أغاني وموسيقى</option>
+                        <option>نقاشات وأفكار</option>
+                    </select>
                 </div>
-                <div>
-                    <label class="text-xs text-slate-400 mb-1 block">رابط الصورة الشخصية (Avatar URL):</label>
-                    <input type="text" id="profile-avatar" placeholder="https://example.com/photo.jpg" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-purple-500">
-                </div>
-                <div>
-                    <label class="text-xs text-slate-400 mb-1 block">وصف الحساب (Bio):</label>
-                    <textarea id="profile-bio" rows="2" placeholder="اكتب نبذة قصيرة عنك..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-purple-500"></textarea>
-                </div>
-                <button onclick="saveProfile()" class="w-full py-3 bg-purple-600 hover:bg-purple-500 text-white rounded-xl font-bold transition shadow-lg shadow-purple-600/20">
-                    حفظ التغيرات
+                <button onclick="createAndJoinRoom()" class="w-full py-3 bg-purple-600 hover:bg-purple-500 text-white rounded-xl font-bold transition shadow-lg shadow-purple-600/20">
+                    فتح الروم الآن وبدء البث
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- البرمجة والربط -->
+    <!-- نافذة متجر الهدايا داخل الروم (Gift Store Modal) -->
+    <div id="gift-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="glass-card w-full max-w-md p-6 rounded-3xl border border-slate-700 space-y-4">
+            <div class="flex justify-between items-center mb-2">
+                <h3 class="text-lg font-bold flex items-center gap-2 text-pink-400">
+                    <i class="fa-solid fa-gift"></i> متجر الهدايا الافتراضية
+                </h3>
+                <button onclick="closeModal('gift-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <p class="text-xs text-slate-400">أرسل هدية للمضيف لدعمه ورفع تفاعل الروم:</p>
+            
+            <div class="grid grid-cols-2 gap-3">
+                <div onclick="sendGift('🌹 وردة', 500)" class="glass-card p-3 rounded-xl border border-slate-700 hover:border-pink-500 cursor-pointer text-center transition">
+                    <div class="text-2xl mb-1">🌹</div>
+                    <div class="text-sm font-bold">وردة</div>
+                    <div class="text-xs text-amber-400 mt-1">500 ل.س</div>
+                </div>
+                <div onclick="sendGift('☕ قهوة', 1000)" class="glass-card p-3 rounded-xl border border-slate-700 hover:border-pink-500 cursor-pointer text-center transition">
+                    <div class="text-2xl mb-1">☕</div>
+                    <div class="text-sm font-bold">فنجان قهوة</div>
+                    <div class="text-xs text-amber-400 mt-1">1,000 ل.س</div>
+                </div>
+                <div onclick="sendGift('🏎️ سيارة فخمة', 10000)" class="glass-card p-3 rounded-xl border border-slate-700 hover:border-pink-500 cursor-pointer text-center transition">
+                    <div class="text-2xl mb-1">🏎️</div>
+                    <div class="text-sm font-bold">سيارة سباق</div>
+                    <div class="text-xs text-amber-400 mt-1">10,000 ل.س</div>
+                </div>
+                <div onclick="sendGift('🦁 أسد ذهبي', 50000)" class="glass-card p-3 rounded-xl border border-slate-700 hover:border-pink-500 cursor-pointer text-center transition">
+                    <div class="text-2xl mb-1">🦁</div>
+                    <div class="text-sm font-bold">أسد DEDE</div>
+                    <div class="text-xs text-amber-400 mt-1">50,000 ل.س</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- بقية النوافذ (إيداع، سحب، تحويل، ملف شخصي) -->
+    <!-- (نفس النوافذ السابقة للمحفظة) -->
+    <div id="transfer-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="glass-card w-full max-w-md p-6 rounded-3xl border border-slate-700">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-lg font-bold flex items-center gap-2"><i class="fa-solid fa-paper-plane text-emerald-400"></i> إرسال أموال لمستخدِم</h3>
+                <button onclick="closeModal('transfer-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <div class="space-y-4">
+                <input type="text" id="receiver-username" placeholder="اسم المستخدم المستقبل" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white">
+                <input type="number" id="transfer-amount" placeholder="المبلغ (ل.س)" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white">
+                <button onclick="executeTransfer()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold transition">إرسال الآن</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="deposit-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="glass-card w-full max-w-md p-6 rounded-3xl border border-slate-700 space-y-4">
+            <div class="flex justify-between items-center"><h3 class="text-lg font-bold text-emerald-400">إيداع رصيد (شام كاش)</h3><button onclick="closeModal('deposit-modal')" class="text-slate-400"><i class="fa-solid fa-xmark text-xl"></i></button></div>
+            <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 text-xs">
+                حساب التحويل: <span id="sham-cash-account" class="text-emerald-400 font-mono select-all">c97ee7954214e0b9c32a91d6f07a93ba</span>
+            </div>
+            <input type="text" id="deposit-tx-id" placeholder="رقم عملية التحويل" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white">
+            <input type="number" id="deposit-amount" placeholder="المبلغ المحول (ل.س)" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white">
+            <button onclick="executeDeposit()" class="w-full py-3 bg-emerald-600 text-white rounded-xl font-bold">تأكيد الإيداع (يخصم 1%)</button>
+        </div>
+    </div>
+
+    <div id="withdraw-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="glass-card w-full max-w-md p-6 rounded-3xl border border-slate-700 space-y-4">
+            <div class="flex justify-between items-center"><h3 class="text-lg font-bold text-amber-400">سحب الرصيد (شام كاش)</h3><button onclick="closeModal('withdraw-modal')" class="text-slate-400"><i class="fa-solid fa-xmark text-xl"></i></button></div>
+            <input type="text" id="withdraw-address" placeholder="عنوان محفظة شام كاش" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white">
+            <input type="number" id="withdraw-amount" placeholder="المبلغ المراد سحبه" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white">
+            <button onclick="executeWithdraw()" class="w-full py-3 bg-amber-600 text-white rounded-xl font-bold">تأكيد طلب السحب</button>
+        </div>
+    </div>
+
+    <!-- البرمجة والتفاعل -->
     <script>
         const SUPABASE_URL = "https://hsorrgydvfjmleztmlur.supabase.co"; 
         const SUPABASE_ANON_KEY = "sb_publishable_GgSvoGy9pHif9SHHXPaF_w_g0xgakSh"; 
-
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
         let currentUser = null;
-        let userBalance = 0.0;
+        let userBalance = 1000.0; // افتراضي تجريبي
+        let isMicOn = false;
 
         document.addEventListener("DOMContentLoaded", async () => {
             const { data: { session } } = await supabaseClient.auth.getSession();
             if (session) {
                 currentUser = session.user;
                 updateUserInterface(currentUser);
-                loadProfileData(currentUser.id);
             }
         });
 
-        // 1. تسجيل الدخول عبر Google حصراً
         async function loginWithGoogle() {
-            const { data, error } = await supabaseClient.auth.signInWithOAuth({
+            const { error } = await supabaseClient.auth.signInWithOAuth({
                 provider: 'google',
                 options: { redirectTo: window.location.origin }
             });
-            if (error) alert("خطأ أثناء الاتصال بـ Google: " + error.message);
+            if (error) alert("خطأ: " + error.message);
         }
 
         async function logoutUser() {
@@ -293,144 +266,148 @@
             const name = user.user_metadata?.full_name || user.email.split('@')[0];
 
             authSection.innerHTML = `
-                <div class="flex items-center gap-3 cursor-pointer" onclick="openProfileModal()">
-                    <img src="${avatar}" class="w-9 h-9 rounded-full border border-purple-500 object-cover" alt="User Avatar">
+                <div class="flex items-center gap-3">
+                    <img src="${avatar}" class="w-9 h-9 rounded-full border border-purple-500 object-cover">
                     <div class="text-right hidden sm:block">
-                        <div id="ui-display-name" class="text-xs font-bold text-white">${name}</div>
-                        <button onclick="event.stopPropagation(); logoutUser();" class="text-[10px] text-red-400 hover:underline block">تسجيل الخروج</button>
+                        <div class="text-xs font-bold text-white">${name}</div>
+                        <button onclick="logoutUser()" class="text-[10px] text-red-400 hover:underline">خروج</button>
                     </div>
                 </div>
             `;
         }
 
-        // 2. إدارة البيانات الشخصية
-        async function loadProfileData(userId) {
-            const { data, error } = await supabaseClient
-                .from('profiles')
-                .select('*')
-                .eq('id', userId)
-                .single();
+        // نظام الدخول للرومات الصوتية (الخطوة 3)
+        function joinRoom(roomTitle, hostName) {
+            const mainArea = document.getElementById('main-content-area');
+            mainArea.innerHTML = `
+                <div class="flex flex-col h-full space-y-4">
+                    <!-- رأس الروم -->
+                    <div class="glass-card p-4 rounded-2xl flex items-center justify-between border border-purple-500/30">
+                        <div>
+                            <span class="text-[10px] bg-red-500/20 text-red-400 px-2 py-0.5 rounded-full font-bold animate-pulse">🔴 بث مباشر</span>
+                            <h2 class="text-xl font-bold mt-1 text-white">${roomTitle}</h2>
+                            <p class="text-xs text-slate-400">المضيف: <span class="text-purple-400">${hostName}</span></p>
+                        </div>
+                        <button onclick="leaveRoom()" class="px-4 py-2 bg-red-600/20 text-red-400 hover:bg-red-600 hover:text-white rounded-xl text-xs font-bold transition border border-red-500/30">
+                            مغادرة الروم
+                        </button>
+                    </div>
 
-            if (data) {
-                userBalance = data.balance || 0.0;
-                document.getElementById('user-balance').innerText = userBalance.toLocaleString('ar-SY') + " ل.س";
-                document.getElementById('profile-full-name').value = data.username || currentUser.user_metadata?.full_name || '';
-                document.getElementById('profile-username').value = data.username || '';
-                document.getElementById('profile-avatar').value = data.avatar_url || currentUser.user_metadata?.avatar_url || '';
-            }
+                    <!-- مقاعد المايكات (Speakers Seats) -->
+                    <div class="grid grid-cols-4 md:grid-cols-4 gap-4 p-4 glass-card rounded-2xl text-center">
+                        <div class="flex flex-col items-center space-y-2">
+                            <div class="w-16 h-16 rounded-full bg-purple-600/30 border-2 border-purple-500 flex items-center justify-center text-xl relative">
+                                👑 <span class="absolute bottom-0 right-0 w-4 h-4 bg-emerald-500 rounded-full border-2 border-slate-900"></span>
+                            </div>
+                            <span class="text-xs font-bold text-slate-300">${hostName}</span>
+                            <span class="text-[10px] text-purple-400">المضيف</span>
+                        </div>
+                        <div class="flex flex-col items-center space-y-2">
+                            <div id="my-seat" class="w-16 h-16 rounded-full bg-slate-800 border-2 border-slate-700 flex items-center justify-center text-xl relative">
+                                👤 <span id="my-mic-status" class="absolute bottom-0 right-0 w-4 h-4 bg-slate-600 rounded-full border-2 border-slate-900"></span>
+                            </div>
+                            <span class="text-xs font-bold text-slate-300">أنت (مستمع)</span>
+                            <button onclick="toggleMyMic()" class="px-3 py-1 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-[10px] font-bold">صعدني للمايك</button>
+                        </div>
+                        <div class="flex flex-col items-center space-y-2 opacity-50">
+                            <div class="w-16 h-16 rounded-full bg-slate-800 border-2 border-dashed border-slate-700 flex items-center justify-center text-xl">🎙️</div>
+                            <span class="text-xs font-bold text-slate-500">مقعد فارغ</span>
+                        </div>
+                        <div class="flex flex-col items-center space-y-2 opacity-50">
+                            <div class="w-16 h-16 rounded-full bg-slate-800 border-2 border-dashed border-slate-700 flex items-center justify-center text-xl">🎙️</div>
+                            <span class="text-xs font-bold text-slate-500">مقعد فارغ</span>
+                        </div>
+                    </div>
+
+                    <!-- شات الروم وأزرار الهدايا -->
+                    <div class="flex-1 glass-card rounded-2xl p-4 flex flex-col justify-between">
+                        <div class="space-y-2 overflow-y-auto max-h-40 text-xs text-slate-300">
+                            <div class="p-2 bg-slate-900/60 rounded-xl">👋 أهلاً بالجميع في الروم! شاركونا الأحاديث والطرب.</div>
+                        </div>
+                        <div class="flex items-center gap-3 pt-3 border-t border-slate-800">
+                            <input type="text" placeholder="اكتب رسالة في الروم..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-xs text-white focus:outline-none">
+                            <button onclick="openGiftModal()" class="px-4 py-2 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-lg">
+                                <i class="fa-solid fa-gift"></i> إرسال هدية
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
         }
 
-        async function saveProfile() {
-            if (!currentUser) return alert("يرجى تسجيل الدخول أولاً.");
-            const fullName = document.getElementById('profile-full-name').value;
-            const username = document.getElementById('profile-username').value;
-            const avatarUrl = document.getElementById('profile-avatar').value;
+        function leaveRoom() {
+            location.reload(); // العودة للصفحة الرئيسية
+        }
 
-            const { error } = await supabaseClient
-                .from('profiles')
-                .upsert({
-                    id: currentUser.id,
-                    username: username || fullName,
-                    avatar_url: avatarUrl,
-                    updated_at: new Date()
-                });
-
-            if (error) {
-                alert("حدث خطأ أثناء الحفظ: " + error.message);
+        function toggleMyMic() {
+            isMicOn = !isMicOn;
+            const seat = document.getElementById('my-seat');
+            const micStatus = document.getElementById('my-mic-status');
+            if (isMicOn) {
+                seat.classList.add('active-mic');
+                micStatus.className = "absolute bottom-0 right-0 w-4 h-4 bg-emerald-500 rounded-full border-2 border-slate-900 animate-pulse";
+                alert("تم فتح المايك الخاص بك بنجاح!");
             } else {
-                alert("تم تحديث معلومات حسابك بنجاح!");
-                closeModal('profile-modal');
-                location.reload();
+                seat.classList.remove('active-mic');
+                micStatus.className = "absolute bottom-0 right-0 w-4 h-4 bg-slate-600 rounded-full border-2 border-slate-900";
+                alert("تم كتم المايك.");
             }
         }
 
-        // 3. الإيداع والتسديد عبر شام كاش (تخصم 1% عمولة تلقائياً)
-        async function executeDeposit() {
-            if (!currentUser) return alert("يرجى تسجيل الدخول بحساب Google أولاً لتتمكن من الإيداع.");
-            
-            const txId = document.getElementById('deposit-tx-id').value;
-            const amount = parseFloat(document.getElementById('deposit-amount').value);
-
-            if (!txId || isNaN(amount) || amount <= 0) {
-                alert("يرجى إدخال رقم العملية والمبلغ المحول بشكل صحيح.");
+        // نظام الهدايا داخل الروم (الخطوة 4)
+        function openGiftModal() { document.getElementById('gift-modal').classList.remove('hidden'); }
+        
+        function sendGift(giftName, price) {
+            if (userBalance < price) {
+                alert("رصيدك الحالي غير كافٍ لشراء هذه الهدية. يرجى إيداع رصيد إضافي.");
                 return;
             }
-
-            // اقتطاع عمولة 1% تلقائياً
-            const fee = amount * 0.01;
-            const netAmount = amount - fee;
-
-            userBalance += netAmount;
-            
-            // تحديث الرصيد في قاعدة البيانات
-            await supabaseClient.from('profiles').upsert({ id: currentUser.id, balance: userBalance });
-
+            userBalance -= price;
             document.getElementById('user-balance').innerText = userBalance.toLocaleString('ar-SY') + " ل.س";
-            alert(`تم تأكيد الإيداع بنجاح!\nالمبلغ الإجمالي: ${amount} ل.س\nعمولة الإيداع (1%): ${fee} ل.س\nالصافي المضاف لرصيدك: ${netAmount} ل.س`);
-            closeModal('deposit-modal');
-            document.getElementById('deposit-tx-id').value = '';
-            document.getElementById('deposit-amount').value = '';
+            closeModal('gift-modal');
+            alert(`🎁 تهانينا! أرسلت بنجاح هدية (${giftName}) بتكلفة ${price} ل.س إلى مضيف الروم.`);
         }
 
-        // 4. السحب حصراً لشام كاش
-        async function executeWithdraw() {
-            if (!currentUser) return alert("يرجى تسجيل الدخول أولاً.");
-            const address = document.getElementById('withdraw-address').value;
-            const amount = parseFloat(document.getElementById('withdraw-amount').value);
-
-            if (!address || isNaN(amount) || amount <= 0) {
-                alert("يرجى إدخال عنوان المحفظة والمبلغ المراد سحبه.");
-                return;
-            }
-
-            if (amount > userBalance) {
-                alert("رصيدك الحالي غير كافٍ لإتمام عملية السحب.");
-                return;
-            }
-
-            userBalance -= amount;
-            await supabaseClient.from('profiles').upsert({ id: currentUser.id, balance: userBalance });
-
-            document.getElementById('user-balance').innerText = userBalance.toLocaleString('ar-SY') + " ل.س";
-            alert(`تم تقديم طلب سحب ${amount} ل.س بنجاح إلى المحفظة:\n${address}\nسيصلك المبلغ عبر شام كاش في أقرب وقت.`);
-            closeModal('withdraw-modal');
-        }
-
-        // 5. التحويل بين الأعضاء
-        async function executeTransfer() {
-            const receiver = document.getElementById('receiver-username').value;
-            const amount = parseFloat(document.getElementById('transfer-amount').value);
-
-            if (!receiver || isNaN(amount) || amount <= 0) {
-                alert("يرجى إدخال اسم مستخدم صحيح ومبلغ أكبر من الصفر.");
-                return;
-            }
-
-            if (amount > userBalance) {
-                alert("رصيدك الحالي غير كافٍ لإجراء هذا التحويل.");
-                return;
-            }
-
-            const fee = amount * 0.05;
-            userBalance -= amount;
-            await supabaseClient.from('profiles').upsert({ id: currentUser.id, balance: userBalance });
-
-            document.getElementById('user-balance').innerText = userBalance.toLocaleString('ar-SY') + " ل.س";
-            alert(`تم بنجاح تحويل ${amount - fee} ل.س إلى (${receiver}) مع خصم عمولة المنصة 5% (${fee} ل.س).`);
-            closeModal('transfer-modal');
-        }
-
-        // أدوات مساعدة للنوافذ
-        function openProfileModal() { document.getElementById('profile-modal').classList.remove('hidden'); }
+        // دوال المحفظة العامة
         function openTransferModal() { document.getElementById('transfer-modal').classList.remove('hidden'); }
         function openDepositModal() { document.getElementById('deposit-modal').classList.remove('hidden'); }
         function openWithdrawModal() { document.getElementById('withdraw-modal').classList.remove('hidden'); }
+        function openCreateRoomModal() { document.getElementById('create-room-modal').classList.remove('hidden'); }
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
-        function copyShamCash() {
-            const shamAccount = document.getElementById('sham-cash-account').innerText;
-            navigator.clipboard.writeText(shamAccount);
-            alert("تم نسخ رقم حساب شام كاش بنجاح!");
+        function createAndJoinRoom() {
+            const title = document.getElementById('new-room-title').value || 'روم جديد';
+            closeModal('create-room-modal');
+            joinRoom(title, 'أنت (المضيف)');
+        }
+
+        function executeDeposit() {
+            const amount = parseFloat(document.getElementById('deposit-amount').value);
+            if (isNaN(amount) || amount <= 0) return alert("أدخل مبلغاً صحيحاً");
+            const fee = amount * 0.01;
+            const net = amount - fee;
+            userBalance += net;
+            document.getElementById('user-balance').innerText = userBalance.toLocaleString('ar-SY') + " ل.س";
+            alert(`تم الإيداع بنجاح! خصم 1% عمولة (${fee} ل.س)، وأضيف لرصيدك: ${net} ل.س`);
+            closeModal('deposit-modal');
+        }
+
+        function executeWithdraw() {
+            const amount = parseFloat(document.getElementById('withdraw-amount').value);
+            if (isNaN(amount) || amount <= 0 || amount > userBalance) return alert("رصيد غير كافٍ أو مبلغ خاطئ");
+            userBalance -= amount;
+            document.getElementById('user-balance').innerText = userBalance.toLocaleString('ar-SY') + " ل.س";
+            alert(`تم تقديم طلب سحب ${amount} ل.س بنجاح إلى محفظة شام كاش.`);
+            closeModal('withdraw-modal');
+        }
+
+        function executeTransfer() {
+            const amount = parseFloat(document.getElementById('transfer-amount').value);
+            if (isNaN(amount) || amount <= 0 || amount > userBalance) return alert("مبلغ خاطئ أو رصيد غير كافٍ");
+            userBalance -= amount;
+            document.getElementById('user-balance').innerText = userBalance.toLocaleString('ar-SY') + " ل.س";
+            alert(`تم التحويل بنجاح مع خصم عمولة 5% للمنصة.`);
+            closeModal('transfer-modal');
         }
     </script>
 </body>

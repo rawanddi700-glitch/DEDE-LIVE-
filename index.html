@@ -7,33 +7,32 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Supabase JS Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Agora RTC SDK للبث الصوتي الحي -->
     <script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.17.0.js"></script>
     <style>
-        /* خلفية رومانسية مدمجة مع الصورة */
+        /* خلفية شفافة أثيرية تعبر عن التعارف والرومانسية */
         body { 
-            background: linear-gradient(135deg, #180a1d 0%, #2a0826 40%, #130616 100%); 
+            background: radial-gradient(circle at 50% 30%, #3b0764 0%, #1e052a 50%, #09020d 100%);
             color: #f8fafc; 
             font-family: system-ui, -apple-system, sans-serif; 
             overflow: hidden; 
-            background-attachment: fixed;
         }
 
-        /* تأثيرات زجاجية شفافة ورومانسية */
+        /* كروت زجاجية شفافة فائقة الأناقة Ultra Glassmorphism */
         .glass-card { 
-            background: rgba(45, 18, 48, 0.45); 
-            backdrop-filter: blur(16px); 
-            border: 1px solid rgba(244, 114, 182, 0.15); 
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            background: rgba(50, 15, 55, 0.4); 
+            backdrop-filter: blur(20px); 
+            border: 1px solid rgba(244, 114, 182, 0.2); 
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45);
         }
 
         .glass-nav {
-            background: rgba(26, 9, 28, 0.75);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(236, 72, 153, 0.2);
+            background: rgba(25, 8, 30, 0.7);
+            backdrop-filter: blur(25px);
+            border-bottom: 1px solid rgba(236, 72, 153, 0.25);
         }
         
         /* نبض المايك الرومانسي وقت الكلام */
@@ -53,23 +52,25 @@
         .gift-banner { animation: giftPopup 3s ease-in-out forwards; }
         .vip-badge { background: linear-gradient(135deg, #f59e0b, #d97706); text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
         
-        /* الثيمات الخلفية الشفافة للرومات */
-        .theme-night { background: rgba(20, 10, 25, 0.6); }
-        .theme-tarab { background: linear-gradient(to bottom, rgba(88, 28, 135, 0.5), rgba(15, 5, 20, 0.8)); }
-        .theme-sunset { background: linear-gradient(to bottom, rgba(157, 23, 77, 0.5), rgba(15, 5, 20, 0.8)); }
+        /* الثيمات الخلفية للرومات */
+        .theme-night { background: rgba(20, 8, 28, 0.65); }
+        .theme-tarab { background: linear-gradient(to bottom, rgba(126, 34, 206, 0.4), rgba(15, 5, 20, 0.85)); }
+        .theme-sunset { background: linear-gradient(to bottom, rgba(190, 18, 60, 0.4), rgba(15, 5, 20, 0.85)); }
     </style>
 </head>
 <body class="flex flex-col h-screen">
 
-    <!-- 1. الشريط العلوي Navbar الشفاف مع الشعار الفاخر -->
+    <!-- 1. الشريط العلوي Navbar الشفاف مع الشعار الوردي والمايك الرومانسي -->
     <header class="h-20 glass-nav px-6 flex items-center justify-between z-20">
         <div class="flex items-center gap-3 cursor-pointer" onclick="leaveRoom()">
-            <img src="Gemini_Generated_Image_62044x62044x6204.jpg" alt="DEDE LIVE Logo" class="h-14 w-auto rounded-xl object-contain shadow-lg shadow-pink-500/20 border border-pink-500/30">
-            <div class="hidden sm:block">
-                <span class="text-xl font-black bg-gradient-to-r from-pink-400 via-rose-300 to-amber-300 bg-clip-text text-transparent tracking-wide">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-pink-600 via-rose-500 to-purple-600 flex items-center justify-center font-black text-2xl text-white shadow-lg shadow-pink-500/40 border border-pink-300/40">
+                <i class="fa-solid fa-microphone-lines text-pink-100"></i>
+            </div>
+            <div>
+                <span class="text-2xl font-black bg-gradient-to-r from-pink-400 via-rose-300 to-amber-300 bg-clip-text text-transparent tracking-wider">
                     DEDE LIVE
                 </span>
-                <p class="text-[10px] text-pink-300/80 font-medium">بث مباشر وتواصل اجتماعي</p>
+                <p class="text-[10px] text-pink-300/90 font-bold tracking-wide">بث مباشر وتواصل اجتماعي</p>
             </div>
         </div>
 

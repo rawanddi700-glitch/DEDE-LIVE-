@@ -52,7 +52,7 @@
             </div>
             <div>
                 <h1 class="text-2xl font-black text-white tracking-wider">DEDE LIVE</h1>
-                <p class="text-xs text-pink-300/90 font-bold mt-1">سجل حسابك الجديد أو أدخل للوصول إلى المنصة</p>
+                <p class="text-xs text-pink-300/90 font-bold mt-1">سجل حسابك للوصول إلى المنصة</p>
             </div>
 
             <div class="space-y-3 text-right">
@@ -107,6 +107,10 @@
             <button onclick="openWalletHistoryModal()" class="bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 text-xs text-white px-3.5 py-1 rounded-full font-medium transition shadow-md">
                 <i class="fa-solid fa-clock-rotate-left text-[10px] ml-1"></i> سجل العمليات
             </button>
+            <!-- زر لوحة تحكم الادمن (يظهر للآدمن فقط) -->
+            <button id="admin-panel-btn" onclick="openAdminPanelModal()" class="hidden bg-gradient-to-r from-amber-500 to-red-600 hover:from-amber-600 text-xs text-slate-950 px-3.5 py-1 rounded-full font-black transition shadow-md">
+                <i class="fa-solid fa-shield-halved text-[10px] ml-1"></i> لوحة الإدارة
+            </button>
         </div>
 
         <div class="flex items-center gap-3">
@@ -125,9 +129,9 @@
                     <i class="fa-solid fa-microphone text-lg"></i>
                     <span class="hidden lg:inline">الرومات الصوتية</span>
                 </a>
-                <button onclick="openGamesModal()" class="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-amber-300 hover:bg-amber-500/20 transition text-right border border-amber-500/30">
-                    <i class="fa-solid fa-gem text-lg text-amber-400"></i>
-                    <span class="hidden lg:inline font-bold">كازينو روبرت 💎</span>
+                <button onclick="openLeaderboardModal()" class="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-amber-300 hover:bg-amber-500/20 transition text-right border border-amber-500/30">
+                    <i class="fa-solid fa-trophy text-lg text-amber-400"></i>
+                    <span class="hidden lg:inline font-bold">لوحة المتصدرين 👑</span>
                 </button>
                 <button onclick="openProfilePage()" class="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-pink-200/80 hover:bg-pink-900/30 transition text-right">
                     <i class="fa-solid fa-id-card text-lg text-rose-400"></i>
@@ -161,20 +165,45 @@
 
             <div>
                 <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-xl font-bold text-pink-100">الرومات النشطة الآن</h2>
+                    <h2 class="text-xl font-bold text-pink-100">الرومات النشطة الآن (تحديث حي مباشر 🔴)</h2>
                 </div>
                 <div id="rooms-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
             </div>
         </main>
     </div>
 
-    <!-- 👤 صفحة الملف الشخصي الكاملة -->
+    <!-- 👑 نافذة لوحة المتصدرين الحقيقية -->
+    <div id="leaderboard-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="glass-card w-full max-w-md p-6 rounded-3xl border border-amber-500/40 space-y-4 max-h-[80vh] flex flex-col">
+            <div class="flex justify-between items-center border-b border-pink-500/20 pb-3">
+                <h3 class="text-lg font-bold text-amber-400"><i class="fa-solid fa-trophy"></i> لوحة المتصدرين الرسمية</h3>
+                <button onclick="closeModal('leaderboard-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <div id="leaderboard-list" class="space-y-2 overflow-y-auto flex-1 text-xs">
+                <p class="text-slate-400 text-center py-4">جاري تحميل المتصدرين...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🛡️ نافذة لوحة تحكم الادمن لإدارة الشحن -->
+    <div id="admin-panel-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="glass-card w-full max-w-2xl p-6 rounded-3xl border border-red-500/40 space-y-4 max-h-[85vh] flex flex-col">
+            <div class="flex justify-between items-center border-b border-pink-500/20 pb-3">
+                <h3 class="text-lg font-bold text-amber-400"><i class="fa-solid fa-shield-halved"></i> لوحة تحكم الإدارة - مراجعة إشعارات شام كاش</h3>
+                <button onclick="closeModal('admin-panel-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <div id="admin-deposits-list" class="space-y-3 overflow-y-auto flex-1 text-xs">
+                <p class="text-slate-400 text-center py-4">لا توجد طلبات شحن معلقة حالياً.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 👤 صفحة الملف الشخصي -->
     <div id="profile-page-modal" class="hidden fixed inset-0 bg-[#09020d]/95 backdrop-blur-2xl z-50 flex items-center justify-center p-4 overflow-y-auto">
         <div class="glass-card w-full max-w-lg p-8 rounded-3xl border border-pink-500/40 space-y-6 text-center shadow-2xl relative my-auto">
             <button onclick="closeModal('profile-page-modal')" class="absolute top-5 left-5 text-slate-400 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
-            
             <h2 class="text-xl font-black text-pink-300"><i class="fa-solid fa-id-card text-amber-400"></i> الملف الشخصي والهوية</h2>
-
+            
             <div class="relative w-28 h-28 mx-auto group">
                 <img id="profile-page-avatar" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="w-28 h-28 rounded-full border-4 border-pink-500 object-cover shadow-xl">
                 <label for="avatar-file-input" class="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition cursor-pointer text-white text-xs font-bold">
@@ -195,7 +224,7 @@
                 </div>
                 <div>
                     <label class="block text-pink-200 font-bold mb-1">البايو (النبذة التعريفية):</label>
-                    <textarea id="edit-bio" rows="3" placeholder="اكتب شيئاً مميزاً عنك..." class="w-full bg-slate-900 border border-pink-500/30 rounded-xl p-3 text-sm text-white"></textarea>
+                    <textarea id="edit-bio" rows="3" class="w-full bg-slate-900 border border-pink-500/30 rounded-xl p-3 text-sm text-white"></textarea>
                 </div>
                 <button onclick="saveProfileChanges()" class="w-full py-3 bg-pink-600 hover:bg-pink-700 text-white rounded-xl font-bold text-xs transition shadow-lg">حفظ التعديلات</button>
             </div>
@@ -233,7 +262,7 @@
             <input type="text" id="deposit-tx-id" placeholder="رقم إشعار التحويل (Transaction ID)" class="w-full bg-slate-900 border rounded-xl p-3 text-sm text-white">
             <input type="number" id="deposit-amount" oninput="calculateDepositCoins()" placeholder="المبلغ المحول" class="w-full bg-slate-900 border rounded-xl p-3 text-sm text-white">
             <div class="text-xs text-pink-200">الكوينزات المستحقة: <span id="calculated-coins" class="font-bold text-amber-400">0</span></div>
-            <button onclick="submitDepositRequest()" class="w-full py-3 bg-emerald-600 text-white rounded-xl font-bold text-xs">إرسال طلب الشحن</button>
+            <button onclick="submitDepositRequest()" class="w-full py-3 bg-emerald-600 text-white rounded-xl font-bold text-xs">إرسال طلب الشحن للمراجعة</button>
         </div>
     </div>
 
@@ -260,10 +289,12 @@
         let userProfile = null;
         let userCoins = 0;
         let welcomeAudioPlayed = false;
+        const ADMIN_EMAIL = "mohammadsaaddin79@gmail.com"; // ضع إيميلك هنا لتظهر لك لوحة الادمن
 
         supabaseClient.auth.onAuthStateChange(async (event, session) => {
             if (session && session.user) {
                 await fetchOrCreateProfile(session.user);
+                setupRealtimeSubscriptions();
             } else {
                 document.getElementById('auth-gate-screen').classList.remove('hidden');
             }
@@ -271,19 +302,11 @@
 
         async function fetchOrCreateProfile(user) {
             currentUser = user;
-            
-            // جلب البروفايل الخاص بالمستخدم
-            let { data: profile } = await supabaseClient
-                .from('profiles')
-                .select('*')
-                .eq('id', user.id)
-                .maybeSingle();
+            let { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', user.id).maybeSingle();
 
-            // إذا لم يتم العثور عليه (بسبب انتظار الـ Trigger أو غيره)، ننشئه يطوعياً بأمان تام
             if (!profile) {
                 const randomNumericId = Math.floor(10000000 + Math.random() * 90000000).toString();
                 const defaultName = user.email ? user.email.split('@')[0] : 'مستخدم ديدي';
-                
                 const newProfile = {
                     id: user.id,
                     numeric_id: randomNumericId,
@@ -292,7 +315,6 @@
                     bio: 'مستخدم في ديدي لايف',
                     coins_balance: 0
                 };
-                
                 await supabaseClient.from('profiles').upsert([newProfile], { onConflict: 'id' });
                 userProfile = newProfile;
             } else {
@@ -308,6 +330,21 @@
             document.getElementById('auth-gate-screen').classList.add('hidden');
             updateUserInterface();
             loadActiveRooms();
+
+            // فحص إذا كان المستخدم هو الآدمن
+            if (user.email === ADMIN_EMAIL) {
+                document.getElementById('admin-panel-btn').classList.remove('hidden');
+            }
+        }
+
+        // 🔴 تفعيل التحديث الحي المباشر (Realtime) للرومات
+        function setupRealtimeSubscriptions() {
+            supabaseClient
+                .channel('public:rooms')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'rooms' }, payload => {
+                    loadActiveRooms();
+                })
+                .subscribe();
         }
 
         async function executeGateSignup() {
@@ -323,13 +360,9 @@
                 options: { data: { display_name: displayName } }
             });
             
-            if (error) {
-                alert("خطأ في التسجيل: " + error.message);
-                return;
-            }
-
+            if (error) return alert("خطأ في التسجيل: " + error.message);
             if (data.user) {
-                alert("🎉 تم إنشاء الحساب بنجاح وتوليد الآيدي الرقمي الخاص بك!");
+                alert("🎉 تم إنشاء الحساب بنجاح!");
                 fetchOrCreateProfile(data.user);
             }
         }
@@ -340,11 +373,8 @@
             if (!email || !password) return alert("يرجى إدخال البريد وكلمة المرور.");
 
             const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-            if (error) {
-                alert("خطأ في تسجيل الدخول: " + error.message);
-            } else if (data.user) {
-                fetchOrCreateProfile(data.user);
-            }
+            if (error) alert("خطأ في تسجيل الدخول: " + error.message);
+            else if (data.user) fetchOrCreateProfile(data.user);
         }
 
         function playHumanFemaleVoiceWithEcho() {
@@ -399,28 +429,14 @@
         function uploadAvatarImage(input) {
             const file = input.files[0];
             if (!file) return;
-
-            if (file.size > 2 * 1024 * 1024) {
-                return alert("حجم الصورة كبير جداً! يرجى اختيار صورة أصغر من 2 ميغابايت.");
-            }
-
             const reader = new FileReader();
             reader.onload = async function(e) {
                 const base64Image = e.target.result;
                 document.getElementById('profile-page-avatar').src = base64Image;
-
-                const { error } = await supabaseClient
-                    .from('profiles')
-                    .update({ avatar_url: base64Image })
-                    .eq('id', currentUser.id);
-
-                if (!error) {
-                    userProfile.avatar_url = base64Image;
-                    updateUserInterface();
-                    alert("✨ تم رفع وتحديث الصورة الشخصية بنجاح!");
-                } else {
-                    alert("خطأ في حفظ الصورة: " + error.message);
-                }
+                await supabaseClient.from('profiles').update({ avatar_url: base64Image }).eq('id', currentUser.id);
+                userProfile.avatar_url = base64Image;
+                updateUserInterface();
+                alert("✨ تم تحديث الصورة الشخصية بنجاح!");
             };
             reader.readAsDataURL(file);
         }
@@ -428,21 +444,44 @@
         async function saveProfileChanges() {
             const newName = document.getElementById('edit-display-name').value.trim();
             const newBio = document.getElementById('edit-bio').value.trim();
+            await supabaseClient.from('profiles').update({ display_name: newName, bio: newBio }).eq('id', currentUser.id);
+            userProfile.display_name = newName;
+            userProfile.bio = newBio;
+            document.getElementById('profile-page-name').innerText = newName;
+            updateUserInterface();
+            alert("✨ تم حفظ التعديلات بنجاح!");
+        }
 
-            const { error } = await supabaseClient
+        // 👑 لوحة المتصدرين الحقيقية
+        async function openLeaderboardModal() {
+            const listContainer = document.getElementById('leaderboard-list');
+            listContainer.innerHTML = `<p class="text-slate-400 text-center py-4">جاري تحميل المتصدرين...</p>`;
+            document.getElementById('leaderboard-modal').classList.remove('hidden');
+
+            const { data: profiles, error } = await supabaseClient
                 .from('profiles')
-                .update({ display_name: newName, bio: newBio })
-                .eq('id', currentUser.id);
+                .select('*')
+                .order('coins_balance', { ascending: false })
+                .limit(10);
 
-            if (error) {
-                alert("خطأ في التحديث: " + error.message);
-            } else {
-                userProfile.display_name = newName;
-                userProfile.bio = newBio;
-                document.getElementById('profile-page-name').innerText = newName;
-                updateUserInterface();
-                alert("✨ تم حفظ التعديلات بنجاح!");
+            if (error || !profiles || profiles.length === 0) {
+                listContainer.innerHTML = `<p class="text-slate-400 text-center py-4">لا توجد بيانات متصدرين حالياً.</p>`;
+                return;
             }
+
+            listContainer.innerHTML = profiles.map((p, index) => `
+                <div class="flex items-center justify-between p-3 bg-slate-900/80 rounded-xl border border-amber-500/30">
+                    <div class="flex items-center gap-3">
+                        <span class="font-black text-amber-400">#${index + 1}</span>
+                        <img src="${p.avatar_url || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}" class="w-8 h-8 rounded-full object-cover border border-pink-400">
+                        <div>
+                            <div class="font-bold text-white">${p.display_name}</div>
+                            <div class="text-[9px] text-slate-400 font-mono">ID: ${p.numeric_id || '---'}</div>
+                        </div>
+                    </div>
+                    <div class="font-black text-amber-400">🪙 ${p.coins_balance.toLocaleString()}</div>
+                </div>
+            `).join('');
         }
 
         function calculateDepositCoins() {
@@ -454,6 +493,7 @@
             return netCoins;
         }
 
+        // 📥 إرسال طلب الشحن للمراجعة (حالة Pending)
         async function submitDepositRequest() {
             const txId = document.getElementById('deposit-tx-id').value.trim();
             const amount = parseFloat(document.getElementById('deposit-amount').value) || 0;
@@ -463,36 +503,80 @@
 
             const { error } = await supabaseClient.from('wallet_transactions').insert([{
                 user_id: currentUser.id,
+                username: userProfile.display_name,
                 type: 'deposit',
                 amount_usd: document.getElementById('deposit-currency').value === 'USD' ? amount : amount / 14300,
                 amount_coins: netCoins,
                 sham_cash_tx: txId,
-                status: 'approved'
+                status: 'pending' // بانتظار موافقة الادمن
             }]);
 
-            if (error) {
-                alert("خطأ: " + error.message);
-            } else {
-                userCoins += netCoins;
-                await supabaseClient.from('profiles').update({ coins_balance: userCoins }).eq('id', currentUser.id);
-                document.getElementById('user-balance').innerText = userCoins.toLocaleString() + " كوينز";
-                alert(`✅ تم شحن ${netCoins.toLocaleString()} كوينز إلى محفظتك بنجاح عبر شام كاش!`);
+            if (error) alert("خطأ: " + error.message);
+            else {
+                alert("✅ تم إرسال طلب الشحن بنجاح! سيتم مراجعته واعتماده من قبل الإدارة قريباً.");
                 closeModal('deposit-modal');
             }
         }
 
-        async function openWalletHistoryModal() {
-            const container = document.getElementById('transactions-list-container');
-            container.innerHTML = `<p class="text-slate-400 text-center py-4">جاري تحميل سجل المعاملات...</p>`;
-            document.getElementById('wallet-history-modal').classList.remove('hidden');
+        // 🛡️ لوحة الادمن لمراجعة واعتماد طلبات الشحن
+        async function openAdminPanelModal() {
+            const container = document.getElementById('admin-deposits-list');
+            container.innerHTML = `<p class="text-slate-400 text-center py-4">جاري التحميل...</p>`;
+            document.getElementById('admin-panel-modal').classList.remove('hidden');
 
             const { data: txs, error } = await supabaseClient
                 .from('wallet_transactions')
                 .select('*')
-                .eq('user_id', currentUser.id)
+                .eq('status', 'pending')
                 .order('created_at', { ascending: false });
 
             if (error || !txs || txs.length === 0) {
+                container.innerHTML = `<p class="text-slate-400 text-center py-4">لا توجد طلبات شحن معلقة بانتظار الموافقة.</p>`;
+                return;
+            }
+
+            container.innerHTML = txs.map(tx => `
+                <div class="flex items-center justify-between p-3 bg-slate-900 rounded-xl border border-red-500/30">
+                    <div>
+                        <div class="font-bold text-white">المستخدم: ${tx.username || 'مستخدم'}</div>
+                        <div class="text-[10px] text-amber-300">رقم الإشعار: <span class="font-mono">${tx.sham_cash_tx}</span></div>
+                        <div class="text-[10px] text-emerald-400">المبلغ: ${tx.amount_coins.toLocaleString()} كوينز (${tx.amount_usd}$)</div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="adminApproveDeposit('${tx.id}', '${tx.user_id}', ${tx.amount_coins})" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold">موافقة وشحن</button>
+                        <button onclick="adminRejectDeposit('${tx.id}')" class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold">رفض</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function adminApproveDeposit(txId, userId, coinsAmount) {
+            // تحديث حالة الطلب إلى approved
+            await supabaseClient.from('wallet_transactions').update({ status: 'approved' }).eq('id', txId);
+
+            // جلب رصيد المستخدم الحالي وإضافة الكوينزات
+            let { data: targetProfile } = await supabaseClient.from('profiles').select('coins_balance').eq('id', userId).single();
+            const newBalance = (targetProfile?.coins_balance || 0) + coinsAmount;
+
+            await supabaseClient.from('profiles').update({ coins_balance: newBalance }).eq('id', userId);
+
+            alert("✅ تم اعتماد طلب الشحن وإضافة الكوينزات لحساب المستخدم بنجاح!");
+            openAdminPanelModal();
+        }
+
+        async function adminRejectDeposit(txId) {
+            await supabaseClient.from('wallet_transactions').update({ status: 'rejected' }).eq('id', txId);
+            alert("❌ تم رفض الطلب.");
+            openAdminPanelModal();
+        }
+
+        async function openWalletHistoryModal() {
+            const container = document.getElementById('transactions-list-container');
+            container.innerHTML = `<p class="text-slate-400 text-center py-4">جاري التحميل...</p>`;
+            document.getElementById('wallet-history-modal').classList.remove('hidden');
+
+            const { data: txs } = await supabaseClient.from('wallet_transactions').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false });
+            if (!txs || txs.length === 0) {
                 container.innerHTML = `<p class="text-slate-400 text-center py-4">لا توجد عمليات سابقة مسجلة في محفظتك.</p>`;
                 return;
             }
@@ -500,12 +584,14 @@
             container.innerHTML = txs.map(tx => `
                 <div class="flex items-center justify-between p-3 bg-slate-900/80 rounded-xl border border-pink-500/20">
                     <div>
-                        <div class="font-bold text-white">${tx.type === 'deposit' ? '📥 إيداع شام كاش' : '📤 سحب'}</div>
+                        <div class="font-bold text-white">إيداع شام كاش</div>
                         <div class="text-[10px] text-slate-400">رقم الإشعار: ${tx.sham_cash_tx}</div>
                     </div>
                     <div class="text-left">
                         <div class="font-bold text-amber-400">+${tx.amount_coins.toLocaleString()} كوينز</div>
-                        <div class="text-[10px] text-emerald-400">مكتمل (${tx.amount_usd}$)</div>
+                        <div class="text-[10px] ${tx.status === 'approved' ? 'text-emerald-400' : tx.status === 'rejected' ? 'text-red-400' : 'text-amber-300'}">
+                            ${tx.status === 'approved' ? 'مكتمل وموافق عليه' : tx.status === 'rejected' ? 'مرفود' : 'قيد المراجعة ⏳'}
+                        </div>
                     </div>
                 </div>
             `).join('');
@@ -522,12 +608,13 @@
                     <p class="text-xs text-pink-300 mt-1">المضيف: أبو أحمد 👑</p>
                 </div>
             `;
-            if (rooms) {
+            if (rooms && rooms.length > 0) {
                 rooms.forEach(r => {
                     html += `
                         <div class="glass-card rounded-2xl p-5 hover:border-pink-500/65 transition cursor-pointer group">
                             <h3 class="text-lg font-bold text-white">${r.title}</h3>
                             <p class="text-xs text-pink-300 mt-1">المضيف: ${r.host_name} 👑</p>
+                            ${currentUser && r.host_name === userProfile.display_name ? `<button onclick="deleteRoom('${r.id}')" class="mt-3 px-3 py-1 bg-red-600/80 text-white rounded-lg text-xs">حذف الروم 🗑️</button>` : ''}
                         </div>
                     `;
                 });
@@ -542,8 +629,12 @@
             closeModal('create-room-modal');
 
             await supabaseClient.from('rooms').insert([{ title, host_name: userProfile.display_name, room_type: roomType, pin }]);
-            loadActiveRooms();
-            alert("🎉 تم إنشاء الروم بنجاح!");
+            alert("🎉 تم إنشاء الروم بنجاح ونشره للجميع!");
+        }
+
+        async function deleteRoom(roomId) {
+            await supabaseClient.from('rooms').delete().eq('id', roomId);
+            alert("🗑️ تم حذف الروم.");
         }
 
         async function logoutUser() {
@@ -553,8 +644,7 @@
 
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
         function openDepositModal() { document.getElementById('deposit-modal').classList.remove('hidden'); }
-        function openLeaderboardModal() { alert("لوحة المتصدرين قيد التحديث."); }
-        function openGamesModal() { alert("الكازينو قيد التفعيل."); }
+        function openCreateRoomModal() { document.getElementById('create-room-modal').classList.remove('hidden'); }
         function leaveRoom() { location.reload(); }
     </script>
 </body>

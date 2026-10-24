@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DEDE LIVE - منصة الرومات الصوتية والتواصل الاجتماعي</title>
+    <title>DEDE LIVE - منصة الرومات الصوتية الاحترافية</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -13,12 +13,25 @@
     <!-- Agora RTC SDK للبث الصوتي الحي -->
     <script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.17.0.js"></script>
     <style>
-        body { background-color: #0f172a; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; }
-        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        .active-mic { box-shadow: 0 0 25px #a855f7; border-color: #a855f7 !important; }
+        body { background-color: #090d16; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; overflow: hidden; }
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        /* تأثير النبض والموجات الصوتية وقت الكلام */
+        @keyframes soundWave {
+            0% { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(168, 85, 247, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0); }
+        }
+        .speaking-animation { animation: soundWave 1.5s infinite; border-color: #a855f7 !important; }
+        /* تأثير ظهور الهدايا الفاخرة */
+        @keyframes giftPopup {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.9; }
+        }
+        .gift-banner { animation: giftPopup 3s ease-in-out forwards; }
     </style>
 </head>
-<body class="flex flex-col h-screen overflow-hidden">
+<body class="flex flex-col h-screen">
 
     <!-- 1. الشريط العلوي Navbar -->
     <header class="h-16 border-b border-slate-800 bg-slate-900/90 px-6 flex items-center justify-between z-20">
@@ -36,12 +49,12 @@
             <span class="text-xs text-slate-400">محفظة DEDE:</span>
             <div class="flex items-center gap-2">
                 <i class="fa-solid fa-wallet text-amber-400"></i>
-                <span id="user-balance" class="font-bold text-amber-400">1,000.00 ل.س</span>
+                <span id="user-balance" class="font-bold text-amber-400">1,500,000 ل.س</span>
             </div>
-            <button onclick="openDepositModal()" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-xs text-white px-3 py-1 rounded-full font-medium transition shadow-md">
+            <button onclick="openDepositModal()" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 text-xs text-white px-3 py-1 rounded-full font-medium transition shadow-md">
                 <i class="fa-solid fa-plus text-[10px] ml-1"></i> إيداع (شام كاش)
             </button>
-            <button onclick="openWithdrawModal()" class="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-xs text-white px-3 py-1 rounded-full font-medium transition shadow-md">
+            <button onclick="openWithdrawModal()" class="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 text-xs text-white px-3 py-1 rounded-full font-medium transition shadow-md">
                 <i class="fa-solid fa-arrow-up-from-bracket text-[10px] ml-1"></i> سحب
             </button>
         </div>
@@ -69,11 +82,7 @@
                 </button>
                 <button onclick="openTransferModal()" class="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800/60 hover:text-white transition text-right">
                     <i class="fa-solid fa-paper-plane text-lg text-emerald-400"></i>
-                    <span class="hidden lg:inline">إرسال أموال للمشتركين</span>
-                </button>
-                <button onclick="openWithdrawModal()" class="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800/60 hover:text-white transition text-right">
-                    <i class="fa-solid fa-wallet text-lg text-amber-400"></i>
-                    <span class="hidden lg:inline">سحب الرصيد (شام كاش)</span>
+                    <span class="hidden lg:inline">تحويل أموال</span>
                 </button>
             </nav>
 
@@ -92,9 +101,9 @@
             
             <div class="relative rounded-3xl overflow-hidden p-8 bg-gradient-to-r from-purple-900/60 via-slate-900 to-pink-900/40 border border-slate-800">
                 <div class="max-w-xl space-y-3 z-10 relative">
-                    <span class="px-3 py-1 bg-purple-500/20 text-purple-300 text-xs rounded-full border border-purple-500/30">مرحباً بك في DEDE LIVE 🎙️</span>
-                    <h1 class="text-3xl font-black text-white leading-tight">تواصل صوتياً، ارسل الهدايا، وحوّل الأموال بسهولة</h1>
-                    <p class="text-slate-300 text-sm">نظام اقتصادي محلي متكامل يدعم الإيداع والسحب المباشر عبر شام كاش.</p>
+                    <span class="px-3 py-1 bg-purple-500/20 text-purple-300 text-xs rounded-full border border-purple-500/30">منصة DEDE LIVE الاحترافية 🎙️</span>
+                    <h1 class="text-3xl font-black text-white leading-tight">عالم من الرومات الصوتية، الهدايا الفاخرة، والتواصل الحي</h1>
+                    <p class="text-slate-300 text-sm">استمتع بتجربة مطابقة لتطبيقات البث العالمية مع نظام مالي محلي عبر شام كاش.</p>
                 </div>
             </div>
 
@@ -108,14 +117,14 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div class="glass-card rounded-2xl p-5 hover:border-purple-500/50 transition cursor-pointer group" onclick="joinLiveRoom('جلسة طرب وسوالف شباب 🎶', 'أبو أحمد')">
+                    <div class="glass-card rounded-2xl p-5 hover:border-purple-500/50 transition cursor-pointer group" onclick="joinLiveRoom('سهرة طرب وسوالف شباب 🎶', 'أبو أحمد')">
                         <div class="flex items-start justify-between mb-4">
                             <div>
                                 <span class="bg-purple-500/20 text-purple-400 text-[10px] px-2.5 py-1 rounded-full font-bold">سوالف ودردشة</span>
-                                <h3 class="text-lg font-bold mt-2 group-hover:text-purple-400 transition">جلسة طرب وسوالف شباب 🎶</h3>
+                                <h3 class="text-lg font-bold mt-2 group-hover:text-purple-400 transition">سهرة طرب وسوالف شباب 🎶</h3>
                             </div>
                             <span class="flex items-center gap-1 bg-slate-800/80 px-2.5 py-1 rounded-full text-xs text-slate-300">
-                                <i class="fa-solid fa-user text-[10px] text-emerald-400"></i> 142
+                                <i class="fa-solid fa-user text-[10px] text-emerald-400"></i> 340
                             </span>
                         </div>
                         <div class="flex items-center justify-between pt-4 border-t border-slate-800/80">
@@ -141,7 +150,7 @@
             <div class="space-y-3">
                 <div>
                     <label class="text-xs text-slate-400 mb-1 block">عنوان الروم:</label>
-                    <input type="text" id="new-room-title" placeholder="مثال: سهرة شبابية وأغاني طرب" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-purple-500">
+                    <input type="text" id="new-room-title" placeholder="مثال: سهرة طرب وموسيقى" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-purple-500">
                 </div>
                 <button onclick="createNewLiveRoom()" class="w-full py-3 bg-purple-600 hover:bg-purple-500 text-white rounded-xl font-bold transition shadow-lg shadow-purple-600/20">
                     فتح الروم وبدء البث الحي
@@ -150,31 +159,53 @@
         </div>
     </div>
 
-    <!-- نافذة متجر الهدايا داخل الروم -->
+    <!-- نافذة متجر الهدايا الفاخرة (مطابق لبيغو لايف) -->
     <div id="gift-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="glass-card w-full max-w-md p-6 rounded-3xl border border-slate-700 space-y-4">
+        <div class="glass-card w-full max-w-lg p-6 rounded-3xl border border-slate-700 space-y-4">
             <div class="flex justify-between items-center mb-2">
                 <h3 class="text-lg font-bold flex items-center gap-2 text-pink-400">
-                    <i class="fa-solid fa-gift"></i> متجر الهدايا الافتراضية
+                    <i class="fa-solid fa-gift"></i> متجر الهدايا الفاخرة
                 </h3>
                 <button onclick="closeModal('gift-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
-            <div class="grid grid-cols-2 gap-3">
-                <div onclick="sendGift('🌹 وردة', 500)" class="glass-card p-3 rounded-xl border border-slate-700 hover:border-pink-500 cursor-pointer text-center transition">
-                    <div class="text-2xl mb-1">🌹</div>
-                    <div class="text-sm font-bold">وردة</div>
-                    <div class="text-xs text-amber-400 mt-1">500 ل.س</div>
+            <p class="text-xs text-slate-400">اختر هدية لتظهر بتأثير مذهل على شاشة الروم:</p>
+            
+            <div class="grid grid-cols-3 gap-3 max-h-64 overflow-y-auto p-1">
+                <div onclick="sendGift('🌹 وردة حمراء', 500)" class="glass-card p-3 rounded-xl border border-slate-700 hover:border-pink-500 cursor-pointer text-center transition">
+                    <div class="text-3xl mb-1">🌹</div>
+                    <div class="text-xs font-bold">وردة</div>
+                    <div class="text-[10px] text-amber-400 mt-1">500 ل.س</div>
                 </div>
-                <div onclick="sendGift('🏎️ سيارة فخمة', 10000)" class="glass-card p-3 rounded-xl border border-slate-700 hover:border-pink-500 cursor-pointer text-center transition">
-                    <div class="text-2xl mb-1">🏎️</div>
-                    <div class="text-sm font-bold">سيارة سباق</div>
-                    <div class="text-xs text-amber-400 mt-1">10,000 ل.س</div>
+                <div onclick="sendGift('☕ فنجان قهوة', 1000)" class="glass-card p-3 rounded-xl border border-slate-700 hover:border-pink-500 cursor-pointer text-center transition">
+                    <div class="text-3xl mb-1">☕</div>
+                    <div class="text-xs font-bold">قهوة</div>
+                    <div class="text-[10px] text-amber-400 mt-1">1,000 ل.س</div>
+                </div>
+                <div onclick="sendGift('💍 خاتم ألماس', 5000)" class="glass-card p-3 rounded-xl border border-slate-700 hover:border-pink-500 cursor-pointer text-center transition">
+                    <div class="text-3xl mb-1">💍</div>
+                    <div class="text-xs font-bold">خاتم ألماس</div>
+                    <div class="text-[10px] text-amber-400 mt-1">5,000 ل.س</div>
+                </div>
+                <div onclick="sendGift('🏎️ سيارة رياضية', 25000)" class="glass-card p-3 rounded-xl border border-slate-700 hover:border-pink-500 cursor-pointer text-center transition">
+                    <div class="text-3xl mb-1">🏎️</div>
+                    <div class="text-xs font-bold">سيارة فخمة</div>
+                    <div class="text-[10px] text-amber-400 mt-1">25,000 ل.س</div>
+                </div>
+                <div onclick="sendGift('🦁 أسد DEDE الذهبي', 100000)" class="glass-card p-3 rounded-xl border border-slate-700 hover:border-pink-500 cursor-pointer text-center transition">
+                    <div class="text-3xl mb-1">🦁</div>
+                    <div class="text-xs font-bold">أسد ملكي</div>
+                    <div class="text-[10px] text-amber-400 mt-1">100,000 ل.س</div>
+                </div>
+                <div onclick="sendGift('🚀 صاروخ الفضاء', 500000)" class="glass-card p-3 rounded-xl border border-slate-700 hover:border-pink-500 cursor-pointer text-center transition">
+                    <div class="text-3xl mb-1">🚀</div>
+                    <div class="text-xs font-bold">صاروخ DEDE</div>
+                    <div class="text-[10px] text-amber-400 mt-1">500,000 ل.س</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- النوافذ المالية (إيداع، سحب، تحويل) -->
+    <!-- نوافذ المحفظة (إيداع، سحب، تحويل، تعديل ملف) -->
     <div id="deposit-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="glass-card w-full max-w-md p-6 rounded-3xl border border-slate-700 space-y-4">
             <div class="flex justify-between items-center"><h3 class="text-lg font-bold text-emerald-400">إيداع رصيد (شام كاش)</h3><button onclick="closeModal('deposit-modal')" class="text-slate-400"><i class="fa-solid fa-xmark text-xl"></i></button></div>
@@ -196,18 +227,24 @@
         </div>
     </div>
 
-    <!-- البرمجة والربط الصوتي الحي -->
+    <div id="profile-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="glass-card w-full max-w-md p-6 rounded-3xl border border-slate-700 space-y-4">
+            <div class="flex justify-between items-center"><h3 class="text-lg font-bold text-purple-400">تعديل الملف الشخصي</h3><button onclick="closeModal('profile-modal')" class="text-slate-400"><i class="fa-solid fa-xmark text-xl"></i></button></div>
+            <input type="text" id="prof-name" placeholder="الاسم الكامل" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white">
+            <input type="text" id="prof-username" placeholder="اسم المستخدم (@username)" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white">
+            <textarea id="prof-bio" placeholder="نبذة عنك (Bio)" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white"></textarea>
+            <button onclick="alert('تم حفظ التعديلات بنجاح!')" class="w-full py-3 bg-purple-600 text-white rounded-xl font-bold">حفظ التغييرات</button>
+        </div>
+    </div>
+
+    <!-- البرمجة والتفاعل المتطور -->
     <script>
         const SUPABASE_URL = "https://hsorrgydvfjmleztmlur.supabase.co"; 
         const SUPABASE_ANON_KEY = "sb_publishable_GgSvoGy9pHif9SHHXPaF_w_g0xgakSh"; 
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
         let currentUser = null;
-        let userBalance = 1000.0;
-
-        // إعدادات Agora للبث الصوتي الحي
-        const AGORA_APP_ID = "YOUR_AGORA_APP_ID"; // سيتم ربطه بمعرف الخادم الفعلي لاحقاً
-        let rtcClient = null;
+        let userBalance = 1500000.0; // رصيد افتراضي تجريبي ضخم
         let localAudioTrack = null;
         let isMicActive = false;
 
@@ -243,45 +280,59 @@
             `;
         }
 
-        // بدء الدخول الفعلي للروم مع تشغيل الصوت الحي عبر WebRTC / Agora
-        async function joinLiveRoom(title, host) {
+        // واجهة الروم الحي مع المايكات التفاعلية الانتقالية
+        function joinLiveRoom(title, host) {
             const mainArea = document.getElementById('main-content-area');
             mainArea.innerHTML = `
-                <div class="flex flex-col h-full space-y-4">
+                <div class="flex flex-col h-full space-y-4 relative overflow-hidden">
+                    <!-- تأثيرات الهدايا العائمة المتحركة -->
+                    <div id="gift-animation-container" class="absolute inset-0 pointer-events-none z-30 flex items-center justify-center"></div>
+
+                    <!-- رأس الروم -->
                     <div class="glass-card p-4 rounded-2xl flex items-center justify-between border border-purple-500/30">
                         <div>
-                            <span class="text-[10px] bg-red-500/20 text-red-400 px-2 py-0.5 rounded-full font-bold animate-pulse">🔴 بث صوتي حي مباشر</span>
+                            <span class="text-[10px] bg-red-500/25 text-red-400 px-2 py-0.5 rounded-full font-bold animate-pulse">🔴 بث مباشر حي</span>
                             <h2 class="text-xl font-bold mt-1 text-white">${title}</h2>
-                            <p class="text-xs text-slate-400">المضيف: <span class="text-purple-400">${host}</span></p>
+                            <p class="text-xs text-slate-400">المضيف: <span class="text-purple-400">${host}</span> | متواجدون: <span class="text-emerald-400">340 مستمع</span></p>
                         </div>
                         <button onclick="leaveRoom()" class="px-4 py-2 bg-red-600/20 text-red-400 hover:bg-red-600 hover:text-white rounded-xl text-xs font-bold transition border border-red-500/30">
                             مغادرة البث
                         </button>
                     </div>
 
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 glass-card rounded-2xl text-center">
-                        <div class="flex flex-col items-center space-y-2">
-                            <div class="w-16 h-16 rounded-full bg-purple-600/30 border-2 border-purple-500 flex items-center justify-center text-xl relative">👑</div>
-                            <span class="text-xs font-bold text-slate-300">${host}</span>
-                            <span class="text-[10px] text-purple-400">المضيف الأساسي</span>
+                    <!-- شبكة مقاعد المايكات الاحترافية (مطابق لبيغو) -->
+                    <div class="grid grid-cols-4 md:grid-cols-8 gap-3 p-4 glass-card rounded-2xl text-center">
+                        <div class="flex flex-col items-center space-y-1">
+                            <div class="w-14 h-14 rounded-full bg-purple-600/30 border-2 border-purple-500 flex items-center justify-center text-lg relative">👑</div>
+                            <span class="text-[11px] font-bold text-slate-300">${host}</span>
+                            <span class="text-[9px] text-purple-400">المضيف</span>
                         </div>
-                        <div class="flex flex-col items-center space-y-2">
-                            <div id="my-seat" class="w-16 h-16 rounded-full bg-slate-800 border-2 border-slate-700 flex items-center justify-center text-xl relative">
-                                🎙️ <span id="mic-indicator" class="absolute bottom-0 right-0 w-4 h-4 bg-slate-600 rounded-full border-2 border-slate-900"></span>
+                        <div class="flex flex-col items-center space-y-1">
+                            <div id="seat-my-slot" class="w-14 h-14 rounded-full bg-slate-800 border-2 border-slate-700 flex items-center justify-center text-lg relative">
+                                🎙️ <span id="mic-indicator" class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-slate-600 rounded-full border-2 border-slate-900"></span>
                             </div>
-                            <span class="text-xs font-bold text-slate-300">أنت (متحدث)</span>
-                            <button onclick="toggleRealAudioMic()" id="mic-btn" class="px-3 py-1 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-[10px] font-bold">فتح المايك الصوتي</button>
+                            <span class="text-[11px] font-bold text-slate-300">أنت</span>
+                            <button onclick="toggleRealAudioMic()" id="mic-btn" class="px-2 py-0.5 bg-purple-600 hover:bg-purple-500 text-white rounded-md text-[9px] font-bold">صعود للمايك</button>
+                        </div>
+                        <div class="flex flex-col items-center space-y-1 opacity-60">
+                            <div class="w-14 h-14 rounded-full bg-slate-800 border-2 border-dashed border-slate-700 flex items-center justify-center text-lg">3</div>
+                            <span class="text-[10px] text-slate-500">مقعد فارغ</span>
+                        </div>
+                        <div class="flex flex-col items-center space-y-1 opacity-60">
+                            <div class="w-14 h-14 rounded-full bg-slate-800 border-2 border-dashed border-slate-700 flex items-center justify-center text-lg">4</div>
+                            <span class="text-[10px] text-slate-500">مقعد فارغ</span>
                         </div>
                     </div>
 
+                    <!-- شات الروم والتحكم -->
                     <div class="flex-1 glass-card rounded-2xl p-4 flex flex-col justify-between">
                         <div class="space-y-2 overflow-y-auto max-h-40 text-xs text-slate-300" id="room-chat">
-                            <div class="p-2 bg-slate-900/60 rounded-xl">🟢 تم الاتصال بخادم الصوت الحي بنجاح. ابدأ التحدث أو أرسل الهدايا!</div>
+                            <div class="p-2 bg-slate-900/60 rounded-xl">🌟 مرحباً بكم في روم DEDE LIVE الاحترافي! تم تفعيل نظام الصوت الحي والهدايا المتحركة.</div>
                         </div>
                         <div class="flex items-center gap-3 pt-3 border-t border-slate-800">
-                            <input type="text" id="chat-input" placeholder="اكتب تعليقاً..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-xs text-white focus:outline-none">
-                            <button onclick="openGiftModal()" class="px-4 py-2 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-lg">
-                                <i class="fa-solid fa-gift"></i> إرسال هدية
+                            <input type="text" id="chat-input" placeholder="اكتب تعليقاً في الروم..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-xs text-white focus:outline-none focus:border-purple-500">
+                            <button onclick="openGiftModal()" class="px-4 py-2 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-lg shadow-pink-600/30">
+                                <i class="fa-solid fa-gift"></i> إرسال هدية فاخرة
                             </button>
                         </div>
                     </div>
@@ -289,24 +340,24 @@
             `;
         }
 
-        // تشغيل وإيقاف المايك الصوتي الفعلي للمتصفح (WebRTC Audio Stream)
+        // تشغيل المايك الفعلي مع تأثيرات موجات الكلام المتحركة
         async function toggleRealAudioMic() {
             const micBtn = document.getElementById('mic-btn');
-            const seat = document.getElementById('my-seat');
+            const slot = document.getElementById('seat-my-slot');
             const indicator = document.getElementById('mic-indicator');
 
             try {
                 if (!isMicActive) {
-                    // طلب إذن استخدام المايك من المتصفح وفتح البث الحي الفعلي
                     localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
                     isMicActive = true;
                     
-                    seat.classList.add('active-mic');
+                    // تفعيل تأثير النبض وقت الكلام
+                    slot.classList.add('speaking-animation');
                     micBtn.innerText = "كتم المايك";
-                    micBtn.className = "px-3 py-1 bg-red-600 hover:bg-red-500 text-white rounded-lg text-[10px] font-bold";
-                    indicator.className = "absolute bottom-0 right-0 w-4 h-4 bg-emerald-500 rounded-full border-2 border-slate-900 animate-pulse";
+                    micBtn.className = "px-2 py-0.5 bg-red-600 hover:bg-red-500 text-white rounded-md text-[9px] font-bold";
+                    indicator.className = "absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-slate-900 animate-pulse";
                     
-                    alert("تم فتح المايك الصوتي بنجاح وصوتك مسموع الآن في الروم!");
+                    alert("🎙️ المايك مفتوح الآن! صوتك ينقل حياً مع تأثيرات النبض.");
                 } else {
                     if (localAudioTrack) {
                         localAudioTrack.stop();
@@ -314,17 +365,36 @@
                     }
                     isMicActive = false;
                     
-                    seat.classList.remove('active-mic');
-                    micBtn.innerText = "فتح المايك الصوتي";
-                    micBtn.className = "px-3 py-1 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-[10px] font-bold";
-                    indicator.className = "absolute bottom-0 right-0 w-4 h-4 bg-slate-600 rounded-full border-2 border-slate-900";
+                    slot.classList.remove('speaking-animation');
+                    micBtn.innerText = "صعود للمايك";
+                    micBtn.className = "px-2 py-0.5 bg-purple-600 hover:bg-purple-500 text-white rounded-md text-[9px] font-bold";
+                    indicator.className = "absolute bottom-0 right-0 w-3.5 h-3.5 bg-slate-600 rounded-full border-2 border-slate-900";
                     
                     alert("تم كتم المايك.");
                 }
             } catch (error) {
                 alert("تعذر الوصول إلى المايك. يرجى السماح للمتصفح باستخدام المايكروفون.");
-                console.error(error);
             }
+        }
+
+        // إرسال الهدايا مع تأثيرات بصرية عائمة على الشاشة
+        function sendGift(giftName, price) {
+            if (userBalance < price) return alert("رصيدك الحالي غير كافٍ لشراء هذه الهدية الفاخرة.");
+            userBalance -= price;
+            document.getElementById('user-balance').innerText = userBalance.toLocaleString('ar-SY') + " ل.س";
+            closeModal('gift-modal');
+
+            // إظهار التفاعل البصري المتحرك على الشاشة
+            const container = document.getElementById('gift-animation-container');
+            if (container) {
+                const banner = document.createElement('div');
+                banner.className = "gift-banner bg-gradient-to-r from-pink-600/90 to-purple-600/90 border border-pink-400 text-white px-6 py-3 rounded-2xl shadow-2xl text-center font-black text-lg flex items-center gap-3";
+                banner.innerHTML = `<span class="text-3xl">🎁</span> أرسل هدية فاخرة: <span class="text-amber-300">${giftName}</span> (${price.toLocaleString()} ل.س)`;
+                container.appendChild(banner);
+                setTimeout(() => banner.remove(), 3000);
+            }
+
+            alert(`✨ تهانينا! أرسلت هدية (${giftName}) بنجاح.`);
         }
 
         function leaveRoom() {
@@ -335,18 +405,10 @@
             location.reload();
         }
 
-        // إرسال الهدايا وخصم الرصيد
         function openGiftModal() { document.getElementById('gift-modal').classList.remove('hidden'); }
-        function sendGift(giftName, price) {
-            if (userBalance < price) return alert("رصيدك غير كافٍ.");
-            userBalance -= price;
-            document.getElementById('user-balance').innerText = userBalance.toLocaleString('ar-SY') + " ل.س";
-            closeModal('gift-modal');
-            alert(`🎁 أرسلت هدية (${giftName}) بقيمة ${price} ل.س بنجاح!`);
-        }
-
         function openDepositModal() { document.getElementById('deposit-modal').classList.remove('hidden'); }
         function openWithdrawModal() { document.getElementById('withdraw-modal').classList.remove('hidden'); }
+        function openProfileModal() { document.getElementById('profile-modal').classList.remove('hidden'); }
         function openCreateRoomModal() { document.getElementById('create-room-modal').classList.remove('hidden'); }
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
@@ -362,7 +424,7 @@
             const net = amount - (amount * 0.01);
             userBalance += net;
             document.getElementById('user-balance').innerText = userBalance.toLocaleString('ar-SY') + " ل.س";
-            alert(`تم الإيداع بنجاح بعد خصم 1% عمولة! الرصيد المضاف: ${net} ل.س`);
+            alert(`تم الإيداع بنجاح بعد خصم 1% عمولة! الرصيد المضاف: ${net.toLocaleString()} ل.س`);
             closeModal('deposit-modal');
         }
 
@@ -371,7 +433,7 @@
             if (isNaN(amount) || amount <= 0 || amount > userBalance) return alert("رصيد غير كافٍ أو مبلغ خاطئ");
             userBalance -= amount;
             document.getElementById('user-balance').innerText = userBalance.toLocaleString('ar-SY') + " ل.س";
-            alert(`تم طلب سحب ${amount} ل.س إلى محفظة شام كاش بنجاح.`);
+            alert(`تم طلب سحب ${amount.toLocaleString()} ل.س إلى محفظة شام كاش بنجاح.`);
             closeModal('withdraw-modal');
         }
     </script>

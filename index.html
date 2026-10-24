@@ -13,7 +13,6 @@
     <!-- Agora RTC SDK للبث الصوتي الحي -->
     <script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.17.0.js"></script>
     <style>
-        /* خلفية شفافة أثيرية تعبر عن التعارف والرومانسية */
         body { 
             background: radial-gradient(circle at 50% 30%, #3b0764 0%, #1e052a 50%, #09020d 100%);
             color: #f8fafc; 
@@ -21,21 +20,19 @@
             overflow: hidden; 
         }
 
-        /* كروت زجاجية شفافة فائقة الأناقة Ultra Glassmorphism */
         .glass-card { 
-            background: rgba(50, 15, 55, 0.4); 
+            background: rgba(50, 15, 55, 0.45); 
             backdrop-filter: blur(20px); 
             border: 1px solid rgba(244, 114, 182, 0.2); 
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45);
         }
 
         .glass-nav {
-            background: rgba(25, 8, 30, 0.7);
+            background: rgba(25, 8, 30, 0.75);
             backdrop-filter: blur(25px);
             border-bottom: 1px solid rgba(236, 72, 153, 0.25);
         }
         
-        /* نبض المايك الرومانسي وقت الكلام */
         @keyframes romanticSoundWave {
             0% { box-shadow: 0 0 0 0 rgba(236, 72, 153, 0.8); }
             70% { box-shadow: 0 0 0 20px rgba(236, 72, 153, 0); }
@@ -43,7 +40,6 @@
         }
         .speaking-animation { animation: romanticSoundWave 1.4s infinite; border-color: #ec4899 !important; }
         
-        /* تأثير ظهور الهدايا الفاخرة */
         @keyframes giftPopup {
             0% { transform: scale(0.5); opacity: 0; }
             50% { transform: scale(1.1); opacity: 1; }
@@ -52,7 +48,6 @@
         .gift-banner { animation: giftPopup 3s ease-in-out forwards; }
         .vip-badge { background: linear-gradient(135deg, #f59e0b, #d97706); text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
         
-        /* الثيمات الخلفية للرومات */
         .theme-night { background: rgba(20, 8, 28, 0.65); }
         .theme-tarab { background: linear-gradient(to bottom, rgba(126, 34, 206, 0.4), rgba(15, 5, 20, 0.85)); }
         .theme-sunset { background: linear-gradient(to bottom, rgba(190, 18, 60, 0.4), rgba(15, 5, 20, 0.85)); }
@@ -60,7 +55,7 @@
 </head>
 <body class="flex flex-col h-screen">
 
-    <!-- 1. الشريط العلوي Navbar الشفاف مع الشعار الوردي والمايك الرومانسي -->
+    <!-- 1. الشريط العلوي Navbar -->
     <header class="h-20 glass-nav px-6 flex items-center justify-between z-20">
         <div class="flex items-center gap-3 cursor-pointer" onclick="leaveRoom()">
             <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-pink-600 via-rose-500 to-purple-600 flex items-center justify-center font-black text-2xl text-white shadow-lg shadow-pink-500/40 border border-pink-300/40">
@@ -74,7 +69,6 @@
             </div>
         </div>
 
-        <!-- محفظة DEDE بالكوينزات والدعم -->
         <div class="hidden md:flex items-center gap-4 bg-rose-950/40 px-4 py-2 rounded-full border border-pink-500/30">
             <button onclick="openLeaderboardModal()" class="flex items-center gap-1.5 text-xs font-bold text-amber-300 hover:text-amber-200 transition">
                 <i class="fa-solid fa-trophy text-amber-400"></i> المتصدرين
@@ -85,8 +79,8 @@
                 <span class="text-amber-400 text-sm">🪙</span>
                 <span id="user-balance" class="font-black text-amber-400">400,000 كوينز</span>
             </div>
-            <button onclick="openDepositModal()" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 text-xs text-white px-3.5 py-1 rounded-full font-medium transition shadow-md shadow-emerald-500/20">
-                <i class="fa-solid fa-plus text-[10px] ml-1"></i> شحن (شام كاش)
+            <button onclick="openDepositModal()" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 text-xs text-white px-3.5 py-1 rounded-full font-medium transition shadow-md">
+                <i class="fa-solid fa-plus text-[10px] ml-1"></i> شحن
             </button>
             <button onclick="openWithdrawModal()" class="bg-gradient-to-r from-amber-500 to-rose-600 hover:from-amber-600 text-xs text-white px-3.5 py-1 rounded-full font-medium transition shadow-md">
                 <i class="fa-solid fa-arrow-up-from-bracket text-[10px] ml-1"></i> سحب
@@ -94,8 +88,8 @@
         </div>
 
         <div class="flex items-center gap-3">
-            <a href="https://wa.me/963993918672" target="_blank" class="px-3.5 py-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-lg shadow-emerald-600/20">
-                <i class="fa-brands fa-whatsapp text-sm"></i> الدعم والشكاوي
+            <a href="https://wa.me/963993918672" target="_blank" class="px-3.5 py-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-lg">
+                <i class="fa-brands fa-whatsapp text-sm"></i> الدعم
             </a>
             <div id="auth-section" class="flex items-center gap-3 border-r border-pink-500/30 pr-3">
                 <button onclick="loginWithGoogle()" id="auth-btn" class="px-3.5 py-1.5 bg-white/90 hover:bg-white text-slate-900 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-md">
@@ -106,249 +100,195 @@
     </header>
 
     <div class="flex flex-1 overflow-hidden">
-        <!-- 2. القائمة الجانبية Sidebar الشفافة -->
+        <!-- 2. القائمة الجانبية -->
         <aside class="w-20 lg:w-64 border-l border-pink-500/20 bg-slate-950/40 flex flex-col justify-between p-4 z-10 backdrop-blur-md">
             <nav class="space-y-2">
-                <a href="#" onclick="leaveRoom()" class="flex items-center gap-4 px-4 py-3 rounded-xl bg-gradient-to-r from-pink-600 via-rose-600 to-purple-600 text-white font-medium shadow-lg shadow-pink-500/20 border border-pink-400/20">
+                <a href="#" onclick="leaveRoom()" class="flex items-center gap-4 px-4 py-3 rounded-xl bg-gradient-to-r from-pink-600 via-rose-600 to-purple-600 text-white font-medium shadow-lg">
                     <i class="fa-solid fa-microphone text-lg"></i>
                     <span class="hidden lg:inline">الرومات الصوتية</span>
                 </a>
-                <button onclick="openAboutModal()" class="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-pink-200/80 hover:bg-pink-900/30 hover:text-white transition text-right">
+                <button onclick="openGamesModal()" class="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-amber-300 hover:bg-amber-500/20 transition text-right border border-amber-500/30">
+                    <i class="fa-solid fa-dice text-lg text-amber-400"></i>
+                    <span class="hidden lg:inline font-bold">ألعاب الحظ والبوكر 🎲</span>
+                </button>
+                <button onclick="openAboutModal()" class="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-pink-200/80 hover:bg-pink-900/30 transition text-right">
                     <i class="fa-solid fa-circle-info text-lg text-pink-400"></i>
                     <span class="hidden lg:inline">شرح التطبيق والوكلاء</span>
                 </button>
-                <button onclick="openLeaderboardModal()" class="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-pink-200/80 hover:bg-pink-900/30 hover:text-white transition text-right">
+                <button onclick="openLeaderboardModal()" class="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-pink-200/80 hover:bg-pink-900/30 transition text-right">
                     <i class="fa-solid fa-crown text-lg text-amber-400"></i>
                     <span class="hidden lg:inline">لوحة المتصدرين</span>
                 </button>
-                <button onclick="openProfileModal()" class="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-pink-200/80 hover:bg-pink-900/30 hover:text-white transition text-right">
+                <button onclick="openProfileModal()" class="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-pink-200/80 hover:bg-pink-900/30 transition text-right">
                     <i class="fa-solid fa-user-gear text-lg text-rose-400"></i>
                     <span class="hidden lg:inline">الملف الشخصي و VIP</span>
                 </button>
-                <button onclick="openTransferModal()" class="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-pink-200/80 hover:bg-pink-900/30 hover:text-white transition text-right">
-                    <i class="fa-solid fa-paper-plane text-lg text-emerald-400"></i>
-                    <span class="hidden lg:inline">تحويل كوينزات</span>
-                </button>
             </nav>
 
-            <div class="hidden lg:block glass-card p-4 rounded-2xl text-center relative overflow-hidden border border-pink-500/20">
+            <div class="hidden lg:block glass-card p-4 rounded-2xl text-center border border-pink-500/20">
                 <div class="text-xs text-pink-300 font-bold mb-1">💖 مجتمع DEDE LIVE</div>
-                <p class="text-[11px] text-pink-200/70 mb-3">أكثر من <span class="text-amber-300 font-bold">100,000 مستخدم</span> يتواصلون بحب ورومانسية!</p>
-                <button onclick="openCreateRoomModal()" class="w-full py-2.5 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 text-white text-xs rounded-xl font-bold transition shadow-lg shadow-pink-600/30">
-                    + إنشاء غرفة تعارف صوتية
-                </button>
+                <p class="text-[11px] text-pink-200/70 mb-3">أكثر من <span class="text-amber-300 font-bold">100,000 مستخدم</span> نشط!</p>
+                <button onclick="openCreateRoomModal()" class="w-full py-2.5 bg-gradient-to-r from-pink-600 to-purple-600 text-white text-xs rounded-xl font-bold transition shadow-lg">+ إنشاء روم</button>
             </div>
         </aside>
 
-        <!-- 3. المحتوى الرئيسي Main Content -->
+        <!-- 3. المحتوى الرئيسي -->
         <main id="main-content-area" class="flex-1 overflow-y-auto p-6 space-y-8">
-            
             <div class="relative rounded-3xl overflow-hidden p-8 bg-gradient-to-r from-pink-950/60 via-purple-950/80 to-rose-950/60 border border-pink-500/30 shadow-2xl">
                 <div class="max-w-xl space-y-3 z-10 relative">
                     <span class="px-3.5 py-1 bg-pink-500/20 text-pink-200 text-xs rounded-full border border-pink-500/30">DEDE LIVE World 💕</span>
-                    <h1 class="text-3xl font-black text-white leading-tight">تواصل وتعارف مع أكثر من 100,000 مستخدم</h1>
-                    <p class="text-pink-200/80 text-sm">أجواء رومانسية دافئة، نظام كوينزات مرن، وشحن وسحب المالي المباشر عبر شام كاش.</p>
+                    <h1 class="text-3xl font-black text-white leading-tight">تواصل والعب ألعاب الحظ بالكوينزات</h1>
+                    <p class="text-pink-200/80 text-sm">جرب حظك الآن في ألعاب الحظ (1K حتى 100K) واربح أضعاف رصيدك بالكوينزات!</p>
                 </div>
             </div>
 
-            <!-- قائمة الرومات الصوتية -->
             <div>
                 <div class="flex items-center justify-between mb-6">
                     <div class="flex items-center gap-3">
                         <div class="w-3 h-3 bg-pink-500 rounded-full animate-ping"></div>
-                        <h2 class="text-xl font-bold text-pink-100">رومات التعارف والطرب النشطة</h2>
+                        <h2 class="text-xl font-bold text-pink-100">الرومات النشطة الآن</h2>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div class="glass-card rounded-2xl p-5 hover:border-pink-500/60 transition cursor-pointer group" onclick="joinLiveRoom('سهرة حب وطرب وسوالف 🎶💖', 'أبو أحمد')">
+                    <div class="glass-card rounded-2xl p-5 hover:border-pink-500/60 transition cursor-pointer group" onclick="joinLiveRoom('سهرة حب وتحديات بوكر 🎲💖', 'أبو أحمد')">
                         <div class="flex items-start justify-between mb-4">
                             <div>
-                                <span class="bg-pink-500/20 text-pink-300 text-[10px] px-2.5 py-1 rounded-full font-bold border border-pink-500/30">تعارف وسوالف</span>
-                                <h3 class="text-lg font-bold mt-2 group-hover:text-pink-300 transition text-white">سهرة حب وطرب وسوالف 🎶💖</h3>
+                                <span class="bg-pink-500/20 text-pink-300 text-[10px] px-2.5 py-1 rounded-full font-bold border border-pink-500/30">ألعاب وحظ</span>
+                                <h3 class="text-lg font-bold mt-2 text-white">سهرة حب وتحديات بوكر 🎲💖</h3>
                             </div>
-                            <span class="flex items-center gap-1 bg-pink-950/60 px-2.5 py-1 rounded-full text-xs text-pink-200 border border-pink-500/20">
-                                <i class="fa-solid fa-heart text-[10px] text-pink-400"></i> 340
+                            <span class="flex items-center gap-1 bg-pink-950/60 px-2.5 py-1 rounded-full text-xs text-pink-200">
+                                <i class="fa-solid fa-heart text-pink-400"></i> 410
                             </span>
                         </div>
                         <div class="flex items-center justify-between pt-4 border-t border-pink-500/20">
-                            <span class="text-xs text-pink-200/80">أبو أحمد <span class="text-[9px] vip-badge text-white px-1.5 py-0.2 rounded-md">VIP 👑</span></span>
-                            <button class="px-4 py-1.5 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-500 text-white rounded-lg text-xs font-bold transition shadow-md shadow-pink-600/20">دخول الروم</button>
+                            <span class="text-xs text-pink-200">أبو أحمد <span class="text-[9px] vip-badge text-white px-1.5 rounded">VIP 👑</span></span>
+                            <button class="px-4 py-1.5 bg-gradient-to-r from-pink-600 to-rose-600 text-white rounded-lg text-xs font-bold">دخول الروم</button>
                         </div>
                     </div>
                 </div>
             </div>
-
         </main>
     </div>
 
-    <!-- نافذة شرح التطبيق والبنود الشرطية -->
-    <div id="about-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-        <div class="glass-card w-full max-w-2xl p-6 rounded-3xl border border-pink-500/30 space-y-5 max-h-[85vh] overflow-y-auto">
+    <!-- 🎲 نافذة ألعاب الحظ والبوكر بالكوينزات -->
+    <div id="games-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="glass-card w-full max-w-lg p-6 rounded-3xl border border-amber-500/40 space-y-5">
             <div class="flex justify-between items-center border-b border-pink-500/20 pb-3">
-                <h3 class="text-xl font-bold flex items-center gap-2 text-pink-300">
-                    <i class="fa-solid fa-book-open"></i> دليل DEDE LIVE والبنود الشرطية
+                <h3 class="text-lg font-bold flex items-center gap-2 text-amber-400">
+                    <i class="fa-solid fa-dice"></i> صالة ألعاب الحظ والبوكر (بالكوينزات)
                 </h3>
-                <button onclick="closeModal('about-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
-            </div>
-            
-            <div class="p-3.5 bg-pink-500/10 rounded-2xl border border-pink-500/30 text-xs text-pink-200 flex items-center gap-3">
-                <span class="text-2xl">🌍</span>
-                <div>تطبيـق <b>DEDE LIVE</b> يضم أكثر من <b>100,000 مستخدم</b> نشط حول العالم، مع نظام شحن وسحب اقتصادي محمي كلياً.</div>
+                <button onclick="closeModal('games-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
 
-            <!-- قسم البنود والشروط -->
-            <div class="space-y-4">
-                <div class="bg-rose-950/40 p-4 rounded-2xl border border-pink-500/20 space-y-2">
-                    <h4 class="text-sm font-bold text-amber-300 flex items-center gap-2">
-                        <i class="fa-solid fa-briefcase"></i> 1. قسم الوكلاء المعتمدين (Agencies)
-                    </h4>
-                    <p class="text-xs text-pink-100/80 leading-relaxed">
-                        يلتزم الوكيل بإدارة أهداف واستحقاقات المضيفين والتأكد من جودة البث. يحصل الوكيل على نسبة الأرباح والمكافآت الدورية شريطة الالتزام بالقواعد السلوكية ومكافحة الاحتيال.
-                    </p>
-                </div>
-
-                <div class="bg-rose-950/40 p-4 rounded-2xl border border-pink-500/20 space-y-2">
-                    <h4 class="text-sm font-bold text-pink-400 flex items-center gap-2">
-                        <i class="fa-solid fa-gem"></i> 2. قسم الداعمين الرسميين (Top Supporters)
-                    </h4>
-                    <p class="text-xs text-pink-100/80 leading-relaxed">
-                        يُمنح الداعمون شارات VIP حصرية وأولوية الوصول والدعم المباشر. تخضع كافة عمليات شراء الكوينزات وإهدائها لبنود الأمان والتدقيق المالي الشفاف.
-                    </p>
-                </div>
-
-                <div class="bg-rose-950/40 p-4 rounded-2xl border border-pink-500/20 space-y-2 text-xs">
-                    <h4 class="text-xs font-bold text-emerald-400">💵 جدول أسعار الكوينزات وشروط الصرف:</h4>
-                    <ul class="list-disc list-inside space-y-1 text-pink-100/80 text-[11px]">
-                        <li>سعر صرف الليرة السورية المعتمد: <b>1$ = 14,300 ل.س</b>.</li>
-                        <li>معادلة الإيداع: <b>كل 1$ يعطيك 40,000 كوينز</b> (خصم 1% عمولة منصة).</li>
-                        <li>معادلة السحب: <b>كل 700,000 كوينز تُصرف بـ 10$</b> حصراً عبر شام كاش.</li>
-                    </ul>
+            <div class="space-y-3">
+                <label class="text-xs text-pink-200 block font-bold">اختر قيمة الرهان بالكوينزات:</label>
+                <div class="grid grid-cols-5 gap-2">
+                    <button onclick="selectBet(1000)" id="bet-1000" class="bet-btn py-2 bg-pink-950/80 border border-pink-500/40 rounded-xl text-xs font-bold text-white hover:border-amber-400 transition">1K</button>
+                    <button onclick="selectBet(5000)" id="bet-5000" class="bet-btn py-2 bg-pink-950/80 border border-pink-500/40 rounded-xl text-xs font-bold text-white hover:border-amber-400 transition">5K</button>
+                    <button onclick="selectBet(10000)" id="bet-10000" class="bet-btn py-2 bg-pink-950/80 border border-pink-500/40 rounded-xl text-xs font-bold text-white hover:border-amber-400 transition">10K</button>
+                    <button onclick="selectBet(50000)" id="bet-50000" class="bet-btn py-2 bg-pink-950/80 border border-pink-500/40 rounded-xl text-xs font-bold text-white hover:border-amber-400 transition">50K</button>
+                    <button onclick="selectBet(100000)" id="bet-100000" class="bet-btn py-2 bg-pink-950/80 border border-pink-500/40 rounded-xl text-xs font-bold text-white hover:border-amber-400 transition">100K</button>
                 </div>
             </div>
 
-            <div class="pt-2 flex items-center gap-3">
-                <button onclick="acceptTerms()" class="w-full py-3 bg-gradient-to-r from-pink-600 via-rose-600 to-purple-600 text-white font-bold rounded-xl text-xs transition shadow-lg shadow-pink-600/30">
-                    أوافق على جميع الشروط والبنود للدخول
+            <div class="p-4 bg-slate-950/60 rounded-2xl border border-pink-500/20 text-center space-y-2">
+                <div class="text-xs text-slate-400">الرهان المحدد حالياً:</div>
+                <div id="selected-bet-display" class="text-xl font-black text-amber-400">🪙 1,000 كوينز</div>
+                <div id="game-result-msg" class="text-xs text-pink-300 font-medium min-h-[20px]">اضغط ابدأ اللعب لاختبار حظك!</div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="playLuckyWheel()" class="py-3 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 text-slate-950 font-black rounded-xl text-xs transition shadow-lg">
+                    🎡 عجلة الحظ السريعة
+                </button>
+                <button onclick="playPokerCard()" class="py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 text-white font-black rounded-xl text-xs transition shadow-lg">
+                    🃏 تحدي ورق البوكر
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- نافذة متجر الهدايا بالكوينزات -->
+    <!-- نافذة الهدايا -->
     <div id="gift-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="glass-card w-full max-w-lg p-6 rounded-3xl border border-pink-500/30 space-y-4">
             <div class="flex justify-between items-center mb-2">
-                <h3 class="text-lg font-bold flex items-center gap-2 text-pink-300">
-                    <i class="fa-solid fa-gift"></i> متجر الهدايا الرومانسية والفاخرة
-                </h3>
-                <button onclick="closeModal('gift-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+                <h3 class="text-lg font-bold flex items-center gap-2 text-pink-300"><i class="fa-solid fa-gift"></i> متجر الهدايا</h3>
+                <button onclick="closeModal('gift-modal')" class="text-slate-400"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
             <div class="grid grid-cols-3 gap-3 max-h-64 overflow-y-auto p-1">
-                <div onclick="sendGift('🌹 باقة ورد احمر', 100)" class="glass-card p-3 rounded-xl border border-pink-500/30 hover:border-pink-500 cursor-pointer text-center transition">
+                <div onclick="sendGift('🌹 باقة ورد', 1000)" class="glass-card p-3 rounded-xl border border-pink-500/30 hover:border-pink-500 cursor-pointer text-center">
                     <div class="text-3xl mb-1">🌹</div>
-                    <div class="text-xs font-bold text-white">باقة ورد</div>
-                    <div class="text-[10px] text-amber-400 mt-1">🪙 100 كوينز</div>
+                    <div class="text-xs font-bold text-white">وردة</div>
+                    <div class="text-[10px] text-amber-400 mt-1">🪙 1,000</div>
                 </div>
-                <div onclick="sendGift('💖 قلب متألق', 250)" class="glass-card p-3 rounded-xl border border-pink-500/30 hover:border-pink-500 cursor-pointer text-center transition">
+                <div onclick="sendGift('💖 قلب متألق', 5000)" class="glass-card p-3 rounded-xl border border-pink-500/30 hover:border-pink-500 cursor-pointer text-center">
                     <div class="text-3xl mb-1">💖</div>
-                    <div class="text-xs font-bold text-white">قلب متألق</div>
-                    <div class="text-[10px] text-amber-400 mt-1">🪙 250 كوينز</div>
-                </div>
-                <div onclick="sendGift('💍 خاتم ألماس', 2500)" class="glass-card p-3 rounded-xl border border-pink-500/30 hover:border-pink-500 cursor-pointer text-center transition">
-                    <div class="text-3xl mb-1">💍</div>
-                    <div class="text-xs font-bold text-white">خاتم ألماس</div>
-                    <div class="text-[10px] text-amber-400 mt-1">🪙 2,500 كوينز</div>
-                </div>
-                <div onclick="sendGift('🏎️ سيارة سباق', 10000)" class="glass-card p-3 rounded-xl border border-pink-500/30 hover:border-pink-500 cursor-pointer text-center transition">
-                    <div class="text-3xl mb-1">🏎️</div>
-                    <div class="text-xs font-bold text-white">سيارة فخمة</div>
-                    <div class="text-[10px] text-amber-400 mt-1">🪙 10,000 كوينز</div>
-                </div>
-                <div onclick="sendGift('🦁 أسد DEDE الملكي', 40000)" class="glass-card p-3 rounded-xl border border-pink-500/30 hover:border-pink-500 cursor-pointer text-center transition">
-                    <div class="text-3xl mb-1">🦁</div>
-                    <div class="text-xs font-bold text-white">أسد ملكي</div>
-                    <div class="text-[10px] text-amber-400 mt-1">🪙 40,000 كوينز</div>
-                </div>
-                <div onclick="sendGift('🏰 قصر الأحلام', 100000)" class="glass-card p-3 rounded-xl border border-pink-500/30 hover:border-pink-500 cursor-pointer text-center transition">
-                    <div class="text-3xl mb-1">🏰</div>
-                    <div class="text-xs font-bold text-white">قصر الأحلام</div>
-                    <div class="text-[10px] text-amber-400 mt-1">🪙 100,000 كوينز</div>
+                    <div class="text-xs font-bold text-white">قلب</div>
+                    <div class="text-[10px] text-amber-400 mt-1">🪙 5,000</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- نافذة الإيداع -->
+    <!-- الإيداع والسحب وباقي النوافذ -->
     <div id="deposit-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="glass-card w-full max-w-md p-6 rounded-3xl border border-pink-500/30 space-y-4">
-            <div class="flex justify-between items-center">
-                <h3 class="text-lg font-bold text-emerald-400 flex items-center gap-2">
-                    <i class="fa-solid fa-coins"></i> شحن كوينزات (شام كاش)
-                </h3>
-                <button onclick="closeModal('deposit-modal')" class="text-slate-400"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <div class="flex justify-between items-center"><h3 class="text-lg font-bold text-emerald-400">شحن كوينزات</h3><button onclick="closeModal('deposit-modal')" class="text-slate-400"><i class="fa-solid fa-xmark text-xl"></i></button></div>
+            <div class="bg-rose-950/50 p-3 rounded-xl border text-xs space-y-1">
+                <div>محفظة شام كاش: <span class="text-emerald-400 font-mono select-all">c97ee7954214e0b9c32a91d6f07a93ba</span></div>
+                <div class="text-amber-300">1$ = 40,000 كوينز (سعر الصرف 14,300 ل.س)</div>
             </div>
-            
-            <div class="bg-rose-950/50 p-3 rounded-xl border border-pink-500/20 text-xs space-y-1">
-                <div class="text-pink-100">عنوان المحفظة: <span class="text-emerald-400 font-mono select-all">c97ee7954214e0b9c32a91d6f07a93ba</span></div>
-                <div class="text-[11px] text-amber-300">💡 1$ = 40,000 كوينز | سعر الصرف: 1$ = 14,300 ل.س (عمولة 1%)</div>
-            </div>
-
-            <div>
-                <label class="text-xs text-pink-200 mb-1 block">اختر عملة الإيداع المحولة:</label>
-                <select id="deposit-currency" onchange="calculateDepositCoins()" class="w-full bg-slate-900 border border-pink-500/30 rounded-xl p-2.5 text-xs text-white">
-                    <option value="USD">بالدولار الأمريكي ($)</option>
-                    <option value="SYP">بالليرة السورية (ل.س) - بسعر 14,300</option>
-                </select>
-            </div>
-
-            <input type="text" id="deposit-tx-id" placeholder="رقم عملية التحويل / الإشعار" class="w-full bg-slate-900 border border-pink-500/30 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-pink-500">
-            <input type="number" id="deposit-amount" oninput="calculateDepositCoins()" placeholder="أدخل المبلغ المحول" class="w-full bg-slate-900 border border-pink-500/30 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-pink-500">
-
-            <div class="p-3 bg-pink-500/10 rounded-xl border border-pink-500/20 text-xs text-pink-200">
-                🪙 الكوينزات المكتسبة الصافية: <span id="calculated-coins" class="font-bold text-amber-400">0 كوينز</span>
-            </div>
-
-            <button onclick="executeDeposit()" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl font-bold transition shadow-lg shadow-emerald-600/20">تأكيد الإيداع وإضافة الكوينزات</button>
+            <select id="deposit-currency" onchange="calculateDepositCoins()" class="w-full bg-slate-900 border rounded-xl p-2.5 text-xs text-white">
+                <option value="USD">دولار الأمريكي ($)</option>
+                <option value="SYP">ليرة سورية (ل.س)</option>
+            </select>
+            <input type="text" id="deposit-tx-id" placeholder="رقم إشعار التحويل" class="w-full bg-slate-900 border rounded-xl p-3 text-sm text-white">
+            <input type="number" id="deposit-amount" oninput="calculateDepositCoins()" placeholder="المبلغ" class="w-full bg-slate-900 border rounded-xl p-3 text-sm text-white">
+            <div class="text-xs text-pink-200">الكوينزات: <span id="calculated-coins" class="font-bold text-amber-400">0</span></div>
+            <button onclick="executeDeposit()" class="w-full py-3 bg-emerald-600 text-white rounded-xl font-bold">تأكيد الإيداع</button>
         </div>
     </div>
 
-    <!-- نافذة السحب المالي -->
     <div id="withdraw-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="glass-card w-full max-w-md p-6 rounded-3xl border border-pink-500/30 space-y-4">
-            <div class="flex justify-between items-center"><h3 class="text-lg font-bold text-amber-400">سحب الكوينزات (شام كاش حصراً)</h3><button onclick="closeModal('withdraw-modal')" class="text-slate-400"><i class="fa-solid fa-xmark text-xl"></i></button></div>
-            
-            <div class="p-3 bg-amber-500/10 rounded-xl border border-amber-500/20 text-xs text-amber-300">
-                ⚡ معادلة السحب المعتمدة: كل <b>700,000 كوينز = 10 دولار</b> (أو ما يعادلها بالسوري).
-            </div>
-
-            <input type="text" id="withdraw-address" placeholder="عنوان محفظة شام كاش الخاصة بك" class="w-full bg-slate-900 border border-pink-500/30 rounded-xl p-3 text-sm text-white">
-            <input type="number" id="withdraw-coins" placeholder="أدخل عدد الكوينزات المراد سحبها" class="w-full bg-slate-900 border border-pink-500/30 rounded-xl p-3 text-sm text-white">
-            
-            <button onclick="executeWithdraw()" class="w-full py-3 bg-gradient-to-r from-amber-600 to-rose-600 text-white rounded-xl font-bold shadow-lg">تأكيد طلب السحب</button>
+            <div class="flex justify-between items-center"><h3 class="text-lg font-bold text-amber-400">سحب الكوينزات (شام كاش)</h3><button onclick="closeModal('withdraw-modal')" class="text-slate-400"><i class="fa-solid fa-xmark text-xl"></i></button></div>
+            <div class="text-xs text-amber-300">الحد الأدنى 700,000 كوينز = 10$</div>
+            <input type="text" id="withdraw-address" placeholder="عنوان محفظة شام كاش" class="w-full bg-slate-900 border rounded-xl p-3 text-sm text-white">
+            <input type="number" id="withdraw-coins" placeholder="الكوينزات المراد سحبها" class="w-full bg-slate-900 border rounded-xl p-3 text-sm text-white">
+            <button onclick="executeWithdraw()" class="w-full py-3 bg-amber-600 text-white rounded-xl font-bold">تأكيد السحب</button>
         </div>
     </div>
 
-    <!-- باقي النوافذ -->
+    <div id="about-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="glass-card w-full max-w-2xl p-6 rounded-3xl border border-pink-500/30 space-y-5 max-h-[85vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b pb-3"><h3 class="text-xl font-bold text-pink-300">دليل DEDE LIVE</h3><button onclick="closeModal('about-modal')" class="text-slate-400"><i class="fa-solid fa-xmark text-xl"></i></button></div>
+            <div class="text-xs text-pink-200 space-y-2">
+                <p>مرحباً بك في تطبيق DEDE LIVE الذي يضم أكثر من <b>100,000 مستخدم</b> حول العالم[cite: 1].</p>
+                <p><b>شروط الوكلاء والداعمين:</b> تلتزم الوكالات بإدارة المضيفين، ويحصل الداعمون على شارات VIP.</p>
+                <p>معادلة الإيداع: 1$ = 40,000 كوينز. معادلة السحب: 700,000 كوينز = 10$.</p>
+            </div>
+            <button onclick="closeModal('about-modal')" class="w-full py-3 bg-pink-600 text-white rounded-xl font-bold text-xs">موافق</button>
+        </div>
+    </div>
+
     <div id="leaderboard-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="glass-card w-full max-w-md p-6 rounded-3xl border border-pink-500/30 space-y-4">
-            <div class="flex justify-between items-center"><h3 class="text-lg font-bold text-amber-400">المتصدرون كبار الداعمين</h3><button onclick="closeModal('leaderboard-modal')" class="text-slate-400"><i class="fa-solid fa-xmark text-xl"></i></button></div>
-            <div class="space-y-2 max-h-60 overflow-y-auto">
-                <div class="flex justify-between p-3 bg-rose-950/40 rounded-xl text-xs"><span class="font-bold text-white">#1 خالد الحمصي 👑</span><span class="text-amber-400 font-bold">🪙 21,600,000</span></div>
-                <div class="flex justify-between p-3 bg-rose-950/40 rounded-xl text-xs"><span class="font-bold text-white">#2 سارة الدمشقية 💕</span><span class="text-amber-400 font-bold">🪙 12,400,000</span></div>
+            <div class="flex justify-between items-center"><h3 class="text-lg font-bold text-amber-400">المتصدرون</h3><button onclick="closeModal('leaderboard-modal')" class="text-slate-400"><i class="fa-solid fa-xmark text-xl"></i></button></div>
+            <div class="space-y-2 text-xs text-white">
+                <div class="flex justify-between p-3 bg-rose-950/40 rounded-xl"><span>#1 خالد الحمصي 👑</span><span class="text-amber-400 font-bold">🪙 21,600,000</span></div>
             </div>
         </div>
     </div>
 
     <div id="create-room-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="glass-card w-full max-w-md p-6 rounded-3xl border border-pink-500/30 space-y-4">
-            <div class="flex justify-between items-center"><h3 class="text-lg font-bold text-pink-300">إنشاء روم تعارف جديد</h3><button onclick="closeModal('create-room-modal')" class="text-slate-400"><i class="fa-solid fa-xmark text-xl"></i></button></div>
-            <input type="text" id="new-room-title" placeholder="عنوان الروم" class="w-full bg-slate-900 border border-pink-500/30 rounded-xl p-3 text-sm text-white">
-            <button onclick="createNewLiveRoom()" class="w-full py-3 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-xl font-bold shadow-lg">فتح الروم الآن</button>
+            <div class="flex justify-between items-center"><h3 class="text-lg font-bold text-pink-300">إنشاء روم</h3><button onclick="closeModal('create-room-modal')" class="text-slate-400"><i class="fa-solid fa-xmark text-xl"></i></button></div>
+            <input type="text" id="new-room-title" placeholder="عنوان الروم" class="w-full bg-slate-900 border rounded-xl p-3 text-sm text-white">
+            <button onclick="createNewLiveRoom()" class="w-full py-3 bg-pink-600 text-white rounded-xl font-bold">فتح الروم</button>
         </div>
     </div>
 
-    <!-- البرمجة والحسابات الاقتصاديّة -->
     <script>
         const SUPABASE_URL = "https://hsorrgydvfjmleztmlur.supabase.co"; 
         const SUPABASE_ANON_KEY = "sb_publishable_GgSvoGy9pHif9SHHXPaF_w_g0xgakSh"; 
@@ -356,6 +296,7 @@
         
         let currentUser = null;
         let userCoins = 400000;
+        let selectedBetAmount = 1000; // الرهان الافتراضي
         let localAudioTrack = null;
         let isMicActive = false;
         let currentTheme = 'theme-night';
@@ -366,6 +307,7 @@
                 currentUser = session.user;
                 updateUserInterface(currentUser);
             }
+            selectBet(1000);
         });
 
         async function loginWithGoogle() {
@@ -394,16 +336,63 @@
             `;
         }
 
+        // إداراة نظام الرهانات والألعاب (1K إلى 100K)
+        function selectBet(amount) {
+            selectedBetAmount = amount;
+            document.querySelectorAll('.bet-btn').forEach(btn => {
+                btn.classList.remove('border-amber-400', 'bg-amber-500/20');
+            });
+            const activeBtn = document.getElementById(`bet-${amount}`);
+            if (activeBtn) {
+                activeBtn.classList.add('border-amber-400', 'bg-amber-500/20');
+            }
+            document.getElementById('selected-bet-display').innerText = `🪙 ${amount.toLocaleString()} كوينز`;
+        }
+
+        function playLuckyWheel() {
+            if (userCoins < selectedBetAmount) {
+                return alert("رصيد الكوينزات لديك غير كافٍ لهذا الرهان!");
+            }
+            userCoins -= selectedBetAmount;
+            
+            // محاكاة حظ عشوائي (ربح أو خسارة)
+            const isWin = Math.random() > 0.45; // 55% نسبة الربح
+            const resultMsg = document.getElementById('game-result-msg');
+
+            if (isWin) {
+                const multiplier = [2, 3, 5][Math.floor(Math.random() * 3)];
+                const profit = selectedBetAmount * multiplier;
+                userCoins += profit;
+                resultMsg.innerHTML = `<span class="text-emerald-400 font-bold">🎉 مبروك! ربحت ضعف الرهان (${profit.toLocaleString()} كوينز)!</span>`;
+            } else {
+                resultMsg.innerHTML = `<span class="text-red-400 font-bold">💔 حظاً أوفر في الجولة القادمة (-${selectedBetAmount.toLocaleString()})</span>`;
+            }
+            document.getElementById('user-balance').innerText = userCoins.toLocaleString() + " كوينز";
+        }
+
+        function playPokerCard() {
+            if (userCoins < selectedBetAmount) {
+                return alert("رصيد الكوينزات لديك غير كافٍ لتحدي البوكر!");
+            }
+            userCoins -= selectedBetAmount;
+            const isWin = Math.random() > 0.5;
+            const resultMsg = document.getElementById('game-result-msg');
+
+            if (isWin) {
+                const profit = selectedBetAmount * 4;
+                userCoins += profit;
+                resultMsg.innerHTML = `<span class="text-amber-400 font-bold">🃏 فوز ساحق بالبوكر! ربحت (${profit.toLocaleString()} كوينز)!</span>`;
+            } else {
+                resultMsg.innerHTML = `<span class="text-red-400 font-bold">❌ خسرنا الجولة (-${selectedBetAmount.toLocaleString()})</span>`;
+            }
+            document.getElementById('user-balance').innerText = userCoins.toLocaleString() + " كوينز";
+        }
+
         function calculateDepositCoins() {
             const curr = document.getElementById('deposit-currency').value;
             const amount = parseFloat(document.getElementById('deposit-amount').value) || 0;
-            let usdValue = amount;
-
-            if (curr === 'SYP') usdValue = amount / 14300;
-
-            const rawCoins = usdValue * 40000;
-            const netCoins = Math.floor(rawCoins * 0.99);
-
+            let usdValue = curr === 'SYP' ? amount / 14300 : amount;
+            const netCoins = Math.floor((usdValue * 40000) * 0.99);
             document.getElementById('calculated-coins').innerText = netCoins.toLocaleString() + " كوينز";
             return netCoins;
         }
@@ -411,132 +400,84 @@
         function executeDeposit() {
             const txId = document.getElementById('deposit-tx-id').value;
             const netCoins = calculateDepositCoins();
-
-            if (!txId || netCoins <= 0) return alert("يرجى إدخال رقم الإشعار والمبلغ بشكل صحيح.");
-
+            if (!txId || netCoins <= 0) return alert("يرجى ملء الحقول.");
             userCoins += netCoins;
             document.getElementById('user-balance').innerText = userCoins.toLocaleString() + " كوينز";
-            alert(`تم تأكيد الإيداع بنجاح!\nتمت إضافة ${netCoins.toLocaleString()} كوينز إلى محفظتك.`);
+            alert(`تم شحن ${netCoins.toLocaleString()} كوينز بنجاح!`);
             closeModal('deposit-modal');
         }
 
         function executeWithdraw() {
-            const coinsToWithdraw = parseInt(document.getElementById('withdraw-coins').value);
-            const address = document.getElementById('withdraw-address').value;
-
-            if (!address || isNaN(coinsToWithdraw) || coinsToWithdraw < 700000) return alert("الحد الأدنى للسحب هو 700,000 كوينز (تساوي 10$).");
-
-            if (coinsToWithdraw > userCoins) return alert("رصيدك الحالي من الكوينز غير كافٍ.");
-
-            const usdEquivalent = (coinsToWithdraw / 700000) * 10;
-            userCoins -= coinsToWithdraw;
+            const coins = parseInt(document.getElementById('withdraw-coins').value);
+            const addr = document.getElementById('withdraw-address').value;
+            if (!addr || isNaN(coins) || coins < 700000) return alert("الحد الأدنى للسحب 700,000 كوينز.");
+            if (coins > userCoins) return alert("رصيدك غير كافٍ.");
+            userCoins -= coins;
             document.getElementById('user-balance').innerText = userCoins.toLocaleString() + " كوينز";
-            
-            alert(`تم تقديم طلب السحب بنجاح!\nالكوينزات المسحوبة: ${coinsToWithdraw.toLocaleString()}\nالقيمة المستحقة: $${usdEquivalent.toFixed(2)} تحول عبر شام كاش.`);
+            alert(`تم تقديم طلب سحب ${coins.toLocaleString()} كوينز عبر شام كاش بنجاح.`);
             closeModal('withdraw-modal');
         }
 
-        function sendGift(giftName, costInCoins) {
-            if (userCoins < costInCoins) return alert("رصيد الكوينزات لديك غير كافٍ لشراء هذه الهدية.");
-
-            userCoins -= costInCoins;
+        function sendGift(name, cost) {
+            if (userCoins < cost) return alert("رصيدك غير كافٍ.");
+            userCoins -= cost;
             document.getElementById('user-balance').innerText = userCoins.toLocaleString() + " كوينز";
             closeModal('gift-modal');
-
-            const container = document.getElementById('gift-animation-container');
-            if (container) {
-                const banner = document.createElement('div');
-                banner.className = "gift-banner bg-gradient-to-r from-pink-600/90 via-rose-600/90 to-purple-600/90 border border-pink-400 text-white px-6 py-3 rounded-2xl shadow-2xl text-center font-black text-lg flex items-center gap-3 backdrop-blur-md";
-                banner.innerHTML = `<span class="text-3xl">🎁</span> أرسل هدية: <span class="text-amber-300">${giftName}</span> (🪙 ${costInCoins.toLocaleString()} كوينز)`;
-                container.appendChild(banner);
-                setTimeout(() => banner.remove(), 3000);
-            }
+            alert(`🎁 أرسلت هدية (${name}) بقيمة ${cost.toLocaleString()} كوينز بنجاح!`);
         }
 
         function joinLiveRoom(title, host) {
             const mainArea = document.getElementById('main-content-area');
             mainArea.innerHTML = `
-                <div id="room-container" class="flex flex-col h-full space-y-4 relative overflow-hidden transition-all duration-500 p-3 rounded-3xl ${currentTheme} border border-pink-500/30">
-                    <div id="gift-animation-container" class="absolute inset-0 pointer-events-none z-30 flex items-center justify-center"></div>
-
+                <div class="flex flex-col h-full space-y-4 p-3 rounded-3xl ${currentTheme} border border-pink-500/30">
                     <div class="glass-card p-4 rounded-2xl flex items-center justify-between border border-pink-500/30">
                         <div>
-                            <span class="text-[10px] bg-pink-500/25 text-pink-300 px-2 py-0.5 rounded-full font-bold animate-pulse border border-pink-500/30">🔴 بث تعارف حي</span>
+                            <span class="text-[10px] bg-pink-500/25 text-pink-300 px-2 py-0.5 rounded-full font-bold animate-pulse">🔴 بث مباشر وألعاب</span>
                             <h2 class="text-xl font-bold mt-1 text-white">${title}</h2>
-                            <p class="text-xs text-pink-200/80">المضيف: <span class="text-amber-300 font-bold">${host}</span> <span class="text-[9px] vip-badge text-white px-1.5 py-0.2 rounded">VIP 👑</span></p>
+                            <p class="text-xs text-pink-200">المضيف: <span class="text-amber-300 font-bold">${host}</span></p>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <button onclick="changeRoomTheme()" class="px-3 py-1.5 bg-pink-950/60 hover:bg-pink-900/60 text-pink-200 rounded-xl text-xs font-bold border border-pink-500/30">🎨 الخلفية</button>
-                            <button onclick="leaveRoom()" class="px-4 py-2 bg-red-600/20 text-red-300 hover:bg-red-600 hover:text-white rounded-xl text-xs font-bold border border-red-500/30">مغادرة</button>
-                        </div>
+                        <button onclick="leaveRoom()" class="px-4 py-2 bg-red-600/20 text-red-300 rounded-xl text-xs font-bold border border-red-500/30">مغادرة</button>
                     </div>
 
-                    <div class="grid grid-cols-4 md:grid-cols-8 gap-3 p-4 glass-card rounded-2xl text-center">
+                    <div class="grid grid-cols-4 gap-3 p-4 glass-card rounded-2xl text-center">
                         <div class="flex flex-col items-center space-y-1">
-                            <div class="w-14 h-14 rounded-full bg-pink-600/30 border-2 border-amber-400 flex items-center justify-center text-lg relative shadow-lg shadow-pink-500/20">👑</div>
+                            <div class="w-14 h-14 rounded-full bg-pink-600/30 border-2 border-amber-400 flex items-center justify-center text-lg relative">👑</div>
                             <span class="text-[11px] font-bold text-pink-100">${host}</span>
-                            <span class="text-[9px] text-amber-300">المضيف</span>
                         </div>
                         <div class="flex flex-col items-center space-y-1">
-                            <div id="seat-my-slot" class="w-14 h-14 rounded-full bg-rose-950/60 border-2 border-pink-500/30 flex items-center justify-center text-lg relative">
-                                🎙️ <span id="mic-indicator" class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-slate-600 rounded-full border-2 border-slate-900"></span>
-                            </div>
+                            <div id="seat-my-slot" class="w-14 h-14 rounded-full bg-rose-950/60 border-2 border-pink-500/30 flex items-center justify-center text-lg relative">🎙️</div>
                             <span class="text-[11px] font-bold text-pink-100">أنت</span>
-                            <button onclick="toggleRealAudioMic()" id="mic-btn" class="px-2 py-0.5 bg-gradient-to-r from-pink-600 to-rose-600 text-white rounded-md text-[9px] font-bold">صعود للمايك</button>
+                            <button onclick="openGamesModal()" class="px-2 py-0.5 bg-amber-500 text-slate-950 rounded text-[9px] font-bold">ألعاب الحظ 🎲</button>
                         </div>
                     </div>
 
                     <div class="flex-1 glass-card rounded-2xl p-4 flex flex-col justify-between">
-                        <div class="space-y-2 overflow-y-auto max-h-40 text-xs text-pink-100/90" id="room-chat">
-                            <div class="p-2 bg-pink-950/40 rounded-xl border border-pink-500/20">💖 أهلاً بك في روم DEDE LIVE! تواصل بحب وأرسل الهدايا.</div>
+                        <div class="space-y-2 overflow-y-auto max-h-40 text-xs text-pink-100/90">
+                            <div class="p-2 bg-pink-950/40 rounded-xl">🎲 مرحباً بك في روم الألعاب والبوكر بالكوينزات!</div>
                         </div>
                         <div class="flex items-center gap-3 pt-3 border-t border-pink-500/20">
-                            <button onclick="alert('✋ تم رفع اليد واستئذان المضيف')" class="px-3 py-2 bg-pink-500/20 text-pink-200 rounded-xl text-xs font-bold border border-pink-500/30">✋ رفع اليد</button>
-                            <input type="text" placeholder="اكتب كلمة حلوة..." class="flex-1 bg-rose-950/50 border border-pink-500/30 rounded-xl px-4 py-2 text-xs text-white focus:outline-none">
-                            <button onclick="openGiftModal()" class="px-4 py-2 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-lg shadow-pink-600/30">
-                                <i class="fa-solid fa-gift"></i> إرسال هدية
-                            </button>
+                            <button onclick="openGamesModal()" class="px-3 py-2 bg-amber-500/20 text-amber-300 rounded-xl text-xs font-bold border border-amber-500/30">🎲 صالة الألعاب</button>
+                            <input type="text" placeholder="اكتب تعليقاً..." class="flex-1 bg-rose-950/50 border rounded-xl px-4 py-2 text-xs text-white">
+                            <button onclick="openGiftModal()" class="px-4 py-2 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-xl text-xs font-bold">هدية</button>
                         </div>
                     </div>
                 </div>
             `;
         }
 
-        async function toggleRealAudioMic() {
-            const micBtn = document.getElementById('mic-btn');
-            const slot = document.getElementById('seat-my-slot');
-            const indicator = document.getElementById('mic-indicator');
-
-            try {
-                if (!isMicActive) {
-                    localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
-                    isMicActive = true;
-                    slot.classList.add('speaking-animation');
-                    micBtn.innerText = "كتم المايك";
-                    indicator.className = "absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-slate-900 animate-pulse";
-                } else {
-                    if (localAudioTrack) { localAudioTrack.stop(); localAudioTrack.close(); }
-                    isMicActive = false;
-                    slot.classList.remove('speaking-animation');
-                    micBtn.innerText = "صعود للمايك";
-                    indicator.className = "absolute bottom-0 right-0 w-3.5 h-3.5 bg-slate-600 rounded-full border-2 border-slate-900";
-                }
-            } catch (error) { alert("يرجى السماح بالوصول للمايكروفون."); }
-        }
-
-        function acceptTerms() { closeModal('about-modal'); alert("شكراً لموافقتك على بنود وشروط DEDE LIVE المعتمدة!"); }
-        function leaveRoom() { if (localAudioTrack) { localAudioTrack.stop(); localAudioTrack.close(); } location.reload(); }
+        function leaveRoom() { location.reload(); }
+        function openGamesModal() { document.getElementById('games-modal').classList.remove('hidden'); }
         function openAboutModal() { document.getElementById('about-modal').classList.remove('hidden'); }
         function openGiftModal() { document.getElementById('gift-modal').classList.remove('hidden'); }
         function openLeaderboardModal() { document.getElementById('leaderboard-modal').classList.remove('hidden'); }
         function openDepositModal() { document.getElementById('deposit-modal').classList.remove('hidden'); }
         function openWithdrawModal() { document.getElementById('withdraw-modal').classList.remove('hidden'); }
-        function openProfileModal() { document.getElementById('profile-modal').classList.remove('hidden'); }
+        function openProfileModal() { alert("قسم الملف الشخصي و VIP جاهز."); }
         function openCreateRoomModal() { document.getElementById('create-room-modal').classList.remove('hidden'); }
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
         function createNewLiveRoom() {
-            const title = document.getElementById('new-room-title').value || 'روم تعارف جديد';
+            const title = document.getElementById('new-room-title').value || 'روم ألعاب جديد';
             closeModal('create-room-modal');
             joinLiveRoom(title, 'أنت (المضيف)');
         }

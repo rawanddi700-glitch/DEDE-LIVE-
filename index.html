@@ -100,12 +100,15 @@
             <a href="https://wa.me/963993918672" target="_blank" class="px-3.5 py-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-lg">
                 <i class="fa-brands fa-whatsapp text-sm"></i> الدعم والشكاوي
             </a>
-            <div id="auth-section" class="flex items-center gap-3 border-r border-pink-500/30 pr-3">
-                <button onclick="loginWithGoogle()" id="auth-btn" class="px-3.5 py-1.5 bg-white/90 hover:bg-white text-slate-900 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-md">
-                    <i class="fa-brands fa-google text-red-500 text-sm"></i> دخول Google
+            <div id="auth-section" class="flex items-center gap-2 border-r border-pink-500/30 pr-3">
+                <button onclick="openEmailLoginModal()" class="px-3 py-1.5 bg-pink-600 hover:bg-pink-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-md">
+                    <i class="fa-solid fa-envelope text-amber-300 text-xs"></i> دخول بالبريد
                 </button>
-                <button onclick="loginAsGuest()" class="px-3 py-1.5 bg-pink-900/60 hover:bg-pink-900 text-pink-200 border border-pink-500/40 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-md">
-                    <i class="fa-solid fa-user-secret text-amber-300 text-xs"></i> زائر وهمي
+                <button onclick="loginWithFacebook()" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-md">
+                    <i class="fa-brands fa-facebook text-white text-xs"></i> دخول فيسبوك
+                </button>
+                <button onclick="loginAsGuest()" class="px-2.5 py-1.5 bg-pink-900/60 hover:bg-pink-900 text-pink-200 border border-pink-500/40 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-md">
+                    <i class="fa-solid fa-user-secret text-amber-300 text-xs"></i> زائر
                 </button>
             </div>
         </div>
@@ -219,6 +222,23 @@
         </div>
     </div>
 
+    <!-- نافذة تسجيل الدخول بالبريد الإلكتروني -->
+    <div id="email-login-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="glass-card w-full max-w-md p-6 rounded-3xl border border-pink-500/30 space-y-4 text-center">
+            <div class="flex justify-between items-center">
+                <h3 class="text-lg font-bold text-pink-300">تسجيل الدخول بالبريد الإلكتروني</h3>
+                <button onclick="closeModal('email-login-modal')" class="text-slate-400"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <p class="text-xs text-pink-200">أدخل بريدك الإلكتروني وكلمة المرور للدخول أو إنشاء حساب جديد برصيد يبدأ من الصفر:</p>
+            <input type="email" id="user-email-input" placeholder="example@domain.com" class="w-full bg-slate-900 border rounded-xl p-3 text-sm text-white text-center">
+            <input type="password" id="user-password-input" placeholder="كلمة المرور" class="w-full bg-slate-900 border rounded-xl p-3 text-sm text-white text-center">
+            <div class="flex gap-2 pt-2">
+                <button onclick="executeEmailLogin()" class="flex-1 py-3 bg-pink-600 hover:bg-pink-700 text-white rounded-xl font-bold text-xs transition">تسجيل الدخول</button>
+                <button onclick="executeEmailSignup()" class="flex-1 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-bold text-xs transition">إنشاء حساب جديد</button>
+            </div>
+        </div>
+    </div>
+
     <!-- 🎁 نافذة متجر الهدايا (100 هدية) -->
     <div id="gift-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="glass-card w-full max-w-2xl p-6 rounded-3xl border border-pink-500/30 space-y-4 max-h-[85vh] flex flex-col">
@@ -246,7 +266,7 @@
     <div id="mod-request-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="glass-card w-full max-w-md p-6 rounded-3xl border border-pink-500/30 space-y-4 text-center">
             <h3 class="text-lg font-bold text-amber-400">طلب الحصول على إشراف الروم</h3>
-            <p class="text-xs text-pink-200">بما أنك عضو معتمد، هل تود طلب صلاحيات المشرف الكاملة (تشغيل الأغاني وطرد الأعضاء)؟</p>
+            <p class="text-xs text-pink-200">بما أنك عضو معتمد، هل تود طلب صلاحيات المشرف الكاملة (تشغيل الأغاني وطرد الأعضاء)?</p>
             <div class="flex gap-3 pt-2">
                 <button onclick="submitModRequest()" class="flex-1 py-2.5 bg-emerald-600 text-white rounded-xl font-bold text-xs">إرسال طلب الإشراف</button>
                 <button onclick="closeModal('mod-request-modal')" class="flex-1 py-2.5 bg-slate-800 text-slate-300 rounded-xl text-xs">إلغاء</button>
@@ -315,7 +335,7 @@
                 <h3 class="text-xl font-bold flex items-center gap-2 text-pink-300"><i class="fa-solid fa-book-open text-amber-400"></i> دليل DEDE LIVE</h3>
                 <button onclick="closeModal('about-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
-            <div class="text-xs text-pink-200">يضم التطبيق أكثر من 100,000 مستخدم مع غرف عامة وخاصة وتسجيل آمن عبر Google أو الزوار الوهميين. الرصيد يبدأ من الصفر ولا يرتفع إلا بالشحن الحقيقي.</div>
+            <div class="text-xs text-pink-200">يضم التطبيق أكثر من 100,000 مستخدم مع غرف عامة وخاصة وتسجيل آمن عبر البريد الإلكتروني أو فيسبوك أو الزوار الوهميين. الرصيد يبدأ من الصفر ولا يرتفع إلا بالشحن الحقيقي.</div>
             <button onclick="closeModal('about-modal')" class="w-full py-3 bg-pink-600 text-white rounded-xl font-bold text-xs">إغلاق</button>
         </div>
     </div>
@@ -404,7 +424,7 @@
             const { data: { session } } = await supabaseClient.auth.getSession();
             if (session) {
                 currentUser = session.user;
-                userCoins = 0; // تأكيد الصفر عند الدخول برابط النظام
+                userCoins = 0; 
                 updateUserInterface(currentUser);
             }
             populateGiftsModal();
@@ -431,12 +451,47 @@
             } catch (e) {}
         }
 
-        async function loginWithGoogle() {
+        function openEmailLoginModal() {
+            document.getElementById('email-login-modal').classList.remove('hidden');
+        }
+
+        async function executeEmailLogin() {
+            const email = document.getElementById('user-email-input').value;
+            const password = document.getElementById('user-password-input').value;
+            if (!email || !password) return alert("يرجى إدخال البريد الإلكتروني وكلمة المرور.");
+
+            const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+            if (error) {
+                alert("خطأ في تسجيل الدخول: " + error.message);
+            } else {
+                currentUser = data.user;
+                userCoins = 0;
+                updateUserInterface(currentUser);
+                closeModal('email-login-modal');
+                alert("✨ أهلاً بك! تم تسجيل الدخول بنجاح.");
+            }
+        }
+
+        async function executeEmailSignup() {
+            const email = document.getElementById('user-email-input').value;
+            const password = document.getElementById('user-password-input').value;
+            if (!email || !password) return alert("يرجى إدخال البريد الإلكتروني وكلمة المرور لإنشاء الحساب.");
+
+            const { data, error } = await supabaseClient.auth.signUp({ email, password });
+            if (error) {
+                alert("خطأ في التسجيل: " + error.message);
+            } else {
+                alert("🎉 تم إنشاء الحساب بنجاح! يرجى التحقق من بريدك الإلكتروني لتأكيد الحساب إن طُلب منك.");
+                closeModal('email-login-modal');
+            }
+        }
+
+        async function loginWithFacebook() {
             const { error } = await supabaseClient.auth.signInWithOAuth({
-                provider: 'google',
+                provider: 'facebook',
                 options: { redirectTo: window.location.origin }
             });
-            if (error) alert("خطأ: " + error.message);
+            if (error) alert("خطأ في ربط فيسبوك: " + error.message);
         }
 
         // تسجيل الدخول كزائر برصيد يبدأ من الصفر
@@ -449,7 +504,7 @@
                 },
                 email: `guest_${randomGuestId}@dedelive.com`
             };
-            userCoins = 0; // الرصيد صفر تماماً
+            userCoins = 0; 
             updateUserInterface(currentUser);
             alert(`👋 أهلاً بك! تم تسجيل دخولك كزائر برصيد 0 كوينز.`);
         }
@@ -457,7 +512,7 @@
         function updateUserInterface(user) {
             const authSection = document.getElementById('auth-section');
             const avatar = user.user_metadata?.avatar_url || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
-            const name = user.user_metadata?.full_name || user.email.split('@')[0];
+            const name = user.user_metadata?.full_name || (user.email ? user.email.split('@')[0] : 'مستخدم');
 
             document.getElementById('user-balance').innerText = userCoins.toLocaleString() + " كوينز";
 
@@ -497,7 +552,7 @@
             document.getElementById('user-balance').innerText = userCoins.toLocaleString() + " كوينز";
             closeModal('gift-modal');
 
-            const senderName = currentUser ? (currentUser.user_metadata?.full_name || currentUser.email.split('@')[0]) : "زائر كريم";
+            const senderName = currentUser ? (currentUser.user_metadata?.full_name || (currentUser.email ? currentUser.email.split('@')[0] : 'زائر')) : "زائر كريم";
             const receiverName = activeRoomHost;
 
             try {
@@ -633,7 +688,7 @@
 
         function playLocalAudio() {
             if (localPlayerAudio) {
-                localPlayerAudio.play().then(() => alert("▶ تتم تشغيل الأغنية في الروم الآن الحين!"));
+                localPlayerAudio.play().then(() => alert("▶ تتم تشغيل الأغنية في الروم الآن!"));
             } else {
                 alert("يرجى اختيار ملف صوتي من هاتفك أو حاسوبك أولاً.");
             }
@@ -699,7 +754,7 @@
             const txId = document.getElementById('deposit-tx-id').value;
             const netCoins = calculateDepositCoins();
             if (!txId || netCoins <= 0) return alert("يرجى ملء الحقول.");
-            userCoins += netCoins; // يتم إضافة الرصيد الحقيقي فقط عند الشحن
+            userCoins += netCoins; 
             document.getElementById('user-balance').innerText = userCoins.toLocaleString() + " كوينز";
             alert(`تم شحن ${netCoins.toLocaleString()} كوينز إلى رصيدك بنجاح!`);
             closeModal('deposit-modal');
@@ -782,7 +837,7 @@
             const pin = document.getElementById('new-room-pin').value;
             closeModal('create-room-modal');
 
-            let hostName = currentUser ? (currentUser.user_metadata?.full_name || currentUser.email.split('@')[0]) : "زائر كريم";
+            let hostName = currentUser ? (currentUser.user_metadata?.full_name || (currentUser.email ? currentUser.email.split('@')[0] : 'زائر')) : "زائر كريم";
             isUserMember = true;
             isUserAdminOrMod = true; 
 
@@ -806,7 +861,6 @@
                 </div>
             `;
             grid.prepend(roomCard);
-            tryJoinCard = true;
             tryJoinRoom(title, hostName, roomType === 'private', pin);
         }
     </script>

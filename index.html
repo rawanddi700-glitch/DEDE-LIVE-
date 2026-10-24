@@ -108,8 +108,8 @@
                     <span class="hidden lg:inline">الرومات الصوتية</span>
                 </a>
                 <button onclick="openGamesModal()" class="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-amber-300 hover:bg-amber-500/20 transition text-right border border-amber-500/30 shadow-lg shadow-amber-500/10">
-                    <i class="fa-solid fa-chart-line text-lg text-amber-400"></i>
-                    <span class="hidden lg:inline font-bold">قسم الكازينو 🎰</span>
+                    <i class="fa-solid fa-gem text-lg text-amber-400"></i>
+                    <span class="hidden lg:inline font-bold">كازينو روبرت 💎</span>
                 </button>
                 <button onclick="openAboutModal()" class="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-pink-200/80 hover:bg-pink-900/30 transition text-right">
                     <i class="fa-solid fa-book-open text-lg text-pink-400"></i>
@@ -159,8 +159,8 @@
             <div class="relative rounded-3xl overflow-hidden p-8 bg-gradient-to-r from-pink-950/60 via-purple-950/80 to-rose-950/60 border border-pink-500/30 shadow-2xl">
                 <div class="max-w-xl space-y-3 z-10 relative">
                     <span class="px-3.5 py-1 bg-pink-500/20 text-pink-200 text-xs rounded-full border border-pink-500/30">DEDE LIVE World 💕</span>
-                    <h1 class="text-3xl font-black text-white leading-tight">تواصل واستمتع بأجواء قسم الكازينو بالكوينزات</h1>
-                    <p class="text-pink-200/80 text-sm">أضخم منصة تعارف وبث صوتي تضم أكثر من 100,000 مستخدم مع ألعاب كازينو حماسية[cite: 1]!</p>
+                    <h1 class="text-3xl font-black text-white leading-tight">مرحباً بكم في كازينو روبرت الحصري</h1>
+                    <p class="text-pink-200/80 text-sm">جرب عجلة الحظ الكبرى بضربات محسوبة ومكافآت مضاعفة يومياً[cite: 1]!</p>
                 </div>
             </div>
 
@@ -173,11 +173,11 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div class="glass-card rounded-2xl p-5 hover:border-pink-500/60 transition cursor-pointer group" onclick="joinLiveRoom('سهرة تعارف وتحديات كازينو 🎰💖', 'أبو أحمد')">
+                    <div class="glass-card rounded-2xl p-5 hover:border-pink-500/60 transition cursor-pointer group" onclick="joinLiveRoom('سهرة تحديات كازينو روبرت 💎💖', 'أبو أحمد')">
                         <div class="flex items-start justify-between mb-4">
                             <div>
-                                <span class="bg-pink-500/20 text-pink-300 text-[10px] px-2.5 py-1 rounded-full font-bold border border-pink-500/30">قسم الكازينو</span>
-                                <h3 class="text-lg font-bold mt-2 text-white">سهرة تعارف وتحديات كازينو 🎰💖</h3>
+                                <span class="bg-amber-500/20 text-amber-300 text-[10px] px-2.5 py-1 rounded-full font-bold border border-amber-500/30">كازينو روبرت</span>
+                                <h3 class="text-lg font-bold mt-2 text-white">سهرة تحديات كازينو روبرت 💎💖</h3>
                             </div>
                             <span class="flex items-center gap-1 bg-pink-950/60 px-2.5 py-1 rounded-full text-xs text-pink-200">
                                 <i class="fa-solid fa-heart text-pink-400"></i> 410
@@ -193,41 +193,36 @@
         </main>
     </div>
 
-    <!-- 🎰 نافذة قسم الكازينو والبوكر بالكوينزات -->
+    <!-- 💎 نافذة كازينو روبرت الحصرية (عجلة الحظ بنظام الضربات) -->
     <div id="games-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="glass-card w-full max-w-lg p-6 rounded-3xl border border-amber-500/40 space-y-5">
             <div class="flex justify-between items-center border-b border-pink-500/20 pb-3">
                 <h3 class="text-lg font-bold flex items-center gap-2 text-amber-400">
-                    <i class="fa-solid fa-chart-line"></i> قسم الكازينو وصالة ألعاب الحظ (بالكوينزات)
+                    <i class="fa-solid fa-gem"></i> كازينو روبرت - عجلة الحظ الحصرية
                 </h3>
                 <button onclick="closeModal('games-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
 
             <div class="space-y-3">
-                <label class="text-xs text-pink-200 block font-bold">اختر قيمة الرهان بالكوينزات:</label>
-                <div class="grid grid-cols-5 gap-2">
-                    <button onclick="selectBet(1000)" id="bet-1000" class="bet-btn py-2 bg-pink-950/80 border border-pink-500/40 rounded-xl text-xs font-bold text-white hover:border-amber-400 transition">1K</button>
-                    <button onclick="selectBet(5000)" id="bet-5000" class="bet-btn py-2 bg-pink-950/80 border border-pink-500/40 rounded-xl text-xs font-bold text-white hover:border-amber-400 transition">5K</button>
-                    <button onclick="selectBet(10000)" id="bet-10000" class="bet-btn py-2 bg-pink-950/80 border border-pink-500/40 rounded-xl text-xs font-bold text-white hover:border-amber-400 transition">10K</button>
-                    <button onclick="selectBet(50000)" id="bet-50000" class="bet-btn py-2 bg-pink-950/80 border border-pink-500/40 rounded-xl text-xs font-bold text-white hover:border-amber-400 transition">50K</button>
-                    <button onclick="selectBet(100000)" id="bet-100000" class="bet-btn py-2 bg-pink-950/80 border border-pink-500/40 rounded-xl text-xs font-bold text-white hover:border-amber-400 transition">100K</button>
+                <label class="text-xs text-pink-200 block font-bold">اختر قيمة الضرب بالكوينزات:</label>
+                <div class="grid grid-cols-4 gap-2">
+                    <button onclick="selectBet(1000)" id="bet-1000" class="bet-btn py-2.5 bg-pink-950/80 border border-pink-500/40 rounded-xl text-xs font-bold text-white hover:border-amber-400 transition">1,000</button>
+                    <button onclick="selectBet(5000)" id="bet-5000" class="bet-btn py-2.5 bg-pink-950/80 border border-pink-500/40 rounded-xl text-xs font-bold text-white hover:border-amber-400 transition">5,000</button>
+                    <button onclick="selectBet(10000)" id="bet-10000" class="bet-btn py-2.5 bg-pink-950/80 border border-pink-500/40 rounded-xl text-xs font-bold text-white hover:border-amber-400 transition">10,000</button>
+                    <button onclick="selectBet(50000)" id="bet-50000" class="bet-btn py-2.5 bg-pink-950/80 border border-pink-500/40 rounded-xl text-xs font-bold text-white hover:border-amber-400 transition">50,000</button>
                 </div>
             </div>
 
             <div class="p-4 bg-slate-950/60 rounded-2xl border border-pink-500/20 text-center space-y-2">
-                <div class="text-xs text-slate-400">الرهان المحدد حالياً:</div>
+                <div class="text-xs text-slate-400">الضربة المحددة حالياً:</div>
                 <div id="selected-bet-display" class="text-xl font-black text-amber-400">🪙 1,000 كوينز</div>
-                <div id="game-result-msg" class="text-xs text-pink-300 font-medium min-h-[20px]">اختر اللعبة وابدأ التحدي في الكازينو!</div>
+                <div id="robert-spins-counter" class="text-xs text-pink-300 font-bold">عدد المحاولات اليومية المتبقية: 6 ضربات</div>
+                <div id="game-result-msg" class="text-xs text-pink-200 font-medium min-h-[20px]">أول ضربتين تمنحان الدبل (2x)!</div>
             </div>
 
-            <div class="grid grid-cols-2 gap-3">
-                <button onclick="playLuckyWheel()" class="py-3 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 text-slate-950 font-black rounded-xl text-xs transition shadow-lg">
-                    🎰 عجلة كازينو DEDE
-                </button>
-                <button onclick="playPokerCard()" class="py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 text-white font-black rounded-xl text-xs transition shadow-lg">
-                    🃏 روليت البوكر الملكي
-                </button>
-            </div>
+            <button id="spin-btn" onclick="playRobertCasino()" class="w-full py-3.5 bg-gradient-to-r from-amber-500 via-orange-600 to-rose-600 hover:from-amber-600 text-slate-950 font-black rounded-xl text-sm transition shadow-lg tracking-wider">
+                🎡 أدر عجلة كازينو روبرت الآن
+            </button>
         </div>
     </div>
 
@@ -252,7 +247,7 @@
                         <i class="fa-solid fa-coins"></i> 1. النظام الاقتصادي والعملة (الكوينزات 🪙)
                     </h4>
                     <p class="text-pink-100/90">
-                        يعتمد التطبيق على عملة الكوينزات (Coins) الرسمية لشراء الهدايا والمشاركة في ألعاب الكازينو[cite: 1].
+                        يعتمد التطبيق على عملة الكوينزات (Coins) الرسمية لشراء الهدايا والمشاركة في كازينو روبرت[cite: 1].
                         <br>• <b>سعر صرف الليرة السورية المعتمد:</b> 1 دولار = 14,300 ل.س[cite: 1].
                         <br>• <b>معادلة الشحن والإيداع:</b> كل 1$ شحن يمنحك <b>40,000 كوينز</b> (خصم 1% عمولة إيداع)[cite: 1].
                     </p>
@@ -295,7 +290,7 @@
         </div>
     </div>
 
-    <!-- باقي النوافذ الهدايا والإيداع والسحب -->
+    <!-- باقي النوافذ والهدايا والشحن -->
     <div id="gift-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="glass-card w-full max-w-lg p-6 rounded-3xl border border-pink-500/30 space-y-4">
             <div class="flex justify-between items-center mb-2"><h3 class="text-lg font-bold text-pink-300">متجر الهدايا</h3><button onclick="closeModal('gift-modal')" class="text-slate-400"><i class="fa-solid fa-xmark text-xl"></i></button></div>
@@ -368,6 +363,17 @@
         let currentTheme = 'theme-night';
         let welcomeAudioPlayed = false;
 
+        // نظام إدارة محاولات كازينو روبرت (أول ضربتين دبل، ثم 4 ضربات لا شيء، ثم قفل لليوم التالي)
+        let robertSpinCount = parseInt(localStorage.getItem('robert_spins') || '0');
+        let robertLastDate = localStorage.getItem('robert_date') || '';
+        const todayStr = new Date().toDateString();
+
+        if (robertLastDate !== todayStr) {
+            robertSpinCount = 0;
+            localStorage.setItem('robert_date', todayStr);
+            localStorage.setItem('robert_spins', '0');
+        }
+
         document.addEventListener("DOMContentLoaded", async () => {
             const { data: { session } } = await supabaseClient.auth.getSession();
             if (session) {
@@ -375,6 +381,7 @@
                 updateUserInterface(currentUser);
             }
             selectBet(1000);
+            updateRobertUI();
         });
 
         // تشغيل صوت الترحيب البشري الأنثوي المعالَج مع تأثير الصدى السينمائي
@@ -453,37 +460,54 @@
             document.getElementById('selected-bet-display').innerText = `🪙 ${amount.toLocaleString()} كوينز`;
         }
 
-        function playLuckyWheel() {
-            if (userCoins < selectedBetAmount) return alert("رصيد الكوينزات لديك غير كافٍ لهذا الرهان!");
-            userCoins -= selectedBetAmount;
-            const isWin = Math.random() > 0.45;
-            const resultMsg = document.getElementById('game-result-msg');
+        function updateRobertUI() {
+            const counter = document.getElementById('robert-spins-counter');
+            const spinBtn = document.getElementById('spin-btn');
+            const remaining = 6 - robertSpinCount;
 
-            if (isWin) {
-                const multiplier = [2, 3, 5][Math.floor(Math.random() * 3)];
-                const profit = selectedBetAmount * multiplier;
-                userCoins += profit;
-                resultMsg.innerHTML = `<span class="text-emerald-400 font-bold">🎉 مبروك! ربحت (${profit.toLocaleString()} كوينز) من الكازينو!</span>`;
+            if (remaining <= 0) {
+                counter.innerHTML = `<span class="text-red-400 font-bold">🛑 انتهت محاولاتك لليوم! عد غداً لكازينو روبرت.</span>`;
+                spinBtn.disabled = true;
+                spinBtn.classList.add('opacity-50', 'cursor-not-allowed');
             } else {
-                resultMsg.innerHTML = `<span class="text-red-400 font-bold">💔 حظاً أوفر في الجولة القادمة (-${selectedBetAmount.toLocaleString()})</span>`;
+                counter.innerHTML = `عدد المحاولات المتبقية اليوم: <span class="text-amber-400 font-bold">${remaining} ضربات</span>`;
+                spinBtn.disabled = false;
+                spinBtn.classList.remove('opacity-50', 'cursor-not-allowed');
             }
-            document.getElementById('user-balance').innerText = userCoins.toLocaleString() + " كوينز";
         }
 
-        function playPokerCard() {
-            if (userCoins < selectedBetAmount) return alert("رصيدك غير كافٍ لتحدي كازينو البوكر!");
+        function playRobertCasino() {
+            if (robertSpinCount >= 6) {
+                return alert("لقد استنفذت محاولاتك الـ 6 لهذا اليوم في كازينو روبرت. نراكم غداً!");
+            }
+
+            if (userCoins < selectedBetAmount) {
+                return alert("رصيد الكوينزات لديك غير كافٍ لهذه الضربة!");
+            }
+
             userCoins -= selectedBetAmount;
-            const isWin = Math.random() > 0.5;
+            robertSpinCount++;
+            localStorage.setItem('robert_spins', robertSpinCount.toString());
+
             const resultMsg = document.getElementById('game-result-msg');
 
-            if (isWin) {
-                const profit = selectedBetAmount * 4;
+            // المنطق المطلوب: أول ضربتين دبل (ربح)، تليها 4 ضربات خسارة (أو لا شيء)
+            if (robertSpinCount <= 2) {
+                const profit = selectedBetAmount * 2;
                 userCoins += profit;
-                resultMsg.innerHTML = `<span class="text-amber-400 font-bold">🃏 فوز ملكي بالبوكر! ربحت (${profit.toLocaleString()} كوينز)!</span>`;
+                resultMsg.innerHTML = `<span class="text-emerald-400 font-bold">🎉 ضربة مذهلة! ربحت الدبل (${profit.toLocaleString()} كوينز)!</span>`;
             } else {
-                resultMsg.innerHTML = `<span class="text-red-400 font-bold">❌ خسرنا الجولة (-${selectedBetAmount.toLocaleString()})</span>`;
+                resultMsg.innerHTML = `<span class="text-red-400 font-bold">💔 لم تحقق ربحاً في هذه الضربة (-${selectedBetAmount.toLocaleString()})</span>`;
             }
+
             document.getElementById('user-balance').innerText = userCoins.toLocaleString() + " كوينز";
+            updateRobertUI();
+
+            if (robertSpinCount >= 6) {
+                setTimeout(() => {
+                    alert("لقد أكملت ضرباتك الـ 6 اليوم. تم إيقاف كازينو روبرت حتى الغد!");
+                }, 500);
+            }
         }
 
         function calculateDepositCoins() {
@@ -530,7 +554,7 @@
                 <div class="flex flex-col h-full space-y-4 p-3 rounded-3xl ${currentTheme} border border-pink-500/30">
                     <div class="glass-card p-4 rounded-2xl flex items-center justify-between border border-pink-500/30">
                         <div>
-                            <span class="text-[10px] bg-pink-500/25 text-pink-300 px-2 py-0.5 rounded-full font-bold animate-pulse">🔴 بث مباشر وقسم الكازينو</span>
+                            <span class="text-[10px] bg-amber-500/25 text-amber-300 px-2 py-0.5 rounded-full font-bold animate-pulse">🔴 كازينو روبرت الحي</span>
                             <h2 class="text-xl font-bold mt-1 text-white">${title}</h2>
                             <p class="text-xs text-pink-200">المضيف: <span class="text-amber-300 font-bold">${host}</span></p>
                         </div>
@@ -545,16 +569,16 @@
                         <div class="flex flex-col items-center space-y-1">
                             <div id="seat-my-slot" class="w-14 h-14 rounded-full bg-rose-950/60 border-2 border-pink-500/30 flex items-center justify-center text-lg relative">🎙️</div>
                             <span class="text-[11px] font-bold text-pink-100">أنت</span>
-                            <button onclick="openGamesModal()" class="px-2 py-0.5 bg-amber-500 text-slate-950 rounded text-[9px] font-bold">قسم الكازينو 🎰</button>
+                            <button onclick="openGamesModal()" class="px-2 py-0.5 bg-amber-500 text-slate-950 rounded text-[9px] font-bold">كازينو روبرت 💎</button>
                         </div>
                     </div>
 
                     <div class="flex-1 glass-card rounded-2xl p-4 flex flex-col justify-between">
                         <div class="space-y-2 overflow-y-auto max-h-40 text-xs text-pink-100/90">
-                            <div class="p-2 bg-pink-950/40 rounded-xl">🎰 مرحباً بك في روم الكازينو والبوكر بالكوينزات!</div>
+                            <div class="p-2 bg-pink-950/40 rounded-xl">💎 مرحباً بك في روم كازينو روبرت الحصري!</div>
                         </div>
                         <div class="flex items-center gap-3 pt-3 border-t border-pink-500/20">
-                            <button onclick="openGamesModal()" class="px-3 py-2 bg-amber-500/20 text-amber-300 rounded-xl text-xs font-bold border border-pink-500/30">🎰 قسم الكازينو</button>
+                            <button onclick="openGamesModal()" class="px-3 py-2 bg-amber-500/20 text-amber-300 rounded-xl text-xs font-bold border border-amber-500/30">💎 كازينو روبرت</button>
                             <input type="text" placeholder="اكتب تعليقاً..." class="flex-1 bg-rose-950/50 border rounded-xl px-4 py-2 text-xs text-white">
                             <button onclick="openGiftModal()" class="px-4 py-2 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-xl text-xs font-bold">هدية</button>
                         </div>
@@ -565,7 +589,7 @@
 
         function acceptTerms() { closeModal('about-modal'); alert("شكراً لموافقتك على دليل وشروط DEDE LIVE المعتمدة!"); }
         function leaveRoom() { location.reload(); }
-        function openGamesModal() { document.getElementById('games-modal').classList.remove('hidden'); }
+        function openGamesModal() { document.getElementById('games-modal').classList.remove('hidden'); updateRobertUI(); }
         function openAboutModal() { document.getElementById('about-modal').classList.remove('hidden'); }
         function openGiftModal() { document.getElementById('gift-modal').classList.remove('hidden'); }
         function openLeaderboardModal() { document.getElementById('leaderboard-modal').classList.remove('hidden'); }
@@ -576,7 +600,7 @@
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
         function createNewLiveRoom() {
-            const title = document.getElementById('new-room-title').value || 'روم كازينو جديد';
+            const title = document.getElementById('new-room-title').value || 'روم كازينو روبرت';
             closeModal('create-room-modal');
             joinLiveRoom(title, 'أنت (المضيف)');
         }

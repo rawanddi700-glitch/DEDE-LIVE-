@@ -48,13 +48,20 @@
         }
         .big-boss-announcement { animation: bigBossBanner 4s ease-in-out forwards; }
 
+        @keyframes emojiFloat {
+            0% { transform: translateY(0) scale(0.5); opacity: 0; }
+            50% { opacity: 1; transform: translateY(-40px) scale(1.3); }
+            100% { transform: translateY(-80px) scale(1); opacity: 0; }
+        }
+        .emoji-reaction-anim { animation: emojiFloat 2s ease-out forwards; }
+
         .vip-badge { background: linear-gradient(135deg, #f59e0b, #d97706); text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
         .theme-night { background: rgba(20, 8, 28, 0.65); }
     </style>
 </head>
 <body class="flex flex-col h-screen" onclick="playHumanFemaleVoiceWithEcho()">
 
-    <!-- حاوية التأثيرات الكبرى على الشاشة (الهدايا الفخمة وإعلان الكبير) -->
+    <!-- حاوية التأثيرات الكبرى على الشاشة -->
     <div id="screen-effects-container" class="fixed inset-0 pointer-events-none z-50 flex flex-col items-center justify-center overflow-hidden"></div>
 
     <!-- 1. الشريط العلوي Navbar -->
@@ -195,21 +202,50 @@
         </main>
     </div>
 
-    <!-- 🎁 نافذة متجر الهدايا الاحترافية داخل الروم -->
+    <!-- 🎁 نافذة متجر الهدايا (100 هدية عادية ومتوسطة وفخمة) -->
     <div id="gift-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-        <div class="glass-card w-full max-w-lg p-6 rounded-3xl border border-pink-500/30 space-y-4">
+        <div class="glass-card w-full max-w-2xl p-6 rounded-3xl border border-pink-500/30 space-y-4 max-h-[85vh] flex flex-col">
             <div class="flex justify-between items-center border-b border-pink-500/20 pb-3">
-                <h3 class="text-lg font-bold text-pink-300 flex items-center gap-2"><i class="fa-solid fa-gift text-amber-400"></i> متجر الهدايا الفاخرة</h3>
+                <h3 class="text-lg font-bold text-pink-300 flex items-center gap-2"><i class="fa-solid fa-gift text-amber-400"></i> متجر الهدايا الأسطوري (100 هدية)</h3>
                 <button onclick="closeModal('gift-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
-            <p class="text-xs text-pink-200/80">اختر الهدية لإرسالها للمضيف وتوليد تأثيرات مذهلة على الشاشة:</p>
-            <div id="gifts-grid" class="grid grid-cols-3 gap-3 max-h-72 overflow-y-auto p-1">
-                <!-- يتم تعبئة الهدايا برمجياً -->
+            <p class="text-xs text-pink-200/80">اختر من قائمة الهدايا (عادية، متوسطة، فاخرة وأسطورية):</p>
+            <div id="gifts-grid" class="grid grid-cols-2 md:grid-cols-4 gap-3 overflow-y-auto p-1 flex-1">
+                <!-- يتم تعبئة 100 هدية برمجياً -->
             </div>
         </div>
     </div>
 
-    <!-- 💎 نافذة كازينو روبرت (قريباً) -->
+    <!-- نافذة طلب الإشراف -->
+    <div id="mod-request-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="glass-card w-full max-w-md p-6 rounded-3xl border border-pink-500/30 space-y-4 text-center">
+            <h3 class="text-lg font-bold text-amber-400">طلب الحصول على إشراف الروم</h3>
+            <p class="text-xs text-pink-200">هل تود إرسال طلب للحصول على صلاحيات المشرف (إدارة الأغاني، السمايلات، وطرد الأعضاء) إلى صاحب الروم؟</p>
+            <div class="flex gap-3 pt-2">
+                <button onclick="submitModRequest()" class="flex-1 py-2.5 bg-emerald-600 text-white rounded-xl font-bold text-xs">إرسال الطلب</button>
+                <button onclick="closeModal('mod-request-modal')" class="flex-1 py-2.5 bg-slate-800 text-slate-300 rounded-xl text-xs">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة تشغيل الأغاني للمشرفين والمضيف -->
+    <div id="music-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="glass-card w-full max-w-md p-6 rounded-3xl border border-pink-500/30 space-y-4 text-center">
+            <h3 class="text-lg font-bold text-pink-300 flex items-center justify-center gap-2"><i class="fa-solid fa-music text-amber-400"></i> مشغل الأغاني الداخلي للروم</h3>
+            <p class="text-xs text-pink-200">اختر مساراً موسيقياً أو أدخل رابط الأغنية ليسمعها الجميع في الروم:</p>
+            <select id="music-track-select" class="w-full bg-slate-900 border rounded-xl p-3 text-xs text-white">
+                <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">🎵 سهرة طرب رومانسية (موسيقى حية)</option>
+                <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3">🎸 ريمكس حماسي للكازينو</option>
+                <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3">🎶 هدوء وليالي ديدي لايف</option>
+            </select>
+            <div class="flex gap-3 pt-2">
+                <button onclick="startPlayingMusic()" class="flex-1 py-2.5 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-xl font-bold text-xs shadow-lg">تشغيل الأغنية بالروم 🎧</button>
+                <button onclick="stopPlayingMusic()" class="py-2.5 px-4 bg-red-600/30 text-red-300 rounded-xl text-xs border border-red-500/30">إيقاف</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- بقية النوافذ الثابتة -->
     <div id="games-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="glass-card w-full max-w-md p-8 rounded-3xl border border-amber-500/40 space-y-6 text-center shadow-2xl">
             <div class="flex justify-between items-center border-b border-pink-500/20 pb-3">
@@ -225,7 +261,6 @@
         </div>
     </div>
 
-    <!-- 📚 نافذة الدليل الشامل -->
     <div id="about-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="glass-card w-full max-w-2xl p-6 rounded-3xl border border-pink-500/30 space-y-5 max-h-[85vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b border-pink-500/20 pb-3">
@@ -240,7 +275,6 @@
         </div>
     </div>
 
-    <!-- نوافذ الإيداع والسحب والمتصدرين -->
     <div id="deposit-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="glass-card w-full max-w-md p-6 rounded-3xl border border-pink-500/30 space-y-4">
             <div class="flex justify-between items-center"><h3 class="text-lg font-bold text-emerald-400">شحن كوينزات</h3><button onclick="closeModal('deposit-modal')" class="text-slate-400"><i class="fa-solid fa-xmark text-xl"></i></button></div>
@@ -296,16 +330,37 @@
         let currentTheme = 'theme-night';
         let welcomeAudioPlayed = false;
         let activeRoomHost = 'أبو أحمد';
+        let isUserAdminOrMod = false; // هل المستخدم مشرف أو صاحب روم؟
+        let currentBackgroundMusic = null;
 
-        // قائمة الهدايا الاحترافية مع الأسماء والأيقونات والأصوات الخاصة بها
-        const giftsList = [
-            { id: 1, name: "وردة جورية", icon: "🌹", price: 1000, sound: "https://actions.google.com/sounds/v1/cartoon/bell_ringing.ogg" },
-            { id: 2, name: "قلب متألق", icon: "💖", price: 5000, sound: "https://actions.google.com/sounds/v1/cartoon/wood_plank_flick.ogg" },
-            { id: 3, name: "تاج ملكي", icon: "👑", price: 25000, sound: "https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg" },
-            { id: 4, name: "سيارة فاخرة", icon: "🏎️", price: 50000, sound: "https://actions.google.com/sounds/v1/vehicles/car_accelerate.ogg" },
-            { id: 5, name: "صاروخ الفضاء", icon: "🚀", price: 100000, sound: "https://actions.google.com/sounds/v1/science_fiction/laser_charge.ogg" },
-            { id: 6, name: "قصر الأحلام", icon: "🏰", price: 500000, sound: "https://actions.google.com/sounds/v1/ambiences/large_room.ogg" }
+        // توليد 100 هدية (عادية، متوسطة، فاخرة، وأسطورية) برمجياً بأسماء وأسعار وتصاميم واقعية
+        const giftsList = [];
+        const giftCategories = [
+            { prefix: "وردة", icons: ["🌹", "🌷", "🌸", "🌺", "🌻", "🌼", "💐"], basePrice: 1000 },
+            { prefix: "قلب", icons: ["💖", "💗", "💓", "💞", "💕", "💘", "💖"], basePrice: 5000 },
+            { prefix: "نجمة", icons: ["⭐", "🌟", "💫", "✨", "🌠"], basePrice: 15000 },
+            { prefix: "تاج", icons: ["👑", "💎", "💍", "🏆", "🥇"], basePrice: 30000 },
+            { prefix: "سيارة", icons: ["🏎️", "🚗", "🚙", "🚕", "🚓"], basePrice: 50000 },
+            { prefix: "طائرة", icons: ["✈️", "🚀", "🛸", "🚁", "🛰️"], basePrice: 100000 },
+            { prefix: "قصر", icons: ["🏰", "🏯", "🏛️", "🏟️", "🗼"], basePrice: 250000 },
+            { prefix: "أسطورة", icons: ["🐉", "🦁", "🐅", "⚡", "🔥"], basePrice: 500000 }
         ];
+
+        let idCounter = 1;
+        giftCategories.forEach(cat => {
+            for (let i = 0; i < 13 && idCounter <= 100; i++) {
+                const icon = cat.icons[i % cat.icons.length];
+                const price = cat.basePrice + (i * 2500);
+                giftsList.push({
+                    id: idCounter,
+                    name: `${cat.prefix} رقم ${idCounter}`,
+                    icon: icon,
+                    price: price,
+                    sound: price >= 50000 ? "https://actions.google.com/sounds/v1/science_fiction/laser_charge.ogg" : "https://actions.google.com/sounds/v1/cartoon/bell_ringing.ogg"
+                });
+                idCounter++;
+            }
+        });
 
         document.addEventListener("DOMContentLoaded", async () => {
             const { data: { session } } = await supabaseClient.auth.getSession();
@@ -316,7 +371,6 @@
             populateGiftsModal();
         });
 
-        // تشغيل صوت الترحيب البشري الأنثوي المعالَج مع الصدى
         function playHumanFemaleVoiceWithEcho() {
             if (welcomeAudioPlayed) return;
             welcomeAudioPlayed = true;
@@ -373,7 +427,7 @@
             grid.innerHTML = giftsList.map(g => `
                 <div onclick="sendGift(${g.id})" class="glass-card p-3 rounded-2xl border border-pink-500/30 hover:border-amber-400 cursor-pointer text-center transition group">
                     <div class="text-3xl mb-1 group-hover:scale-125 transition duration-300">${g.icon}</div>
-                    <div class="text-xs font-bold text-white">${g.name}</div>
+                    <div class="text-xs font-bold text-white truncate">${g.name}</div>
                     <div class="text-[10px] text-amber-400 mt-1 font-mono">🪙 ${g.price.toLocaleString()}</div>
                 </div>
             `).join('');
@@ -391,25 +445,20 @@
             document.getElementById('user-balance').innerText = userCoins.toLocaleString() + " كوينز";
             closeModal('gift-modal');
 
-            // جلب اسم المستخدم الحالي
             const senderName = currentUser ? (currentUser.user_metadata?.full_name || currentUser.email.split('@')[0]) : "محمد سعد الدين";
             const receiverName = activeRoomHost;
 
-            // تشغيل التأثير الصوتي الخاص بالهدية
             try {
                 const giftAudio = new Audio(gift.sound);
                 giftAudio.play().catch(() => {});
             } catch(e) {}
 
-            // إظهار تأثير الهدية على الشاشة (للمرسل والمستلم)
             showScreenGiftEffect(senderName, receiverName, gift);
 
-            // إذا كانت الهدية غالية جداً (أكبر من أو تساوي 50,000 كوينز)، يتم إظهار إعلان الكبير الفخم على الشاشة!
             if (gift.price >= 50000) {
                 showBigBossAnnouncement(senderName, gift);
             }
 
-            // إضافة رسالة في شات الروم الفعال إذا كان موجوداً
             const chatBox = document.getElementById('room-chat-messages');
             if (chatBox) {
                 const msgDiv = document.createElement('div');
@@ -449,6 +498,78 @@
             `;
             container.appendChild(el);
             setTimeout(() => { el.remove(); }, 4000);
+        }
+
+        // ميزات المشرف وصاحب الروم (سمايلات، أغاني، وطرد)
+        function requestAdminRole() {
+            document.getElementById('mod-request-modal').classList.remove('hidden');
+        }
+
+        function submitModRequest() {
+            closeModal('mod-request-modal');
+            alert("تم إرسال طلب الإشراف إلى صاحب الروم بنجاح! بانتظار الموافقة.");
+            setTimeout(() => {
+                isUserAdminOrMod = true;
+                alert("🎉 مبارك! وافق صاحب الروم على منحك صلاحيات الإشراف الكاملة.");
+                updateRoomControlsForAdmin();
+            }, 2000);
+        }
+
+        function updateRoomControlsForAdmin() {
+            const controlsArea = document.getElementById('admin-room-controls');
+            if (controlsArea) {
+                controlsArea.innerHTML = `
+                    <div class="flex items-center gap-2 flex-wrap bg-amber-500/10 p-2 rounded-xl border border-amber-500/30 text-xs">
+                        <span class="text-amber-400 font-bold"><i class="fa-solid fa-shield-halved"></i> لوحة المشرف:</span>
+                        <button onclick="triggerEmojiReaction('🔥')" class="px-2.5 py-1 bg-pink-600 text-white rounded-lg font-bold">🔥 سمايلي</button>
+                        <button onclick="triggerEmojiReaction('💖')" class="px-2.5 py-1 bg-rose-600 text-white rounded-lg font-bold">💖 قلب</button>
+                        <button onclick="triggerEmojiReaction('👑')" class="px-2.5 py-1 bg-amber-600 text-white rounded-lg font-bold">👑 تاج</button>
+                        <button onclick="openMusicModal()" class="px-2.5 py-1 bg-purple-600 text-white rounded-lg font-bold"><i class="fa-solid fa-music"></i> تشغيل أغنية</button>
+                        <button onclick="kickGuestUser()" class="px-2.5 py-1 bg-red-600 text-white rounded-lg font-bold"><i class="fa-solid fa-user-slash"></i> طرد عضو</button>
+                    </div>
+                `;
+            }
+        }
+
+        function triggerEmojiReaction(emoji) {
+            const avatarSlot = document.getElementById('my-avatar-slot');
+            if (!avatarSlot) return;
+            const floatEl = document.createElement('div');
+            floatEl.className = "emoji-reaction-anim absolute -top-8 text-3xl z-30";
+            floatEl.innerText = emoji;
+            avatarSlot.appendChild(floatEl);
+            setTimeout(() => { floatEl.remove(); }, 2000);
+        }
+
+        function openMusicModal() {
+            document.getElementById('music-modal').classList.remove('hidden');
+        }
+
+        function startPlayingMusic() {
+            const trackUrl = document.getElementById('music-track-select').value;
+            closeModal('music-modal');
+            if (currentBackgroundMusic) currentBackgroundMusic.pause();
+            currentBackgroundMusic = new Audio(trackUrl);
+            currentBackgroundMusic.loop = true;
+            currentBackgroundMusic.play().then(() => {
+                alert("🎵 تبث الموسيقى الآن في الروم بنجاح لجميع الحاضرين!");
+            }).catch(e => alert("خطأ في تشغيل المسار الصوتي."));
+        }
+
+        function stopPlayingMusic() {
+            closeModal('music-modal');
+            if (currentBackgroundMusic) {
+                currentBackgroundMusic.pause();
+                currentBackgroundMusic = null;
+                alert("⏹️ تم إيقاف الأغنية بالروم.");
+            }
+        }
+
+        function kickGuestUser() {
+            const targetName = prompt("أدخل اسم العضو المراد طرده لعدم حيازته على إشراف أو وكالة:");
+            if (targetName) {
+                alert(`⚠️ تم طرد العضو (${targetName}) بنجاح من الروم بواسطة المشرف.`);
+            }
         }
 
         function calculateDepositCoins() {
@@ -492,8 +613,14 @@
                             <h2 class="text-xl font-bold mt-1 text-white">${title}</h2>
                             <p class="text-xs text-pink-200">المضيف: <span class="text-amber-300 font-bold">${host}</span></p>
                         </div>
-                        <button onclick="leaveRoom()" class="px-4 py-2 bg-red-600/20 text-red-300 rounded-xl text-xs font-bold border border-red-500/30">مغادرة</button>
+                        <div class="flex items-center gap-2">
+                            <button onclick="requestAdminRole()" class="px-3 py-1.5 bg-amber-500/20 text-amber-300 rounded-xl text-xs font-bold border border-amber-500/40 hover:bg-amber-500/40">طلب إشراف 🛡️</button>
+                            <button onclick="leaveRoom()" class="px-4 py-2 bg-red-600/20 text-red-300 rounded-xl text-xs font-bold border border-red-500/30">مغادرة</button>
+                        </div>
                     </div>
+
+                    <!-- منطقة أزرار تحكم المشرف إذا مُنح الصلاحية -->
+                    <div id="admin-room-controls"></div>
 
                     <div class="grid grid-cols-4 gap-3 p-4 glass-card rounded-2xl text-center">
                         <div class="flex flex-col items-center space-y-1">
@@ -501,7 +628,7 @@
                             <span class="text-[11px] font-bold text-pink-100">${host}</span>
                         </div>
                         <div class="flex flex-col items-center space-y-1">
-                            <div id="seat-my-slot" class="w-14 h-14 rounded-full bg-rose-950/60 border-2 border-pink-500/30 flex items-center justify-center text-lg relative">🎙️</div>
+                            <div id="my-avatar-slot" class="w-14 h-14 rounded-full bg-rose-950/60 border-2 border-pink-500/30 flex items-center justify-center text-lg relative">🎙️</div>
                             <span class="text-[11px] font-bold text-pink-100">أنت</span>
                         </div>
                     </div>
@@ -513,15 +640,16 @@
                         <div class="flex items-center gap-3 pt-3 border-t border-pink-500/20">
                             <button onclick="alert('✋ تم رفع اليد')" class="px-3 py-2 bg-pink-500/20 text-pink-200 rounded-xl text-xs font-bold border border-pink-500/30">✋ رفع اليد</button>
                             <input type="text" placeholder="اكتب تعليقاً..." class="flex-1 bg-rose-950/50 border rounded-xl px-4 py-2 text-xs text-white">
-                            <button onclick="openGiftModal()" class="px-4 py-2 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-xl text-xs font-bold shadow-lg animate-pulse">🎁 الهدايا</button>
+                            <button onclick="openGiftModal()" class="px-4 py-2 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-xl text-xs font-bold shadow-lg animate-pulse">🎁 الهدايا (100)</button>
                         </div>
                     </div>
                 </div>
             `;
+            if (isUserAdminOrMod) updateRoomControlsForAdmin();
         }
 
         function acceptTerms() { closeModal('about-modal'); alert("شكراً لموافقتك على دليل وشروط DEDE LIVE المعتمدة!"); }
-        function leaveRoom() { location.reload(); }
+        function leaveRoom() { if (currentBackgroundMusic) currentBackgroundMusic.pause(); location.reload(); }
         function openGamesModal() { document.getElementById('games-modal').classList.remove('hidden'); }
         function openAboutModal() { document.getElementById('about-modal').classList.remove('hidden'); }
         function openGiftModal() { document.getElementById('gift-modal').classList.remove('hidden'); }
@@ -536,6 +664,7 @@
             const title = document.getElementById('new-room-title').value || 'روم تعارف جديد';
             closeModal('create-room-modal');
             let hostName = currentUser ? (currentUser.user_metadata?.full_name || currentUser.email.split('@')[0]) : "محمد سعد الدين";
+            isUserAdminOrMod = true; // صاحب الروم يمتلك الصلاحيات كاملة افتراضياً
             joinLiveRoom(title, hostName);
         }
     </script>

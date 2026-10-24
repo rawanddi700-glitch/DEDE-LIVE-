@@ -289,7 +289,7 @@
         let userProfile = null;
         let userCoins = 0;
         let welcomeAudioPlayed = false;
-        const ADMIN_EMAIL = "mohammadsaaddin79@gmail.com"; // ضع إيميلك هنا لتظهر لك لوحة الادمن
+        const ADMIN_EMAIL = "rawand.di700@gmail.com"; // إيميل الآدمن المعتمد لمراجعة العمليات
 
         supabaseClient.auth.onAuthStateChange(async (event, session) => {
             if (session && session.user) {
@@ -551,10 +551,8 @@
         }
 
         async function adminApproveDeposit(txId, userId, coinsAmount) {
-            // تحديث حالة الطلب إلى approved
             await supabaseClient.from('wallet_transactions').update({ status: 'approved' }).eq('id', txId);
 
-            // جلب رصيد المستخدم الحالي وإضافة الكوينزات
             let { data: targetProfile } = await supabaseClient.from('profiles').select('coins_balance').eq('id', userId).single();
             const newBalance = (targetProfile?.coins_balance || 0) + coinsAmount;
 
@@ -590,7 +588,7 @@
                     <div class="text-left">
                         <div class="font-bold text-amber-400">+${tx.amount_coins.toLocaleString()} كوينز</div>
                         <div class="text-[10px] ${tx.status === 'approved' ? 'text-emerald-400' : tx.status === 'rejected' ? 'text-red-400' : 'text-amber-300'}">
-                            ${tx.status === 'approved' ? 'مكتمل وموافق عليه' : tx.status === 'rejected' ? 'مرفود' : 'قيد المراجعة ⏳'}
+                            ${tx.status === 'approved' ? 'مكتمل وموافق عليه' : tx.status === 'rejected' ? 'مرفوض' : 'قيد المراجعة ⏳'}
                         </div>
                     </div>
                 </div>

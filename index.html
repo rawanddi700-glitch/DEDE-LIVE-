@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Supabase JS Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Agora RTC SDK للبث الصوتي الحي -->
+    <!-- Agora RTC SDK -->
     <script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.17.0.js"></script>
     <style>
         body { 
@@ -44,7 +44,7 @@
 
     <div id="screen-effects-container" class="fixed inset-0 pointer-events-none z-50 flex flex-col items-center justify-center overflow-hidden"></div>
 
-    <!-- 🛑 شاشة تسجيل الدخول الإجبارية واختيار اسم المستخدم -->
+    <!-- 🛑 شاشة تسجيل الدخول الإجبارية -->
     <div id="auth-gate-screen" class="fixed inset-0 bg-[#09020d]/95 backdrop-blur-2xl z-50 flex items-center justify-center p-4">
         <div class="glass-card w-full max-w-md p-8 rounded-3xl border border-pink-500/40 space-y-5 text-center shadow-2xl">
             <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-tr from-pink-600 via-rose-500 to-purple-600 flex items-center justify-center font-black text-3xl text-white shadow-lg shadow-pink-500/40 border border-pink-300/40">
@@ -52,16 +52,12 @@
             </div>
             <div>
                 <h1 class="text-2xl font-black text-white tracking-wider">DEDE LIVE</h1>
-                <p class="text-xs text-pink-300/90 font-bold mt-1">سجل حسابك وحدد اسم المستخدم الخاص بك للبدء</p>
+                <p class="text-xs text-pink-300/90 font-bold mt-1">سجل حسابك وسيتم توليد معرّف (ID) رقمي خاص بك تلقائياً</p>
             </div>
 
             <div class="space-y-3 text-right">
                 <div>
-                    <label class="text-[11px] text-pink-300 block mb-1">اسم المستخدم الفريد (ID/Username):</label>
-                    <input type="text" id="gate-username" placeholder="مثال: robert_boss" class="w-full bg-slate-900/80 border border-pink-500/30 rounded-xl p-3 text-sm text-white text-right focus:outline-none focus:border-pink-500">
-                </div>
-                <div>
-                    <label class="text-[11px] text-pink-300 block mb-1">الاسم الظاهر (Display Name):</label>
+                    <label class="text-[11px] text-pink-300 block mb-1">الاسم الظاهر:</label>
                     <input type="text" id="gate-display-name" placeholder="مثال: روبرت الأسطورة" class="w-full bg-slate-900/80 border border-pink-500/30 rounded-xl p-3 text-sm text-white text-right focus:outline-none focus:border-pink-500">
                 </div>
                 <div>
@@ -133,9 +129,9 @@
                     <i class="fa-solid fa-gem text-lg text-amber-400"></i>
                     <span class="hidden lg:inline font-bold">كازينو روبرت 💎</span>
                 </button>
-                <button onclick="openProfileModal()" class="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-pink-200/80 hover:bg-pink-900/30 transition text-right">
-                    <i class="fa-solid fa-user-pen text-lg text-rose-400"></i>
-                    <span class="hidden lg:inline">الملف الشخصي والبايو</span>
+                <button onclick="openProfilePage()" class="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-pink-200/80 hover:bg-pink-900/30 transition text-right">
+                    <i class="fa-solid fa-id-card text-lg text-rose-400"></i>
+                    <span class="hidden lg:inline font-bold">صفحة الملف الشخصي</span>
                 </button>
                 <button onclick="openWalletHistoryModal()" class="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-pink-200/80 hover:bg-pink-900/30 transition text-right">
                     <i class="fa-solid fa-wallet text-lg text-emerald-400"></i>
@@ -172,7 +168,45 @@
         </main>
     </div>
 
-    <!-- نافذة سجل المحفظة والعمليات المالية -->
+    <!-- 👤 صفحة الملف الشخصي الكاملة (تظهر عند الضغط على زر الملف الشخصي) -->
+    <div id="profile-page-modal" class="hidden fixed inset-0 bg-[#09020d]/95 backdrop-blur-2xl z-50 flex items-center justify-center p-4 overflow-y-auto">
+        <div class="glass-card w-full max-w-lg p-8 rounded-3xl border border-pink-500/40 space-y-6 text-center shadow-2xl relative my-auto">
+            <button onclick="closeModal('profile-page-modal')" class="absolute top-5 left-5 text-slate-400 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
+            
+            <h2 class="text-xl font-black text-pink-300"><i class="fa-solid fa-id-card text-amber-400"></i> الملف الشخصي والهوية</h2>
+
+            <!-- صورة الملف الشخصي -->
+            <div class="relative w-28 h-28 mx-auto group">
+                <img id="profile-page-avatar" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="w-28 h-28 rounded-full border-4 border-pink-500 object-cover shadow-xl">
+                <label for="avatar-file-input" class="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition cursor-pointer text-white text-xs font-bold">
+                    <i class="fa-solid fa-camera text-lg"></i> تغيير الصورة
+                </label>
+                <input type="file" id="avatar-file-input" accept="image/*" onchange="uploadAvatarImage(this)" class="hidden">
+            </div>
+
+            <!-- الاسم الظاهر -->
+            <div>
+                <h3 id="profile-page-name" class="text-lg font-black text-white">اسم المستخدم</h3>
+                <!-- الآيدي الرقمي الفريد تحت الاسم مباشرة -->
+                <p class="text-xs text-amber-400 font-mono mt-1 font-bold">ID: <span id="profile-page-numeric-id">------</span></p>
+            </div>
+
+            <!-- حقول التعديل البايو والاسم -->
+            <div class="space-y-3 text-right text-xs">
+                <div>
+                    <label class="block text-pink-200 font-bold mb-1">تعديل الاسم الظاهر:</label>
+                    <input type="text" id="edit-display-name" class="w-full bg-slate-900 border border-pink-500/30 rounded-xl p-3 text-sm text-white">
+                </div>
+                <div>
+                    <label class="block text-pink-200 font-bold mb-1">البايو (النبذة التعريفية):</label>
+                    <textarea id="edit-bio" rows="3" placeholder="اكتب شيئاً مميزاً عنك..." class="w-full bg-slate-900 border border-pink-500/30 rounded-xl p-3 text-sm text-white"></textarea>
+                </div>
+                <button onclick="saveProfileChanges()" class="w-full py-3 bg-pink-600 hover:bg-pink-700 text-white rounded-xl font-bold text-xs transition shadow-lg">حفظ التعديلات</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة سجل المحفظة -->
     <div id="wallet-history-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="glass-card w-full max-w-lg p-6 rounded-3xl border border-pink-500/30 space-y-4 max-h-[80vh] flex flex-col">
             <div class="flex justify-between items-center border-b border-pink-500/20 pb-3">
@@ -207,32 +241,7 @@
         </div>
     </div>
 
-    <!-- نافذة تعديل الملف الشخصي -->
-    <div id="profile-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-        <div class="glass-card w-full max-w-md p-6 rounded-3xl border border-pink-500/30 space-y-4">
-            <div class="flex justify-between items-center border-b border-pink-500/20 pb-3">
-                <h3 class="text-lg font-bold text-pink-300">الملف الشخصي والبايو</h3>
-                <button onclick="closeModal('profile-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
-            </div>
-            <div class="space-y-3 text-xs">
-                <label class="block text-pink-200 font-bold">اسم المستخدم (ID):</label>
-                <input type="text" id="profile-username" disabled class="w-full bg-slate-900/50 border rounded-xl p-3 text-sm text-slate-400">
-                
-                <label class="block text-pink-200 font-bold">الاسم الظاهر:</label>
-                <input type="text" id="profile-display-name" class="w-full bg-slate-900 border rounded-xl p-3 text-sm text-white">
-
-                <label class="block text-pink-200 font-bold">رابط الصورة الشخصية:</label>
-                <input type="text" id="profile-avatar" class="w-full bg-slate-900 border rounded-xl p-3 text-sm text-white">
-
-                <label class="block text-pink-200 font-bold">البايو (النبذة التعريفية):</label>
-                <textarea id="profile-bio" rows="3" class="w-full bg-slate-900 border rounded-xl p-3 text-sm text-white"></textarea>
-
-                <button onclick="saveUserProfile()" class="w-full py-3 bg-pink-600 text-white rounded-xl font-bold text-xs shadow-lg">حفظ التغييرات</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- بقية النوافذ (إنشاء روم، هدايا، إلخ) -->
+    <!-- نافذة إنشاء روم -->
     <div id="create-room-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="glass-card w-full max-w-md p-6 rounded-3xl border border-pink-500/30 space-y-4">
             <div class="flex justify-between items-center"><h3 class="text-lg font-bold text-pink-300">إنشاء روم جديد</h3><button onclick="closeModal('create-room-modal')" class="text-slate-400"><i class="fa-solid fa-xmark text-xl"></i></button></div>
@@ -265,7 +274,6 @@
 
         async function fetchOrCreateProfile(user) {
             currentUser = user;
-            // جلب ملف المستخدم من جدول profiles
             let { data: profile, error } = await supabaseClient
                 .from('profiles')
                 .select('*')
@@ -273,12 +281,14 @@
                 .single();
 
             if (!profile) {
-                // إذا لم يكن موجوداً، يتم إنشاؤه تلقائياً
-                const defaultUsername = user.email.split('@')[0] + "_" + Math.floor(Math.random() * 1000);
+                // توليد سلسلة آيدي رقمي عشواءي فريد (مثال: 8 أرقام مثل 58291043)
+                const randomNumericId = Math.floor(10000000 + Math.random() * 90000000).toString();
+                const defaultName = user.email.split('@')[0];
+                
                 const newProfile = {
                     id: user.id,
-                    username: defaultUsername,
-                    display_name: defaultUsername,
+                    numeric_id: randomNumericId,
+                    display_name: defaultName,
                     avatar_url: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
                     bio: 'مستخدم جديد في ديدي لايف',
                     coins_balance: 0
@@ -287,6 +297,12 @@
                 userProfile = newProfile;
             } else {
                 userProfile = profile;
+                // التأكد من أن لديه آيدي رقمي إن لم يكن موجوداً مسبقاً
+                if (!userProfile.numeric_id) {
+                    const randomNumericId = Math.floor(10000000 + Math.random() * 90000000).toString();
+                    await supabaseClient.from('profiles').update({ numeric_id: randomNumericId }).eq('id', user.id);
+                    userProfile.numeric_id = randomNumericId;
+                }
             }
 
             userCoins = userProfile.coins_balance || 0;
@@ -296,12 +312,11 @@
         }
 
         async function executeGateSignup() {
-            const username = document.getElementById('gate-username').value.trim();
             const displayName = document.getElementById('gate-display-name').value.trim();
             const email = document.getElementById('gate-email').value.trim();
             const password = document.getElementById('gate-password').value.trim();
 
-            if (!username || !displayName || !email || !password) return alert("يرجى ملء جميع الحقول واختيار اسم المستخدم.");
+            if (!displayName || !email || !password) return alert("يرجى ملء جميع الحقول.");
 
             const { data, error } = await supabaseClient.auth.signUp({ email, password });
             if (error) {
@@ -310,16 +325,7 @@
             }
 
             if (data.user) {
-                // حفظ البروفايل بالاسم المختار في جدول profiles
-                await supabaseClient.from('profiles').upsert([{
-                    id: data.user.id,
-                    username: username,
-                    display_name: displayName,
-                    avatar_url: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
-                    bio: 'أهلاً بك في حسابي',
-                    coins_balance: 0
-                }]);
-                alert("🎉 تم إنشاء الحساب واختيار اسم المستخدم بنجاح!");
+                alert("🎉 تم إنشاء الحساب بنجاح وتوليد الآيدي الرقمي الخاص بك!");
                 fetchOrCreateProfile(data.user);
             }
         }
@@ -340,46 +346,77 @@
 
             document.getElementById('user-balance').innerText = userCoins.toLocaleString() + " كوينز";
             authSection.innerHTML = `
-                <div class="flex items-center gap-3">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="openProfilePage()">
                     <img src="${userProfile.avatar_url}" class="w-9 h-9 rounded-full border border-pink-400 object-cover shadow-md">
                     <div class="text-right hidden sm:block">
                         <div class="text-xs font-bold text-white flex items-center gap-1">
-                            ${userProfile.display_name} <span class="text-[9px] text-pink-300">(@${userProfile.username})</span>
+                            ${userProfile.display_name} <span class="text-[9px] text-amber-300 font-mono">(ID: ${userProfile.numeric_id})</span>
                         </div>
-                        <button onclick="logoutUser()" class="text-[10px] text-pink-400 hover:underline">خروج</button>
+                        <button onclick="event.stopPropagation(); logoutUser();" class="text-[10px] text-pink-400 hover:underline">خروج</button>
                     </div>
                 </div>
             `;
         }
 
-        function openProfileModal() {
+        // فتح صفحة الملف الشخصي الكاملة
+        function openProfilePage() {
             if (!userProfile) return;
-            document.getElementById('profile-username').value = userProfile.username;
-            document.getElementById('profile-display-name').value = userProfile.display_name;
-            document.getElementById('profile-avatar').value = userProfile.avatar_url;
-            document.getElementById('profile-bio').value = userProfile.bio || '';
-            document.getElementById('profile-modal').classList.remove('hidden');
+            document.getElementById('profile-page-name').innerText = userProfile.display_name;
+            document.getElementById('profile-page-numeric-id').innerText = userProfile.numeric_id;
+            document.getElementById('profile-page-avatar').src = userProfile.avatar_url;
+            document.getElementById('edit-display-name').value = userProfile.display_name;
+            document.getElementById('edit-bio').value = userProfile.bio || '';
+            document.getElementById('profile-page-modal').classList.remove('hidden');
         }
 
-        async function saveUserProfile() {
-            const newName = document.getElementById('profile-display-name').value.trim();
-            const newAvatar = document.getElementById('profile-avatar').value.trim();
-            const newBio = document.getElementById('profile-bio').value.trim();
+        // 📸 رفع الصورة الشخصية مباشرة من تخزين الهاتف (تحويلها لـ Base64 لتخزينها في قاعدة البيانات مباشرة)
+        function uploadAvatarImage(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            if (file.size > 2 * 1024 * 1024) {
+                return alert("حجم الصورة كبير جداً! يرجى اختيار صورة أصغر من 2 ميغابايت.");
+            }
+
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const base64Image = e.target.result;
+                document.getElementById('profile-page-avatar').src = base64Image;
+
+                // تحديث الصورة في قاعدة البيانات مباشرة
+                const { error } = await supabaseClient
+                    .from('profiles')
+                    .update({ avatar_url: base64Image })
+                    .eq('id', currentUser.id);
+
+                if (!error) {
+                    userProfile.avatar_url = base64Image;
+                    updateUserInterface();
+                    alert("✨ تم رفع وتحديث الصورة الشخصية بنجاح!");
+                } else {
+                    alert("خطأ في حفظ الصورة: " + error.message);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function saveProfileChanges() {
+            const newName = document.getElementById('edit-display-name').value.trim();
+            const newBio = document.getElementById('edit-bio').value.trim();
 
             const { error } = await supabaseClient
                 .from('profiles')
-                .update({ display_name: newName, avatar_url: newAvatar, bio: newBio })
+                .update({ display_name: newName, bio: newBio })
                 .eq('id', currentUser.id);
 
             if (error) {
                 alert("خطأ في التحديث: " + error.message);
             } else {
                 userProfile.display_name = newName;
-                userProfile.avatar_url = newAvatar;
                 userProfile.bio = newBio;
+                document.getElementById('profile-page-name').innerText = newName;
                 updateUserInterface();
-                closeModal('profile-modal');
-                alert("✨ تم تحديث الملف الشخصي بنجاح!");
+                alert("✨ تم حفظ التعديلات بنجاح!");
             }
         }
 
@@ -399,21 +436,19 @@
 
             if (!txId || amount <= 0) return alert("يرجى إدخال رقم الإشعار والمبلغ بشكل صحيح.");
 
-            // تسجيل عملية الشحن في جدول transactions
             const { error } = await supabaseClient.from('wallet_transactions').insert([{
                 user_id: currentUser.id,
                 type: 'deposit',
                 amount_usd: document.getElementById('deposit-currency').value === 'USD' ? amount : amount / 14300,
                 amount_coins: netCoins,
                 sham_cash_tx: txId,
-                status: 'approved' // تم الاعتماد الفوري لتجربة المستخدم
+                status: 'approved'
             }]);
 
             if (error) {
                 alert("خطأ: " + error.message);
             } else {
                 userCoins += netCoins;
-                // تحديث رصيد المستخدم في profiles
                 await supabaseClient.from('profiles').update({ coins_balance: userCoins }).eq('id', currentUser.id);
                 document.getElementById('user-balance').innerText = userCoins.toLocaleString() + " كوينز";
                 alert(`✅ تم شحن ${netCoins.toLocaleString()} كوينز إلى محفظتك بنجاح عبر شام كاش!`);
@@ -445,7 +480,7 @@
                     </div>
                     <div class="text-left">
                         <div class="font-bold text-amber-400">+${tx.amount_coins.toLocaleString()} كوينز</div>
-                        <div class="text-[10px] text-emerald-400">مكتمل (${tx.amount_usd}$موافق)</div>
+                        <div class="text-[10px] text-emerald-400">مكتمل (${tx.amount_usd}$)</div>
                     </div>
                 </div>
             `).join('');

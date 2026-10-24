@@ -52,12 +52,12 @@
             </div>
             <div>
                 <h1 class="text-2xl font-black text-white tracking-wider">DEDE LIVE</h1>
-                <p class="text-xs text-pink-300/90 font-bold mt-1">سجل حسابك وسيتم توليد معرّف (ID) رقمي خاص بك تلقائياً</p>
+                <p class="text-xs text-pink-300/90 font-bold mt-1">سجل حسابك أو أدخل بياناتك للوصول إلى المنصة</p>
             </div>
 
             <div class="space-y-3 text-right">
-                <div>
-                    <label class="text-[11px] text-pink-300 block mb-1">الاسم الظاهر:</label>
+                <div id="display-name-field">
+                    <label class="text-[11px] text-pink-300 block mb-1">الاسم الظاهر (عند التسجيل الجديد):</label>
                     <input type="text" id="gate-display-name" placeholder="مثال: روبرت الأسطورة" class="w-full bg-slate-900/80 border border-pink-500/30 rounded-xl p-3 text-sm text-white text-right focus:outline-none focus:border-pink-500">
                 </div>
                 <div>
@@ -184,7 +184,7 @@
                 <input type="file" id="avatar-file-input" accept="image/*" onchange="uploadAvatarImage(this)" class="hidden">
             </div>
 
-            <!-- الاسم الظاهر -->
+            <!-- الاسم الظاهر والآيدي -->
             <div>
                 <h3 id="profile-page-name" class="text-lg font-black text-white">اسم المستخدم</h3>
                 <p class="text-xs text-amber-400 font-mono mt-1 font-bold">ID: <span id="profile-page-numeric-id">------</span></p>
@@ -274,28 +274,34 @@
 
         async function fetchOrCreateProfile(user) {
             currentUser = user;
+            
+            // محاولة جلب البروفايل الخاص بالمستخدم
             let { data: profile, error } = await supabaseClient
                 .from('profiles')
                 .select('*')
                 .eq('id', user.id)
-                .single();
+                .maybeSingle();
 
-            if (!profile) {
+            // إذا لم يكن موجوداً (سواء حساب قديم لم يسجل بروفايل أو جديد)، نقوم بإنشائه فوراً
+            if (!profile || error) {
                 const randomNumericId = Math.floor(10000000 + Math.random() * 90000000).toString();
-                const defaultName = user.email.split('@')[0];
+                const defaultName = user.email ? user.email.split('@')[0] : 'مستخدم ديدي';
                 
                 const newProfile = {
                     id: user.id,
                     numeric_id: randomNumericId,
                     display_name: defaultName,
                     avatar_url: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
-                    bio: 'مستخدم جديد في ديدي لايف',
+                    bio: 'مستخدم في ديدي لايف',
                     coins_balance: 0
                 };
-                await supabaseClient.from('profiles').insert([newProfile]);
+                
+                // حفظ البروفايل الجديد في قاعدة البيانات
+                await supabaseClient.from('profiles').upsert([newProfile]);
                 userProfile = newProfile;
             } else {
                 userProfile = profile;
+                // إذا لم يكن لديه آيدي رقمي، نولد له واحداً
                 if (!userProfile.numeric_id) {
                     const randomNumericId = Math.floor(10000000 + Math.random() * 90000000).toString();
                     await supabaseClient.from('profiles').update({ numeric_id: randomNumericId }).eq('id', user.id);
@@ -321,12 +327,24 @@
                 password,
                 options: { data: { display_name: displayName } }
             });
+            
             if (error) {
                 alert("خطأ في التسجيل: " + error.message);
                 return;
             }
 
             if (data.user) {
+                // إنشاء بروفايل فوري عند التسجيل الجديد
+                const randomNumericId = Math.floor(10000000 + Math.random() * 90000000).toString();
+                await supabaseClient.from('profiles').upsert([{
+                    id: data.user.id,
+                    numeric_id: randomNumericId,
+                    display_name: displayName,
+                    avatar_url: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
+                    bio: 'مستخدم في ديدي لايف',
+                    coins_balance: 0
+                }]);
+                
                 alert("🎉 تم إنشاء الحساب بنجاح وتوليد الآيدي الرقمي الخاص بك!");
                 fetchOrCreateProfile(data.user);
             }
@@ -338,8 +356,11 @@
             if (!email || !password) return alert("يرجى إدخال البريد وكلمة المرور.");
 
             const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-            if (error) alert("خطأ: " + error.message);
-            else if (data.user) fetchOrCreateProfile(data.user);
+            if (error) {
+                alert("خطأ في تسجيل الدخول: " + error.message);
+            } else if (data.user) {
+                fetchOrCreateProfile(data.user);
+            }
         }
 
         function playHumanFemaleVoiceWithEcho() {
@@ -396,7 +417,7 @@
             if (!file) return;
 
             if (file.size > 2 * 1024 * 1024) {
-                return alert("حجم الصورة كبير جداً! يرجى اختيار صورة أصغر من 2 ميغابايت.");
+                return alert("حجم الصورة كبير جداً! يرجىเลือก صورة أصغر من 2 ميغابايت.");
             }
 
             const reader = new FileReader();

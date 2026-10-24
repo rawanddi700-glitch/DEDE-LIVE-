@@ -101,8 +101,11 @@
                 <i class="fa-brands fa-whatsapp text-sm"></i> الدعم والشكاوي
             </a>
             <div id="auth-section" class="flex items-center gap-3 border-r border-pink-500/30 pr-3">
-                <button onclick="loginWithGoogle()" id="auth-btn" class="px-3.5 py-1.5 bg-white/90 hover:bg-white text-slate-900 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-md">
+                <button onclick="loginWithGoogle()" id="auth-btn" class="px-3 py-1.5 bg-white/90 hover:bg-white text-slate-900 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-md">
                     <i class="fa-brands fa-google text-red-500 text-sm"></i> دخول Google
+                </button>
+                <button onclick="loginAsGuest()" class="px-3 py-1.5 bg-pink-900/60 hover:bg-pink-900 text-pink-200 border border-pink-500/40 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-md">
+                    <i class="fa-solid fa-user-secret text-amber-300 text-xs"></i> زائر وهمي
                 </button>
             </div>
         </div>
@@ -169,7 +172,7 @@
                 <div class="max-w-xl space-y-3 z-10 relative">
                     <span class="px-3.5 py-1 bg-pink-500/20 text-pink-200 text-xs rounded-full border border-pink-500/30">DEDE LIVE World 💕</span>
                     <h1 class="text-3xl font-black text-white leading-tight">مرحباً بكم في منصة DEDE LIVE</h1>
-                    <p class="text-pink-200/80 text-sm">أضخم منصة تعارف وبث صوتي تضم أكثر من 100,000 مستخدم مع غرف عامة وخاصة!</p>
+                    <p class="text-pink-200/80 text-sm">أضخم منصة تعارف وبث صوتي تضم غرف عامة وخاصة برقم سري مع تصفح فوري للزوار!</p>
                 </div>
             </div>
 
@@ -251,7 +254,7 @@
         </div>
     </div>
 
-    <!-- نافذة تشغيل الأغاني من الهاتف أو الكمبيوتر والتحكم الكامل -->
+    <!-- نافذة تشغيل الأغاني من الهاتف أو الكمبيوتر -->
     <div id="music-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="glass-card w-full max-w-md p-6 rounded-3xl border border-pink-500/30 space-y-5 text-center">
             <h3 class="text-lg font-bold text-pink-300 flex items-center justify-center gap-2"><i class="fa-solid fa-music text-amber-400"></i> مشغل الأغاني الداخلي</h3>
@@ -277,7 +280,7 @@
         </div>
     </div>
 
-    <!-- نافذة إنشاء روم (عام أو خاص برقم سري) -->
+    <!-- نافذة إنشاء روم -->
     <div id="create-room-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="glass-card w-full max-w-md p-6 rounded-3xl border border-pink-500/30 space-y-4">
             <div class="flex justify-between items-center"><h3 class="text-lg font-bold text-pink-300">إنشاء روم جديد</h3><button onclick="closeModal('create-room-modal')" class="text-slate-400"><i class="fa-solid fa-xmark text-xl"></i></button></div>
@@ -312,7 +315,7 @@
                 <h3 class="text-xl font-bold flex items-center gap-2 text-pink-300"><i class="fa-solid fa-book-open text-amber-400"></i> دليل DEDE LIVE</h3>
                 <button onclick="closeModal('about-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
-            <div class="text-xs text-pink-200">يضم التطبيق أكثر من 100,000 مستخدم مع غرف عامة وخاصة.</div>
+            <div class="text-xs text-pink-200">يضم التطبيق أكثر من 100,000 مستخدم مع غرف عامة وخاصة وتسجيل آمن عبر Google أو الزوار الوهميين.</div>
             <button onclick="closeModal('about-modal')" class="w-full py-3 bg-pink-600 text-white rounded-xl font-bold text-xs">إغلاق</button>
         </div>
     </div>
@@ -364,10 +367,9 @@
         let currentTheme = 'theme-night';
         let welcomeAudioPlayed = false;
         let activeRoomHost = 'أبو أحمد';
-        let isUserMember = false;       // هل المستخدم عضو معتمد؟
-        let isUserAdminOrMod = false;   // هل المستخدم مشرف أو صاحب روم؟
-        
-        let localPlayerAudio = null;    // عنصر الأغنية المرفوعة من الجهاز
+        let isUserMember = false;       
+        let isUserAdminOrMod = false;   
+        let localPlayerAudio = null;    
 
         // قائمة 100 هدية برمجياً
         const giftsList = [];
@@ -436,6 +438,20 @@
             if (error) alert("خطأ: " + error.message);
         }
 
+        // ميزة الدخول كزائر وهمي (Guest Mode)
+        function loginAsGuest() {
+            const randomGuestId = Math.floor(100000 + Math.random() * 900000);
+            currentUser = {
+                user_metadata: {
+                    full_name: `زائر_${randomGuestId}`,
+                    avatar_url: 'https://cdn-icons-png.flaticon.com/512/847/847969.png'
+                },
+                email: `guest_${randomGuestId}@dedelive.com`
+            };
+            updateUserInterface(currentUser);
+            alert(`👋 أهلاً بك! تم تسجيل دخولك كزائر وهمي برقم (زائر_${randomGuestId}) بنجاح.`);
+        }
+
         function updateUserInterface(user) {
             const authSection = document.getElementById('auth-section');
             const avatar = user.user_metadata?.avatar_url || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
@@ -448,7 +464,7 @@
                         <div class="text-xs font-bold text-white flex items-center gap-1">
                             ${name} <span class="text-[9px] vip-badge text-white px-1 rounded">VIP 👑</span>
                         </div>
-                        <button onclick="supabaseClient.auth.signOut(); location.reload();" class="text-[10px] text-pink-400 hover:underline">خروج</button>
+                        <button onclick="location.reload();" class="text-[10px] text-pink-400 hover:underline">خروج</button>
                     </div>
                 </div>
             `;
@@ -475,7 +491,7 @@
             document.getElementById('user-balance').innerText = userCoins.toLocaleString() + " كوينز";
             closeModal('gift-modal');
 
-            const senderName = currentUser ? (currentUser.user_metadata?.full_name || currentUser.email.split('@')[0]) : "محمد سعد الدين";
+            const senderName = currentUser ? (currentUser.user_metadata?.full_name || currentUser.email.split('@')[0]) : "زائر كريم";
             const receiverName = activeRoomHost;
 
             try {
@@ -527,7 +543,6 @@
             setTimeout(() => { el.remove(); }, 4000);
         }
 
-        // تفاعلات العضوية والإشراف
         function requestMemberRole() {
             document.getElementById('member-request-modal').classList.remove('hidden');
         }
@@ -598,7 +613,6 @@
             document.getElementById('music-modal').classList.remove('hidden');
         }
 
-        // تشغيل الصوت المرفوع من الهاتف أو الكمبيوتر والتحكم به
         document.addEventListener('change', function(e) {
             if (e.target && e.target.id === 'local-audio-file') {
                 const file = e.target.files[0];
@@ -762,11 +776,10 @@
             const pin = document.getElementById('new-room-pin').value;
             closeModal('create-room-modal');
 
-            let hostName = currentUser ? (currentUser.user_metadata?.full_name || currentUser.email.split('@')[0]) : "محمد سعد الدين";
+            let hostName = currentUser ? (currentUser.user_metadata?.full_name || currentUser.email.split('@')[0]) : "زائر كريم";
             isUserMember = true;
-            isUserAdminOrMod = true; // منشئ الروم يعتبر مدير مشرف تلقائياً
+            isUserAdminOrMod = true; 
 
-            // إضافة الروم إلى القائمة الرئيسية
             const grid = document.getElementById('rooms-grid');
             const roomCard = document.createElement('div');
             roomCard.className = "glass-card rounded-2xl p-5 hover:border-pink-500/65 transition cursor-pointer group";

@@ -168,7 +168,7 @@
         </main>
     </div>
 
-    <!-- 👤 صفحة الملف الشخصي الكاملة (تظهر عند الضغط على زر الملف الشخصي) -->
+    <!-- 👤 صفحة الملف الشخصي الكاملة -->
     <div id="profile-page-modal" class="hidden fixed inset-0 bg-[#09020d]/95 backdrop-blur-2xl z-50 flex items-center justify-center p-4 overflow-y-auto">
         <div class="glass-card w-full max-w-lg p-8 rounded-3xl border border-pink-500/40 space-y-6 text-center shadow-2xl relative my-auto">
             <button onclick="closeModal('profile-page-modal')" class="absolute top-5 left-5 text-slate-400 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
@@ -187,11 +187,10 @@
             <!-- الاسم الظاهر -->
             <div>
                 <h3 id="profile-page-name" class="text-lg font-black text-white">اسم المستخدم</h3>
-                <!-- الآيدي الرقمي الفريد تحت الاسم مباشرة -->
                 <p class="text-xs text-amber-400 font-mono mt-1 font-bold">ID: <span id="profile-page-numeric-id">------</span></p>
             </div>
 
-            <!-- حقول التعديل البايو والاسم -->
+            <!-- حقول التعديل -->
             <div class="space-y-3 text-right text-xs">
                 <div>
                     <label class="block text-pink-200 font-bold mb-1">تعديل الاسم الظاهر:</label>
@@ -263,6 +262,7 @@
         let currentUser = null;
         let userProfile = null;
         let userCoins = 0;
+        let welcomeAudioPlayed = false;
 
         supabaseClient.auth.onAuthStateChange(async (event, session) => {
             if (session && session.user) {
@@ -281,7 +281,6 @@
                 .single();
 
             if (!profile) {
-                // توليد سلسلة آيدي رقمي عشواءي فريد (مثال: 8 أرقام مثل 58291043)
                 const randomNumericId = Math.floor(10000000 + Math.random() * 90000000).toString();
                 const defaultName = user.email.split('@')[0];
                 
@@ -297,7 +296,6 @@
                 userProfile = newProfile;
             } else {
                 userProfile = profile;
-                // التأكد من أن لديه آيدي رقمي إن لم يكن موجوداً مسبقاً
                 if (!userProfile.numeric_id) {
                     const randomNumericId = Math.floor(10000000 + Math.random() * 90000000).toString();
                     await supabaseClient.from('profiles').update({ numeric_id: randomNumericId }).eq('id', user.id);
@@ -318,7 +316,11 @@
 
             if (!displayName || !email || !password) return alert("يرجى ملء جميع الحقول.");
 
-            const { data, error } = await supabaseClient.auth.signUp({ email, password });
+            const { data, error } = await supabaseClient.auth.signUp({ 
+                email, 
+                password,
+                options: { data: { display_name: displayName } }
+            });
             if (error) {
                 alert("خطأ في التسجيل: " + error.message);
                 return;
@@ -340,6 +342,27 @@
             else if (data.user) fetchOrCreateProfile(data.user);
         }
 
+        function playHumanFemaleVoiceWithEcho() {
+            if (welcomeAudioPlayed) return;
+            welcomeAudioPlayed = true;
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const audio = new Audio("https://actions.google.com/sounds/v1/human_voices/female_voice_welcome.ogg");
+                audio.crossOrigin = "anonymous";
+                const source = audioCtx.createMediaElementSource(audio);
+                const delayNode = audioCtx.createDelay();
+                delayNode.delayTime.value = 0.25;
+                const feedbackNode = audioCtx.createGain();
+                feedbackNode.gain.value = 0.35;
+                source.connect(audioCtx.destination);
+                source.connect(delayNode);
+                delayNode.connect(feedbackNode);
+                feedbackNode.connect(delayNode);
+                delayNode.connect(audioCtx.destination);
+                audio.play().catch(() => {});
+            } catch (e) {}
+        }
+
         function updateUserInterface() {
             const authSection = document.getElementById('auth-section');
             if (!userProfile) return;
@@ -358,7 +381,6 @@
             `;
         }
 
-        // فتح صفحة الملف الشخصي الكاملة
         function openProfilePage() {
             if (!userProfile) return;
             document.getElementById('profile-page-name').innerText = userProfile.display_name;
@@ -369,7 +391,6 @@
             document.getElementById('profile-page-modal').classList.remove('hidden');
         }
 
-        // 📸 رفع الصورة الشخصية مباشرة من تخزين الهاتف (تحويلها لـ Base64 لتخزينها في قاعدة البيانات مباشرة)
         function uploadAvatarImage(input) {
             const file = input.files[0];
             if (!file) return;
@@ -383,7 +404,6 @@
                 const base64Image = e.target.result;
                 document.getElementById('profile-page-avatar').src = base64Image;
 
-                // تحديث الصورة في قاعدة البيانات مباشرة
                 const { error } = await supabaseClient
                     .from('profiles')
                     .update({ avatar_url: base64Image })
@@ -530,6 +550,7 @@
         function openDepositModal() { document.getElementById('deposit-modal').classList.remove('hidden'); }
         function openLeaderboardModal() { alert("لوحة المتصدرين قيد التحديث."); }
         function openGamesModal() { alert("الكازينو قيد التفعيل."); }
+        function leaveRoom() { location.reload(); }
     </script>
 </body>
 </html>

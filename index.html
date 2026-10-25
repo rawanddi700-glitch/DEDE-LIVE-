@@ -192,7 +192,7 @@
           <div>
             <span class="bg-purple-500/20 text-purple-300 text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-purple-500/30 mb-1 inline-block">{{ activeRoom.category }}</span>
             <h2 class="text-xl font-black text-white mt-1">{{ activeRoom.title }}</h2>
-            <p class="text-xs text-slate-400">المضيف: <span class="text-purple-400 font-bold">{{ activeRoom.host_name }}</span> | <span class="text-emerald-400 font-bold">🎙️ غرفة صوتية حية مفعلة</span></p>
+            <p class="text-xs text-slate-400">المضيف: <span class="text-purple-400 font-bold">{{ activeRoom.host_name }}</span> | <span class="text-emerald-400 font-bold">🎙️ أنت داخل الروم الصوتي حالياً</span></p>
           </div>
           <button @click="leaveVoiceRoom(); activeRoom = null;" class="bg-rose-600/20 hover:bg-rose-600 text-rose-300 hover:text-white text-xs font-bold px-4 py-2 rounded-xl transition-all">← مغادرة الروم الصوتي</button>
         </div>
@@ -208,11 +208,11 @@
           </div>
         </div>
 
-        <!-- زر فتح وغلق المايك البارز والتجريبي -->
+        <!-- زر فتح وغلق المايك المباشر والمصحح -->
         <div class="flex items-center justify-center gap-3 mb-6 bg-slate-950 p-4 rounded-2xl border border-slate-800 shadow-inner">
-          <button @click="toggleMicrophone" :class="['px-6 py-3 rounded-2xl text-xs font-black transition-all shadow-xl flex items-center gap-2.5', isMicActive ? 'bg-emerald-600 hover:bg-emerald-500 text-white animate-pulse ring-4 ring-emerald-500/30' : 'bg-slate-800 hover:bg-slate-700 text-slate-300']">
+          <button @click="toggleMicrophone" :class="['px-6 py-3.5 rounded-2xl text-xs font-black transition-all shadow-xl flex items-center gap-2.5', isMicActive ? 'bg-emerald-600 hover:bg-emerald-500 text-white animate-pulse ring-4 ring-emerald-500/30' : 'bg-slate-800 hover:bg-slate-700 text-slate-300']">
             <span class="text-base">{{ isMicActive ? '🎙️' : '🔇' }}</span>
-            <span>{{ isMicActive ? 'المايك مفتوح ويبث صوتك الآن (اضغط للكتم)' : 'المايك مقفل (اضغط للتحدث وسماع الجميع)' }}</span>
+            <span>{{ isMicActive ? 'المايك مفتوح ويبث صوتك الآن (اضغط للكتم)' : 'اضغط هنا لفتح المايك والتحدث 🎙️' }}</span>
           </button>
         </div>
 
@@ -277,7 +277,7 @@
           </div>
         </div>
 
-        <!-- 🌟 ثانياً: الرومات الصوتية النشطة (المتصلة لحظياً) -->
+        <!-- 🌟 ثانياً: الرومات الصوتية النشطة -->
         <div class="mb-10">
           <div class="flex justify-between items-center mb-4">
             <h3 class="text-xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent flex items-center gap-2">
@@ -701,10 +701,9 @@
 
         let threeScene, threeCamera, threeRenderer, wheelGroup, animFrameId;
 
-        // متغيرات الصوت المباشر (WebRTC Native Peer Stream)
+        // متغيرات الصوت المباشر والمايك
         let localAudioStream = null;
         const isMicActive = ref(false);
-        let audioPeers = {};
 
         const viewingUser = ref(null);
         const friendRequests = ref([]);
@@ -777,28 +776,29 @@
           } catch (e) {}
         };
 
-        // تفعيل الاتصال الصوتي المباشر بين مستخدمي الروم
-        const startNativeVoiceStream = async () => {
-          try {
-            localAudioStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
-            isMicActive.value = true;
-            console.log("تم فتح المايك وتقاطعه بنجاح!");
-          } catch (err) {
-            alert("يرجى السماح للمتصفح بالوصول إلى المايكروفون ليتمكن الآخرون من سماعك.");
-            isMicActive.value = false;
-          }
-        };
-
+        // دالة فتح وغلق المايك المباشرة والفعالة (تعمل فوراً داخل الروم)
         const toggleMicrophone = async () => {
+          if (!activeRoom.value) {
+            alert("يرجى الدخول إلى الروم أولاً!");
+            return;
+          }
+
           if (!isMicActive.value) {
-            await startNativeVoiceStream();
+            try {
+              localAudioStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+              isMicActive.value = true;
+              roomChat.value.push({ id: Date.now(), sender: 'النظام 🤖', text: '🎙️ تم تفعيل المايك الخاص بك بنجاح!' });
+            } catch (err) {
+              alert("تعذر الوصول إلى المايك. يرجى السماح للمتصفح بالوصول إلى المايكروفون.");
+              isMicActive.value = false;
+            }
           } else {
             if (localAudioStream) {
               localAudioStream.getTracks().forEach(track => track.stop());
               localAudioStream = null;
             }
             isMicActive.value = false;
-            console.log("تم إغلاق الكتم أو المايك.");
+            roomChat.value.push({ id: Date.now(), sender: 'النظام 🤖', text: '🔇 تم إغلاق المايك (كتم).' });
           }
         };
 
@@ -808,6 +808,7 @@
             localAudioStream = null;
           }
           isMicActive.value = false;
+          activeRoom.value = null;
         };
 
         const openGame = async (gameType) => {
@@ -1109,14 +1110,11 @@
           searchError.value = 'لم يتم العثور على أي مطابقة للـ ID أو الاسم المدخل.';
         };
 
-        const enterRoom = async (room) => {
+        const enterRoom = (room) => {
           activeRoom.value = room;
           const seats = room.max_seats || 8;
           roomSeatsData.value = Array.from({ length: seats }, (_, i) => i === 0 ? { index: 0, user: { name: room.host_name, avatar: room.host_avatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=200", id: room.host_id, role: 'مضيف' }, isHost: true } : { index: i, user: null, isHost: false });
-          roomChat.value = [{ id: 1, sender: 'النظام 🤖', text: `أهلاً بك في روم "${room.title}". يمكنك فتح المايك والتحدث!` }];
-          
-          // تفعيل تلقائي صوتي تجريبي
-          await startNativeVoiceStream();
+          roomChat.value = [{ id: 1, sender: 'النظام 🤖', text: `أهلاً بك في روم "${room.title}". يمكنك الضغط على زر فتح المايك والتحدث!` }];
         };
 
         const claimSeat = (index) => {
